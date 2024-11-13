@@ -7,43 +7,6 @@ const bodyParser = require('body-parser');
 const session = require('./config/session');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
-// const AdminJS = require('adminjs');
-// const AdminJSExpress = require('@adminjs/express');
-// const mongooseAdminJS = require('@adminjs/mongoose');
-// const mongoose = require('mongoose');
-
-// Import your models
-// const Volunteer = require('./models/volunteer');
-// const Donation = require('./models/donation');
-// const Request = require('./models/request');
-// const ContactUs = require('./models/contactUs');
-
-// // Initialize Mongoose AdminJS Adapter
-// AdminJS.registerAdapter(mongooseAdminJS);
-
-// // Create an AdminJS instance
-// const adminJs = new AdminJS({
-//   databases: [mongoose],  // Connect AdminJS to your MongoDB database
-//   resources: [
-//     { resource: Volunteer, options: { parent: { name: 'Volunteers' } } },
-//     { resource: Donation, options: { parent: { name: 'Donations' } } },
-//     { resource: Request, options: { parent: { name: 'Requests' } } },
-//     { resource: ContactUs, options: { parent: { name: 'Contacts' } } }
-//   ],
-//   rootPath: '/admin',  // Set the root path for your admin panel
-// });
-
-// // Build and use the AdminJS router with authentication (if needed)
-// const adminRouter = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
-//   authenticate: async (email, password) => {
-//     // Replace with your own authentication logic
-//     if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-//       return { email: process.env.ADMIN_EMAIL };
-//     }
-//     return null;
-//   },
-//   cookiePassword: 'sessionsecret',  // A secure secret for session handling
-// });
 
 // Initialize Express
 const app = express();
