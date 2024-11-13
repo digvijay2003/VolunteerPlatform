@@ -1,0 +1,105 @@
+body {
+  font-family: "Montserrat", sans-serif;
+  color: #333;
+}
+
+.card {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  transition: 1s;
+}
+
+.card h1 {
+  font-family: "Wittgenstein", serif
+}
+
+.card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.005);
+}
+
+.card:hover > h1 {
+  color: #50a2f0;
+  transition: 1s;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.form-control {
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+}
+
+.btn {
+  border-radius: 5px;
+}
+
+.btn-primary {
+  background-color: #1e90ff;
+  border-color: #1e90ff;
+  width: 100%; /* Make the button take full width */
+  margin-bottom: 10px; /* Add space below the button */
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #1a7ccd;
+  border-color: #1a7ccd;
+  opacity: 0.8;
+}
+
+.btn-secondary {
+  background-color: #ff4e50;
+  border-color: #ff4e50;
+  width: 100%; /* Make the button take full width */
+}
+
+.btn-secondary:hover {
+  opacity: 0.8;
+}
+
+.alert {
+  border-radius: 5px;
+}
+
+.alert-primary {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+.alert-primary a {
+  color: #1e90ff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.alert-primary a:hover {
+  color: #1a7ccd;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .card {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    max-width: 90%;
+  }
+}
+
+.container {
+  transition: transform 0.5s ease, background 0.5s ease;
+}
+
+.card:hover ~ .container {
+  background-color: white;
+}
