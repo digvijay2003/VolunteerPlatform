@@ -28,8 +28,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// AdminJS route
-// app.use(adminJs.options.rootPath, adminRouter);  // Attach AdminJS route
 
 // Routes
 app.use('/', require('./routes/home'));
