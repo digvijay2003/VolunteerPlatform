@@ -8,7 +8,7 @@ const sendMessage = async () => {
     try {
         const message = await client.messages.create({
           body: 'Hello from Digvijay',
-          to: '+917807242269',
+          to: '+',
           from: '+14797179508',
         });
         console.log(message);
