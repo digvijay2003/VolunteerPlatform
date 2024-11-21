@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const session = require('./config/session');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
+const expressLayouts = require('express-ejs-layouts');
 
 // Initialize Express
 const app = express();
@@ -17,6 +18,9 @@ connectDB();
 // Middleware
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('layout', 'layout/boilerplate'); 
+
+app.use(expressLayouts);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({ extended: true }));

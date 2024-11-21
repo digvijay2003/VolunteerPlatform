@@ -2,12 +2,20 @@ const express = require('express');
 const router = express.Router();
 const ContactUs = require('../models/contactUs');
 
+router.get('/', (req, res) => {
+    res.render('development')
+});
+
 router.get('/feedhope', (req, res) => {  
     res.render('home/homepage', {successRequestMessage: ''});
 });
 
 router.get('/feedhope-contact_Us', (req, res) => {
     res.render('home/contactUs', { error: '', success: '' });
+});
+
+router.get('/how-it-works', (req, res) => {
+    res.render('home/how-it-works');
 });
 
 router.post('/feedhope-contact_Us', async (req, res) => {
