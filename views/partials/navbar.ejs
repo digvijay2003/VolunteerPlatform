@@ -1,32 +1,80 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark-subtle fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/feedhope">HOME</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/feedhope-about-us">ABOUT US</a>
-          </li>
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/how-it-works">HOW WE WORK</a>
-          </li>
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/events">EVENTS</a>
-          </li>
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/volunteer-login">VOLUNTEER</a>
-          </li>
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/feedhope-contact_Us">CONTACT US</a>
-          </li>
-        </ul>
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/volunteer-registration">Join<span class="material-symbols-outlined">heart_plus</span> as VOLUNTEER</a>
-                </li>
-            </ul>
-        </div>
+  <div class="container-fluid">
+    <br><br>
+    <a class="navbar-brand" href="/feedhope">HOME</a>
+    <button 
+      class="navbar-toggler" 
+      type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="#navbarNav" 
+      aria-controls="navbarNav" 
+      aria-expanded="false" 
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item mx-3">
+          <a class="nav-link animated-link" href="/feedhope-about-us">ABOUT US</a>
+        </li>
+        <li class="nav-item mx-3">
+          <a class="nav-link animated-link" href="/how-it-works">HOW WE WORK</a>
+        </li>
+        <li class="nav-item mx-3">
+          <a class="nav-link animated-link" href="/events">EVENTS</a>
+        </li>
+        <li class="nav-item mx-3">
+          <a class="nav-link animated-link" href="/volunteer-login">VOLUNTEER</a>
+        </li>
+        <li class="nav-item mx-3">
+          <a class="nav-link animated-link" href="/feedhope-contact_Us">CONTACT US</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link animated-link" href="/volunteer-registration">Join<span class="material-symbols-outlined">heart_plus</span> as VOLUNTEER</a>
+        </li>
+      </ul>
     </div>
+    <br>
+  </div>
 </nav>
+
+<!-- CSS -->
+<style>
+  
+.nav-link:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgb(168, 148, 17);
+}
+
+
+  .animated-link {
+    position: relative;
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+  }
+
+  .animated-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: rgb(204, 179, 18);
+    transition: width 0.3s ease-in-out;
+  }
+
+  .animated-link:hover::after {
+    width: 100%;
+  }
+
+  .animated-link:hover {
+    color: rgb(204, 179, 18);
+  }
+</style>
