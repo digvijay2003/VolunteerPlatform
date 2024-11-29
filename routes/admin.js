@@ -58,7 +58,8 @@ router.get('/login', (req, res) => {
     if (req.session.token) {
         return res.redirect('/admin/dashboard');
     }
-    res.render('admin/login', { error: '' });
+    res.render('admin/login', {title: 'Login',stylesheets:'',title: '',
+        stylesheet: '', layout:false});
 });
 
 // Admin login route (POST - handles login)
@@ -66,7 +67,8 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     if (username !== adminUsername || !bcrypt.compareSync(password, hashedPassword)) {
-        return res.render('admin/login', { error: 'Invalid credentials' });
+        return res.render('admin/login', { error: 'Invalid credentials',title: '',
+            stylesheet: '' });
     }
 
     // Create JWT token
@@ -98,12 +100,15 @@ router.get('/dashboard', ensureAuthenticated, async (req, res) => {
         
         // Pass statistics and flash messages to the view
         res.render('admin/dashboard', {
+            title: '',
+            stylesheet: '',
             totalRequests,
             pendingRequests,
             completedRequests,
             rejectedRequests,
             totalQueries,
-            messages: req.flash() // Make sure to pass flash messages
+            messages: req.flash(),
+            layout:false 
         });
     } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -153,11 +158,14 @@ router.get('/request-donations', isAuthenticatedAdmin, async (req, res) => {
             .limit(limit);
 
         res.render('admin/requestDonationList', {
+            title: '',
+            stylesheet: '',
             donationRequests: donations,
             currentPage: page,
             totalPages: totalPages,
             query: query,            // Pass query to EJS
-            statusFilter: statusFilter // Pass status filter to EJS
+            statusFilter: statusFilter,
+            layout:false // Pass status filter to EJS
         });
     } catch (error) {
         console.error('Error paginating donation requests:', error);
@@ -177,7 +185,8 @@ router.get('/request-donations/:id', isAuthenticatedAdmin, async (req, res) => {
         // Store requester ID in the session
         req.session.requesterId = requester._id;
 
-        res.render('admin/requestSingleList', { requester });
+        res.render('admin/requestSingleList', { requester ,title: '',
+            stylesheet: '', layout:false });
     } catch (error) {
         console.error('Error fetching requester details:', error);
         return res.status(404).send("Requester not found.");
@@ -192,7 +201,8 @@ router.get('/request-donations/:id/edit', isAuthenticatedAdmin, async (req, res)
             req.flash('error', 'Donation request not found');
             return res.redirect('/admin/request-donations');
         }
-        res.render('admin/editRequestDonation', { donationRequest });
+        res.render('admin/editRequestDonation', { donationRequest , title: '',
+            stylesheet: '', layout:false });
     } catch (error) {
         console.error('Error fetching donation request:', error);
         res.status(500).send('Error fetching donation request');
@@ -296,6 +306,8 @@ router.get('/check-queries', isAuthenticatedAdmin, async (req, res) => {
 
         // Render the check-queries view with the filtered list of queries and the search query
         res.render('admin/checkQueries', {
+            title: '',
+                stylesheet: '',
             queries,
             searchQuery, // Pass the search query to the view for input field retention
             messages: req.flash() // Pass flash messages to the view

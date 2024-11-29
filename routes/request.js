@@ -11,7 +11,12 @@ const upload = multer({storage});
 
 // Render the form to request a donation, anyone can do donations
 router.get('/feedhope-request-donation', (req, res) => {
-    res.render('request/requestDonation'); 
+    res.render('request/requestDonation', 
+        {
+            title: '',
+            stylesheet: ''
+        }
+    ); 
 });
 
 // Handle POST request to submit a donation request
@@ -86,7 +91,13 @@ router.post('/feedhope-request-donation', upload.array('images', 10), async (req
 // render list of all the requested donation
 router.get('/feedhope-request-donation-list', async (req, res) =>{
     const allRequests = await RequestDonation.find({});
-    res.render('request/requestedList', {allRequests});
+    res.render('request/requestedList',
+        {
+            allRequests,
+            title: '',
+            stylesheet: ''
+        }
+    );
 });
 
 router.get('/feedhope-request-donation-list/:id', async (req, res) => {
@@ -101,7 +112,8 @@ router.get('/feedhope-request-donation-list/:id', async (req, res) => {
         // Store requester ID in the session
         req.session.requesterId = requester._id;
 
-        res.render('request/requestSingleList', { requester });
+        res.render('request/requestSingleList', { requester,title: '',
+            stylesheet: '' });
     } catch (error) {
         console.error('Error fetching requester details:', error);
         return res.status(404).send("Requester not found.");

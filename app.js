@@ -48,11 +48,10 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/', require('./routes/home'));
-app.use('/', require('./routes/auth'));
-app.use('/', require('./routes/profile'));
-app.use('/', require('./routes/donateFood'));
-app.use('/', require('./routes/requestDonation'));
-app.use('/', require('./routes/aboutUs'));
+app.use('/', require('./routes/volunteer'));
+app.use('/', require('./routes/donate'));
+app.use('/', require('./routes/request'));
+
 app.use('/admin', require('./routes/admin'));
 
 app.use((req, res, next) => {
@@ -70,7 +69,8 @@ app.use((err, req, res, next) => {
         timestamp: new Date().toISOString(),
         message: `500 - ${err.message}`,
     });
-    res.status(500).render('errorHandling/error', { error: 'Something went wrong!' });
+    res.status(500).render('errorHandling/error', { error: 'Something went wrong!',title: '',
+        stylesheet: '' });
 });
 
 const PORT = process.env.PORT || 3000;

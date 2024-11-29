@@ -28,24 +28,6 @@ body {
   padding: 0;
 }
 
-/* Navbar Styles */
-.navbar a {
-  font-size: 1.3rem;
-  color: var(--text-color);
-  text-align: center;
-  padding: 5px 10px;
-  text-decoration: none;
-  font-weight: bolder;
-  font-family: var(--navbar-font);
-  white-space: nowrap;
-}
-
-.navbar a:hover {
-  background-color: var(--hover-bg-color);
-  color: var(--hover-text-color);
-  transition: 0.4s ease-in-out;
-}
-
 /* Hero Section */
 .hero-section {
   width: 100%;

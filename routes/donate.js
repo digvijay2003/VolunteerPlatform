@@ -7,7 +7,8 @@ const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
 
 // render the form for the donation
 router.get('/feedhope-donation-food', (req, res) => {
-    res.render('donation/donateFood', {error:''});
+    res.render('donation/donateFood', {error:'',title: '',
+        stylesheet: ''});
 });
 
 // Handle the donation post request
@@ -47,7 +48,8 @@ router.post('/feedhope-donation-food', async (req, res) => {
         await newDonor.save();
         res.redirect(`/nearby-requests?lat=${latitude}&lng=${longitude}`)
     } catch (err) {
-        return res.render('errorHandling/error', { err });
+        return res.render('errorHandling/error', { err,title: '',
+            stylesheet: '' });
     }
 });
 
@@ -74,7 +76,8 @@ router.post('/nearby-requests', async (req, res) => {
         // Redirect to the existing GET route with lat and lng as query parameters
         res.redirect(`/nearby-requests?lat=${latitude}&lng=${longitude}`);
     } catch (err) {
-        return res.render('errorHandling/error', { err });
+        return res.render('errorHandling/error', { err,title: '',
+            stylesheet: '' });
     }
 });
 
@@ -132,7 +135,8 @@ router.get('/nearby-requests', async (req, res) => {
         const allRequests = await Request.find({});
         // console.log(nearbyRequests);
 
-        res.render('request/nearbyRequests', { nearbyRequests, allRequests, donorCoordinates: [parseFloat(lng), parseFloat(lat)] });
+        res.render('request/nearbyRequests', { nearbyRequests, allRequests, title: '',
+            stylesheet: '', donorCoordinates: [parseFloat(lng), parseFloat(lat)] });
     } catch (err) {
         res.status(500).send('Error finding requests');
     }

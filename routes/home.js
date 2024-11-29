@@ -7,16 +7,57 @@ router.get('/', (req, res) => {
 });
 
 router.get('/feedhope', (req, res) => {  
-    res.render('home/homepage', {successRequestMessage: ''});
+    res.render(
+        'home/homepage', 
+        {
+            title: 'Home',
+            stylesheet: '/stylesheet/home/homepage.css' 
+        }
+    );
 });
 
-router.get('/feedhope-contact_Us', (req, res) => {
-    res.render('home/contactUs', { error: '', success: '' });
+router.get('/feedhope-contact-us', (req, res) => {
+    res.render(
+        'home/contact-us', 
+        {
+            title: 'Contact Us',
+            stylesheet: '/stylesheet/home/contact-us.css'
+        }
+    );
 });
 
-router.get('/how-it-works', (req, res) => {
-    res.render('home/how-it-works');
+router.get('/feedhope-how-it-works', (req, res) => {
+    res.render(
+        'home/how-it-works',
+        {
+            title: 'how-it-works',
+            stylesheet: '/stylesheet/home/how-it-works.css'
+        }
+    );
 });
+
+router.get('/feedhope-about-us', (req, res) => {
+    res.render(
+        'home/about-us', 
+        { 
+            title: 'About Us',
+            stylesheet: '/stylesheet/home/about-us.css' 
+        }
+    );
+});
+
+
+router.get('/feedhope-events', (req, res) => {
+    res.render(
+        'home/events',{
+            title: 'Events',
+            stylesheet: '/stylesheet/home/events.css'
+        }
+    )
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 router.post('/feedhope-contact_Us', async (req, res) => {
     const { username, email, contact, message } = req.body;
