@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const ContactUs = require('../models/contactUs');
+const { lazy } = require('react');
 
 router.get('/', (req, res) => {
-    res.render('development')
+    res.render('development', {title: '', stylesheet:'', layout:false});
 });
 
 router.get('/feedhope', (req, res) => {  
