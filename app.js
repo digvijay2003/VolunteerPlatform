@@ -46,6 +46,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
+});
+
 // Routes
 app.use('/', require('./routes/home'));
 app.use('/', require('./routes/volunteer'));
