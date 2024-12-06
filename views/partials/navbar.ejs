@@ -1,52 +1,74 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark-subtle fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/feedhope">HOME</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/feedhope-about-us">ABOUT US</a>
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/feedhope">FeedHope</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end bg-success" id="offcanvasNavbar" tabindex="-1" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title text-white" id="offcanvasNavbarLabel">FeedHope</h5>
+        <button type="button" class="btn-close btn-close-info" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" href="/feedhope-about-us">About Us</a>
           </li>
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/feedhope-how-it-works">HOW WE WORK</a>
+          <li class="nav-item">
+            <a class="nav-link" href="/feedhope-how-it-works">How We Work</a>
           </li>
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/feedhope-events">EVENTS</a>
+          <li class="nav-item">
+            <a class="nav-link" href="/feedhope-events">Events</a>
           </li>
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/volunteer-login">VOLUNTEER</a>
+          <li class="nav-item">
+            <a class="nav-link" href="/volunteer-login">Volunteer</a>
           </li>
-          <li class="nav-item mx-1">
-            <a class="nav-link" href="/feedhope-contact-us">CONTACT US</a>
+          <li class="nav-item">
+            <a class="nav-link" href="/feedhope-contact-us">Contact Us</a>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="/volunteer-registration">Join<span class="material-symbols-outlined">heart_plus</span> as VOLUNTEER</a>
-                </li>
-            </ul>
-        </div>
+            <a class="nav-link" href="/volunteer-registration">Join as Volunteer</a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </div>
 </nav>
 
-
 <style>
-  .navbar a {
-  font-size: 1.3rem;
-  color: rgb(5, 0, 0);
+.navbar {
+  background-color: #1e3932; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.navbar a {
+  font-size: 1.1rem;
+  color: #ffffff !important; /* Clean white for text to ensure readability */
   text-align: center;
-  padding: 5px 10px;
+  padding: 5px 30px;
   text-decoration: none;
-  font-weight: bolder;
+  font-weight: 600;
   font-family: "Kode Mono", monospace;
   white-space: nowrap;
 }
 
 .navbar a:hover {
-  background-color: #655b62;
-  color:  rgb(4, 45, 48);
-  transition: 0.4s ease-in-out;
+  background-color: #315d46; /* Slightly darker green for hover effect */
+  color: #f4f4f4; /* Lighter hover text color for contrast */
+  transition: 0.3s ease-in-out;
+}
+
+.offcanvas-header {
+  background-color: #284940; /* Match navbar background */
+}
+
+.offcanvas-title {
+  color: #ffffff; /* Clean white for offcanvas title */
+}
+
+.navbar-toggler-icon {
+  background-color: #ffffff; 
 }
 </style>

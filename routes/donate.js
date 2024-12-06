@@ -48,7 +48,7 @@ router.post('/feedhope-donation-food', async (req, res) => {
         await newDonor.save();
         res.redirect(`/nearby-requests?lat=${latitude}&lng=${longitude}`)
     } catch (err) {
-        return res.render('errorHandling/error', { err,title: '',
+        return res.render('error/error', { err,title: '',
             stylesheet: '' });
     }
 });
@@ -76,7 +76,7 @@ router.post('/nearby-requests', async (req, res) => {
         // Redirect to the existing GET route with lat and lng as query parameters
         res.redirect(`/nearby-requests?lat=${latitude}&lng=${longitude}`);
     } catch (err) {
-        return res.render('errorHandling/error', { err,title: '',
+        return res.render('error/error', { err,title: '',
             stylesheet: '' });
     }
 });

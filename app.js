@@ -61,11 +61,17 @@ app.use('/admin', require('./routes/admin'));
 app.use((req, res, next) => {
     const error = new Error('Page not found!');
     error.status = 404;
+
     logger.warn({
         timestamp: new Date().toISOString(),
         message: `404 - ${req.method} ${req.originalUrl}`,
     });
-    res.status(404).render('errorHandling/error', { error: error.message });
+
+    res.status(404).render('error/error', {
+        error_message: error.message,
+        title: '404-Not Found',
+        stylesheet: ''
+    });
 });
 
 app.use((err, req, res, next) => {
@@ -73,8 +79,12 @@ app.use((err, req, res, next) => {
         timestamp: new Date().toISOString(),
         message: `500 - ${err.message}`,
     });
-    res.status(500).render('errorHandling/error', { error: 'Something went wrong!',title: '',
-        stylesheet: '' });
+
+    res.status(500).render('error/error', {
+        error_message: 'Something went wrong!', 
+        title: '500 - Internal Server Error',
+        stylesheet: ''
+    });
 });
 
 const PORT = process.env.PORT || 3000;

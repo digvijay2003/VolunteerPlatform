@@ -1,0 +1,59 @@
+<style>
+  /* body {
+      background: linear-gradient(135deg, #ff7e5f, #feb47b); 
+      font-family: Arial, sans-serif;
+      color: #fff;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  } */
+
+  .card {
+      max-width: 500px;
+      width: 100%;
+      padding: 2rem;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+      font-size: 2rem; 
+      font-weight: bold;
+  }
+
+  .alert {
+      font-size: 1rem;
+      background-color: #f8d7da;
+      color: #721c24;
+  }
+
+  .btn {
+      margin: 5px;
+  }
+
+  .btn-primary {
+      background-color: #007bff;
+      border: none;
+  }
+
+  .btn-secondary {
+      background-color: #6c757d;
+      border: none;
+  }
+
+  .btn:hover {
+      opacity: 0.8; 
+  }
+</style>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow-lg p-4">
+      <h1 class="text-center mb-4 text-danger"><%= error_message %></h1>
+      <div class="d-flex justify-content-center">
+          <a href="/feedhope" class="btn btn-primary">Home</a>
+          <button class="btn btn-secondary" onclick="history.back()">Go Back</button>
+      </div>
+  </div>
+</div>

@@ -51,8 +51,6 @@ function isAuthenticatedAdmin(req, res, next) {
 }
 
 
-
-
 // Admin login route (GET - renders login page)
 router.get('/login', (req, res) => {
     if (req.session.token) {
@@ -310,7 +308,8 @@ router.get('/check-queries', isAuthenticatedAdmin, async (req, res) => {
                 stylesheet: '',
             queries,
             searchQuery, // Pass the search query to the view for input field retention
-            messages: req.flash() // Pass flash messages to the view
+            messages: req.flash(),
+            layout:false // Pass flash messages to the view
         });
     } catch (error) {
         console.error('Error fetching queries:', error);
