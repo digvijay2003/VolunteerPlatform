@@ -9,7 +9,7 @@ const logFormat = printf(({ level, message, timestamp }) => {
     return `${timestamp} [${level}]: ${message}`;
 });
 
-const isProduction = 'production' === 'production';
+const isProduction = 'production' === '';
 
 const logger = createLogger({
     level: 'info',
@@ -19,7 +19,7 @@ const logger = createLogger({
         logFormat
     ),
     transports: [
-        new transports.Console(), // Log to console
+        new transports.Console(), 
         new transports.File({ filename: 'logs/error.log', level: 'error' }), 
         new transports.File({ filename: 'logs/combined.log' }), 
     ]
