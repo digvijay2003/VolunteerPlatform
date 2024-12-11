@@ -58,6 +58,8 @@ app.use('/', require('./routes/request'));
 
 app.use('/admin', require('./routes/admin'));
 
+app.use('/api', require('./api/donor'));
+
 app.use((req, res, next) => {
     const error = new Error('Page not found!');
     error.status = 404;
