@@ -4,29 +4,36 @@ const Volunteer = require('../models/volunteer');
 const mbxGeoCoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const { request } = require('http');
 const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
-
+const sendEmail = require('../utils/sendEmail');
 
 router.get('/volunteer-registration', (req, res) => {
-    res.render('auth/register', { error: '' ,title: 'Volunteer Registration',
-        stylesheet: 'stylesheet/auth/register.css'});
+    res.render('auth/register', 
+        {
+            title: 'Volunteer Registration',
+            stylesheet: 'stylesheet/auth/register.css'
+        }
+    );
 });
 
 router.post('/volunteer-registration', async (req, res) => {
+    
     const { username, email, password, location } = req.body;
+    
     if (!username || !password || !email || !location) {
-        req.flash('error','All fields must be provided');
+        req.flash('error', 'All fields must be provided');
         return res.status(400).render('auth/register');
     }
+
     try {
         const existingVolunteer = await Volunteer.findOne({ email });
         if (existingVolunteer) {
-            req.flash('error','Username already exists with same email!');
+            req.flash('error', 'Username already exists with the same email!');
             return res.status(400).render('auth/register');
         }
 
         const response = await geoCoder.forwardGeocode({ query: location, limit: 1 }).send();
         if (!response.body.features.length) {
-            req.flash('error','Location not found');
+            req.flash('error', 'Location not found');
             return res.status(400).render('auth/register');
         }
 
@@ -41,11 +48,28 @@ router.post('/volunteer-registration', async (req, res) => {
 
         const resp = await newVolunteer.save();
         req.session.volunteerId = newVolunteer._id;
-        req.flash('success','Work for hope, Successful registered');
+
+        if (resp) {
+            const profileLink = `${process.env.PROD_URL}/volunteer-profile/${newVolunteer._id}`;
+
+            try {
+                await sendEmail(
+                    email,
+                    'Welcome to Work for FeedHope!',
+                    'welcomeTemplate.html',
+                    { username, password, profileLink }
+                );
+                console.log('Email sent successfully');
+            } catch (emailError) {
+                console.error('Failed to send email:', emailError);
+            }
+        }
+
+        req.flash('success', 'Work for hope, Successfully registered');
         res.redirect('/volunteer-login');
     } catch (error) {
         console.error(error);
-        req.flash('error','Server error');
+        req.flash('error', 'Server error');
         res.status(500).render('auth/register');
     }
 });
@@ -62,11 +86,12 @@ router.get('/volunteer-login', (req, res) => {
 });
 
 router.post('/volunteer-login', async (req, res) => {
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
     try {
+        
         const volunteer = await Volunteer.findOne({ email });
-        const user = await Volunteer.findOne({ username });
-        if (!volunteer || !user) {
+
+        if (!volunteer) {
             req.flash('error','user not found');
             return res.render('auth/login', { showRegisterButton: true });
         }
