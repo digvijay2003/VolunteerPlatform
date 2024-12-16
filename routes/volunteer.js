@@ -16,9 +16,8 @@ router.get('/volunteer-registration', (req, res) => {
 });
 
 router.post('/volunteer-registration', async (req, res) => {
-    
     const { username, email, password, location } = req.body;
-    
+
     if (!username || !password || !email || !location) {
         req.flash('error', 'All fields must be provided');
         return res.status(400).render('auth/register');
@@ -52,16 +51,20 @@ router.post('/volunteer-registration', async (req, res) => {
         if (resp) {
             const profileLink = `${process.env.PROD_URL}/volunteer-profile/${newVolunteer._id}`;
 
-            try {
-                await sendEmail(
-                    email,
-                    'Welcome to Work for FeedHope!',
-                    'welcomeTemplate.html',
-                    { username, password, profileLink }
-                );
-                console.log('Email sent successfully');
-            } catch (emailError) {
-                console.error('Failed to send email:', emailError);
+             if (process.env.NODE_ENV === 'production') {
+                try {
+                    await sendEmail(
+                        email,
+                        'Welcome to Work for FeedHope!',
+                        'welcomeTemplate.html',
+                        { username, password, profileLink }
+                    );
+                    console.log('Email sent successfully');
+                } catch (emailError) {
+                    console.error('Failed to send email:', emailError);
+                }
+            } else {
+                console.log('Email sending is disabled in development environment');
             }
         }
 
@@ -88,7 +91,7 @@ router.get('/volunteer-login', (req, res) => {
 router.post('/volunteer-login', async (req, res) => {
     const { email, password } = req.body;
     try {
-        
+
         const volunteer = await Volunteer.findOne({ email });
 
         if (!volunteer) {
