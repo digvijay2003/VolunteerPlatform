@@ -4,8 +4,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const flash = require('connect-flash');
-const RequestDonation = require('../models/request');
-const ContactUs = require('../models/contactUs');
+const RequestDonation = require('../../models/request');
+const ContactUs = require('../../models/contactUs');
+const Volunteer = require('../../models/volunteer');
+const Donation = require('../../models/donation');
+const { sendSMS } = require('../../utils/twilio');
 
 // Environment variables
 const adminUsername = process.env.ADMIN_USERNAME;
@@ -51,13 +54,17 @@ function isAuthenticatedAdmin(req, res, next) {
 }
 
 
-// Admin login route (GET - renders login page)
 router.get('/login', (req, res) => {
     if (req.session.token) {
         return res.redirect('/admin/dashboard');
     }
-    res.render('admin/login', {title: 'Login',stylesheets:'',title: '',
-        stylesheet: '', layout:false});
+    res.render('admin/dashboard/ADMIN_login', 
+        {
+            title: 'Login',
+            stylesheet: '', 
+            layout:false
+        }
+    );
 });
 
 // Admin login route (POST - handles login)
@@ -65,8 +72,8 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     if (username !== adminUsername || !bcrypt.compareSync(password, hashedPassword)) {
-        return res.render('admin/login', { error: 'Invalid credentials',title: '',
-            stylesheet: '' });
+
+        return res.redirect('/admin/login')
     }
 
     // Create JWT token
@@ -78,44 +85,47 @@ router.post('/login', async (req, res) => {
     res.redirect('/admin/dashboard');
 });
 
-
-
-
-
-
-
 // Admin dashboard route
 router.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
-        // Example statistics; replace with actual logic
+        // Request Donations Stats
         const totalRequests = await RequestDonation.countDocuments({});
         const pendingRequests = await RequestDonation.countDocuments({ status: 'pending' });
         const completedRequests = await RequestDonation.countDocuments({ status: 'success' });
         const rejectedRequests = await RequestDonation.countDocuments({ status: 'rejected' });
-        
 
+        // Contact Us Queries Stats
         const totalQueries = await ContactUs.countDocuments({});
-        
-        // Pass statistics and flash messages to the view
-        res.render('admin/dashboard', {
-            title: '',
-            stylesheet: '',
+
+        // Volunteers Stats
+        const totalVolunteers = await Volunteer.countDocuments({});
+
+        // Donations Stats
+        const totalDonations = await Donation.countDocuments({});
+        const pendingDonations = await Donation.countDocuments({ status: 'pending' });
+        const successfulDonations = await Donation.countDocuments({ status: 'success' });
+
+        res.render('admin/dashboard/ADMIN_panel', {
+            title: 'Admin Dashboard',
             totalRequests,
             pendingRequests,
             completedRequests,
             rejectedRequests,
             totalQueries,
+            totalVolunteers,
+            totalDonations,
+            pendingDonations,
+            successfulDonations,
             messages: req.flash(),
-            layout:false 
+            layout: false
         });
     } catch (error) {
         console.error('Error fetching dashboard data:', error);
-        res.status(500).send('Error fetching dashboard data');
+        res.status(500).send('Server Error');
     }
 });
 
 
-// Admin logout route
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/admin/login');
@@ -123,7 +133,6 @@ router.get('/logout', (req, res) => {
 
 
 
-// Request donations route
 router.get('/request-donations', isAuthenticatedAdmin, async (req, res) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
@@ -155,7 +164,7 @@ router.get('/request-donations', isAuthenticatedAdmin, async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-        res.render('admin/requestDonationList', {
+        res.render('admin/request/ADMIN_request', {
             title: '',
             stylesheet: '',
             donationRequests: donations,
@@ -183,7 +192,7 @@ router.get('/request-donations/:id', isAuthenticatedAdmin, async (req, res) => {
         // Store requester ID in the session
         req.session.requesterId = requester._id;
 
-        res.render('admin/requestSingleList', { requester ,title: '',
+        res.render('admin/request/single_request', { requester ,title: '',
             stylesheet: '', layout:false });
     } catch (error) {
         console.error('Error fetching requester details:', error);
@@ -199,7 +208,7 @@ router.get('/request-donations/:id/edit', isAuthenticatedAdmin, async (req, res)
             req.flash('error', 'Donation request not found');
             return res.redirect('/admin/request-donations');
         }
-        res.render('admin/editRequestDonation', { donationRequest , title: '',
+        res.render('admin/request/ADMIN_edit_request', { donationRequest , title: '',
             stylesheet: '', layout:false });
     } catch (error) {
         console.error('Error fetching donation request:', error);
@@ -284,36 +293,61 @@ router.delete('/request-donations/:id', isAuthenticatedAdmin, async (req, res) =
 
 router.get('/check-queries', isAuthenticatedAdmin, async (req, res) => {
     try {
-        // Get the search query from the request (if any)
         const searchQuery = req.query.search || '';
 
-        // Build the search filter based on username or email
         let filter = {};
         if (searchQuery) {
             filter = {
                 $or: [
-                    { username: new RegExp(searchQuery, 'i') }, // Case-insensitive search
+                    { username: new RegExp(searchQuery, 'i') }, 
                     { email: new RegExp(searchQuery, 'i') }
                 ]
             };
         }
 
-        // Fetch filtered queries from the ContactUs collection
         const queries = await ContactUs.find(filter);
-        console.log(queries);
 
-        // Render the check-queries view with the filtered list of queries and the search query
-        res.render('admin/checkQueries', {
-            title: '',
-                stylesheet: '',
+        res.render('admin/queries/ADMIN_queries', {
+            title: 'Check Queries',
+            stylesheet: '',
             queries,
-            searchQuery, // Pass the search query to the view for input field retention
+            searchQuery, 
             messages: req.flash(),
-            layout:false // Pass flash messages to the view
+            layout: false
         });
+
     } catch (error) {
         console.error('Error fetching queries:', error);
-        res.status(500).send('Error fetching queries');
+        req.flash('error', 'Failed to load queries.');
+        res.redirect('/admin');
+    }
+});
+
+router.post('/send-message/:id', isAuthenticatedAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { messageBody } = req.body;
+
+        const query = await ContactUs.findById(id);
+        if (!query) {
+            req.flash('error', 'Query not found.');
+            return res.redirect('/admin/check-queries');
+        }
+
+        const checkmessage = await sendSMS(`+917807242269`, messageBody);
+
+        if (checkmessage){
+            req.flash('success', `Message sent successfully to ${query.username}`);
+        } else{
+            req.flash('error', `Message not sent successfully to ${query.username}`);
+        }
+
+        res.redirect('/admin/check-queries');
+
+    } catch (error) {
+        console.error('Error sending message:', error.message);
+        req.flash('error', 'Failed to send the message.');
+        res.redirect('/admin/check-queries');
     }
 });
 

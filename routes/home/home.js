@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ContactUs = require('../models/contactUs');
+const ContactUs = require('../../models/contactUs');
 const { lazy } = require('react');
 
 router.get('/', (req, res) => {

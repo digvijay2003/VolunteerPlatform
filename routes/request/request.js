@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const RequestDonation = require('../models/request');
-const Donation = require('../models/donation');
+const RequestDonation = require('../../models/request');
+const Donation = require('../../models/donation');
 const mbxGeoCoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
-const {cloudinary} = require('../cloudinary');
-const {storage} = require('../cloudinary');
+const {cloudinary} = require('../../cloudinary');
+const {storage} = require('../../cloudinary');
 const multer = require('multer');
 const upload = multer({storage});
 

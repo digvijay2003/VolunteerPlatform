@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const Volunteer = require('../models/volunteer');
+const Volunteer = require('../../models/volunteer');
 const mbxGeoCoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const { request } = require('http');
 const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
-const sendEmail = require('../utils/sendEmail');
+const sendEmail = require('../../utils/sendEmail');
 
 router.get('/volunteer-registration', (req, res) => {
     res.render('auth/register', 
@@ -20,20 +20,20 @@ router.post('/volunteer-registration', async (req, res) => {
 
     if (!username || !password || !email || !location) {
         req.flash('error', 'All fields must be provided');
-        return res.status(400).render('auth/register');
+        return res.redirect('/volunteer-registration');
     }
 
     try {
         const existingVolunteer = await Volunteer.findOne({ email });
         if (existingVolunteer) {
             req.flash('error', 'Username already exists with the same email!');
-            return res.status(400).render('auth/register');
+            return res.redirect('/volunteer-registration');
         }
 
         const response = await geoCoder.forwardGeocode({ query: location, limit: 1 }).send();
         if (!response.body.features.length) {
             req.flash('error', 'Location not found');
-            return res.status(400).render('auth/register');
+            return res.redirect('/volunteer-registration');
         }
 
         const [longitude, latitude] = response.body.features[0].center;
@@ -96,18 +96,32 @@ router.post('/volunteer-login', async (req, res) => {
 
         if (!volunteer) {
             req.flash('error','user not found');
-            return res.render('auth/login', { showRegisterButton: true });
+            return res.render('auth/login',
+                {
+                    showRegisterButton: true,
+                    title: 'Volunteer Login',
+                    stylesheet: '/stylesheet/auth/login.css'
+                }
+            );
         }
 
         const isPasswordValid = await volunteer.comparePassword(password);
         if (!isPasswordValid) {
             req.flash('error', 'incorrect password');
-            return res.render('auth/login', { showRegisterButton: false });
+            return res.render('auth/login',
+                {
+                    showRegisterButton: false,
+                    title: 'Volunteer Login',
+                    stylesheet: '/stylesheet/auth/login.css'
+                }
+            );
         }
 
         req.session.volunteerId = volunteer._id;
+
         req.flash('success', 'Successfully Logged In!')
         res.redirect(`/volunteer-profile/${volunteer._id}`);
+
     } catch (error) {
         console.error(error)
         res.status(500).send('Server error');
@@ -115,14 +129,15 @@ router.post('/volunteer-login', async (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-    req.flash('success', 'Logout successful!');  // Set flash message first
+
+    req.flash('success', 'Logout successful!'); 
 
     req.session.destroy(err => {
         if (err) {
             return res.status(500).send('Server error');
         }
 
-        res.clearCookie('connect.sid');  // Clear session cookie after destroying session
+        res.clearCookie('connect.sid');  
         res.redirect('/volunteer-login');
     });
 });

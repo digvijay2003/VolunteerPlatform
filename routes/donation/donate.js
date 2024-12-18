@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Request = require('../models/request');
-const Donation = require('../models/donation');
+const Request = require('../../models/request');
+const Donation = require('../../models/donation');
 const mbxGeoCoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
 
