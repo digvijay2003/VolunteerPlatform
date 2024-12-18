@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Queries</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .card {
+            border-radius: 15px;
+        }
+        .table thead {
+            background-color: #343a40;
+            color: white;
+        }
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .table-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4">All Queries</h1>
+        <p class="lead text-muted">Manage and respond to customer queries</p>
+    </div>
+
+    <!-- Search Form -->
+    <form class="d-flex justify-content-center my-4" method="GET" action="/admin/check-queries">
+        <div class="input-group w-50">
+            <input type="text" class="form-control" name="search" placeholder="Search by username or email" value="<%= searchQuery %>">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <div class="card shadow-sm">
+        <div class="card-body table-container">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col">Message</th>
+                        <th scope="col">Date Submitted</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (queries.length > 0) { %>
+                        <% queries.forEach(query => { %>
+                            <tr>
+                                <td><%= query.username %></td>
+                                <td><%= query.email %></td>
+                                <td><%= query.contact %></td>
+                                <td><%= query.message %></td>
+                                <td><%= query.createdAt.toLocaleDateString() %></td>
+                                <td>
+                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#replyModal<%= query._id %>">
+                                        Reply
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Modal for each query -->
+                            <div class="modal fade" id="replyModal<%= query._id %>" tabindex="-1" aria-labelledby="replyModalLabel<%= query._id %>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="replyModalLabel<%= query._id %>">Reply to Query - <%= query.username %></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST" action="/admin/send-message/<%= query._id %>">
+                                                <div class="mb-3">
+                                                    <label for="messageBody<%= query._id %>" class="form-label">Reply Message</label>
+                                                    <textarea class="form-control" id="messageBody<%= query._id %>" name="messageBody" rows="3" placeholder="Type your reply..." required></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary w-100">Send Reply</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No queries found</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -6,7 +6,7 @@ const contactUsSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: function(v) {
-                return v.split(' ').filter(Boolean).length <= 2;  // Ensure at least two words
+                return v.split(' ').filter(Boolean).length <= 2; 
             },
             message: props => `${props.value} should contain at least two words`
         }
@@ -21,7 +21,7 @@ const contactUsSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: function(v) {
-                return /^\d{10}$/.test(v);  // Validate for 10-digit number
+                return /^\d{10}$/.test(v); 
             },
             message: props => `${props.value} is not a valid 10-digit number!`
         }
