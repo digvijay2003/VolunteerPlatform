@@ -8,21 +8,55 @@ module.exports = (app) => {
     // Helmet for Security Headers
     app.use(
         helmet({
-            contentSecurityPolicy: {
-                directives: {
-                    defaultSrc: ["'self'"],
-                    scriptSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com"],
-                    frameSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com"],
-                    mediaSrc: ["'self'", "https://www.youtube.com"],
-                    imgSrc: ["'self'", "https://i.ytimg.com"],
-                    connectSrc: ["'self'"],
-                },
+          contentSecurityPolicy: {
+            useDefaults: true,
+            directives: {
+              "default-src": ["'self'"],
+              "script-src": [
+                "'self'",
+                "https://cdn.jsdelivr.net", 
+                "https://api.mapbox.com",
+                "https://www.youtube.com",
+                "https://www.youtube-nocookie.com"
+              ],
+              "style-src": [
+                "'self'", 
+                "'unsafe-inline'",
+                "https://fonts.googleapis.com", 
+                "https://cdn.jsdelivr.net", 
+                "https://api.mapbox.com"
+              ],
+              "font-src": [
+                "'self'", 
+                "https://fonts.googleapis.com", 
+                "https://fonts.gstatic.com"
+              ],
+              "img-src": [
+                "'self'", 
+                "data:", 
+                "https://api.mapbox.com",
+                "https://i.ytimg.com"
+              ],
+              "connect-src": [
+                "'self'", 
+                "https://api.mapbox.com"
+              ],
+              "frame-src": [
+                "'self'",
+                "https://www.youtube.com",
+                "https://www.youtube-nocookie.com"
+              ],
+              "media-src": [
+                "'self'",
+                "https://www.youtube.com"
+              ] 
             },
+          },
         })
-    );
+      );
+      
     app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 
-    // Rate Limiting
     const limiter = rateLimit({
         windowMs: 15 * 60 * 1000,
         max: 100,
@@ -30,13 +64,10 @@ module.exports = (app) => {
     });
     app.use('/api', limiter);
 
-    // NoSQL Injection Prevention
     app.use(mongoSanitize());
 
-    // Prevent HTTP Parameter Pollution
     app.use(hpp());
 
-    // CORS
     app.use(cors({
         origin: ['https://example.com'], 
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
