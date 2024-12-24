@@ -1,20 +1,26 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const imageSchema = require('./image'); 
 
 const volunteerSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+    match: [/^\+?\d{10,15}$/, 'Please enter a valid phone number'],
   },
   location: {
     type: String,
@@ -24,12 +30,80 @@ const volunteerSchema = new mongoose.Schema({
     type: {
       type: String,
       enum: ['Point'],
-      required: true // Changed to false because not all volunteers may have a location
+      required: true,
     },
     coordinates: {
       type: [Number],
-      required: true // Changed to false because not all volunteers may have a location
-    }
+      required: true,
+      index: '2dsphere',
+    },
+  },
+  role: {
+    type: String,
+    enum: ['driver', 'coordinator', 'general'],
+    default: 'general',
+  },
+  availability: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive', 'suspended'],
+    default: 'active',
+  },
+  skills: [{
+    type: String,
+    enum: ['delivery', 'cooking', 'communication', 'logistics'],
+  }],
+  rating: {
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0,
+  },
+  reviews: [{
+    reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+    comment: { type: String },
+    rating: { type: Number, min: 0, max: 5 },
+  }],
+  emergencyContact: {
+    name: { type: String },
+    phone: { type: String, match: [/^\+?\d{10,15}$/, 'Please enter a valid phone number'] },
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+
+  governmentIdProofs: [imageSchema],
+  governmentIdVerified: {
+    type: Boolean,
+    default: false, 
+  },
+
+  verifiedByAdmin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Admin',
+    required: false,
+  },
+
+  verificationResponse: { 
+    type: String,
+    required: false, 
+  },
+
+  isBanned: {
+    type: Boolean,
+    default: false, 
+  },
+  bannedReason: {
+    type: String,
+    required: false, 
   }
 });
 
@@ -50,7 +124,7 @@ volunteerSchema.pre('save', async function (next) {
 volunteerSchema.pre('findOneAndUpdate', async function (next) {
   const update = this.getUpdate();
   if (update.password) {
-      update.password = await bcrypt.hash(update.password, 10);
+    update.password = await bcrypt.hash(update.password, 10);
   }
   next();
 });

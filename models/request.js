@@ -1,23 +1,36 @@
 const mongoose = require('mongoose');
 
-const requestDonation = new mongoose.Schema({
-    requester_name: {
+const imageSchema = new mongoose.Schema({
+  url: { type: String, required: true },
+  filename: { type: String, required: true },
+  description: { type: String, required: true }
+});
+
+const donationRequestSchema = new mongoose.Schema({
+    requesterName: {
         type: String,
-        required: true
-    },
-    requester_phone: {
-        type: Number,
         required: true,
+        trim: true
     },
-    foodtype: {
+    requesterPhone: {
+        type: String,  
+        required: true,
+        match: [/^\+?\d{10,15}$/, 'Please enter a valid phone number']
+    },
+    foodType: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     quantity: {
         amount: {
             type: Number,
             required: true,
-            min: [1, 'Quantity must be at least 1']
+            min: [1, 'Quantity must be at least 1'],
+            validate: {
+                validator: Number.isInteger,
+                message: 'Amount must be an integer'
+            }
         },
         unit: {
             type: String,
@@ -26,21 +39,23 @@ const requestDonation = new mongoose.Schema({
         },
         description: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         }
     },
-    status: {
+    requestStatus: {
         type: String,
-        enum: ['pending', 'success','rejected','failed'],
-        default: "pending"
+        enum: ['pending', 'approved', 'rejected', 'fulfilled'],
+        default: 'pending'
     },
     location: {
         type: String,
         required: true
     },
-    need_description: {
+    descriptionOfNeed: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     geometry: {
         type: {
@@ -56,40 +71,54 @@ const requestDonation = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now
     },
     fulfilledAt: {
         type: Date
     },
-    volunteer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Volunteer',
-        default: null
-    },
-    connectedDonors: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Donation'
-    }],
-    urgency: {
+    urgencyLevel: {
         type: String,
         enum: ['low', 'medium', 'high'],
         default: 'medium',
         required: true
     },
-    number_of_people: {
+    numberOfPeople: {
         type: Number,
         required: true,
         min: [1, 'Must be at least 1']
     },
-    expiration_date: {
-        type: Date,
-        required: false
+    expirationDate: {
+        type: Date
     },
-    images: [{
-        url:String,
-        filename:String
-    }],
-});
+    proofImages: [imageSchema],
+    governmentId: {
+        type: String,  
+        required: true,
+        trim: true
+    },
+    governmentIdImages: [imageSchema], 
+    isVerified: {
+        type: Boolean,
+        default: false  
+    },
+    verifiedByAdmin: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin',  
+        required: false
+    }
+}, { timestamps: true });
 
-const Request = mongoose.model('Request', requestDonation);
+donationRequestSchema.index({ requestStatus: 1 });
+donationRequestSchema.index({ location: 1 });
+donationRequestSchema.index({ createdAt: -1 });
+donationRequestSchema.index({ requestStatus: 1, urgencyLevel: 1 });
+donationRequestSchema.index({ requestStatus: 1, urgencyLevel: 1, createdAt: -1 });
+donationRequestSchema.index({ isVerified: 1 });
+
+const Request = mongoose.model('Request', donationRequestSchema);
+
 module.exports = Request;

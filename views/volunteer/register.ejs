@@ -1,0 +1,91 @@
+<div class="container my-5">
+    <h2 class="mb-4"><%= title %></h2>
+    
+    <div class="alert alert-info">
+        <p><strong>Note:</strong> Please make sure to fill in all required fields. The following validation rules apply:</p>
+        <ul>
+            <li>All fields are required.</li>
+            <li>Phone numbers must be in the correct format (+91 98050xxxxx).</li>
+            <li>Government ID proof images should be less than or equal to 100KB in size.</li>
+        </ul>
+    </div>
+
+    <form action="<%= action %>" method="POST" enctype="multipart/form-data" id="volunteer-registration-form">
+        <% fields.forEach(field => { %>
+            <% if (field.type === 'select') { %>
+                <div class="mb-3">
+                    <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
+                    <select 
+                        class="form-select" 
+                        id="<%= field.id %>" 
+                        name="<%= field.name %>" 
+                        <%= field.multiple ? 'multiple' : '' %>
+                        <%= field.required ? 'required' : '' %>
+                    >
+                        <% field.options.forEach(option => { %>
+                            <option value="<%= option.value %>"><%= option.label %></option>
+                        <% }); %>
+                    </select>
+                    <div class="invalid-feedback" id="<%= field.id %>-error"></div>
+                </div>
+            <% } else if (field.type === 'file') { %>
+                <div class="mb-3">
+                    <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
+                    <input 
+                        type="file" 
+                        class="form-control" 
+                        id="<%= field.id %>" 
+                        name="<%= field.name %>" 
+                        <%= field.multiple ? 'multiple' : '' %>
+                        <%= field.required ? 'required' : '' %>
+                    >
+                    <div class="invalid-feedback" id="<%= field.id %>-error"></div>
+                    <small class="form-text text-muted">
+                        Government ID proofs should not exceed 100KB in size and must be in JPG, PDF, or PNG format.   
+                    </small>
+                </div>
+            <% } else { %>
+                <div class="mb-3">
+                    <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
+                    <input 
+                        type="<%= field.type %>" 
+                        class="form-control" 
+                        id="<%= field.id %>" 
+                        name="<%= field.name %>" 
+                        value="<%= field.value || '' %>"
+                        <%= field.attributes || '' %>
+                        <%= field.required ? 'required' : '' %>
+                    >
+                    <div class="invalid-feedback" id="<%= field.id %>-error"></div>
+                </div>
+            <% } %>
+        <% }); %>
+
+        <button type="submit" class="btn btn-primary"><%= submitLabel || 'Submit' %></button>
+    </form>
+</div>
+
+
+<script>
+    document.getElementById("volunteer-registration-form").addEventListener("submit", function(event) {
+        const fileInput = document.getElementById("governmentIdProofs");
+        const errorMessage = document.getElementById("governmentIdProofs-error");
+        const files = fileInput.files;
+        
+        errorMessage.textContent = '';
+
+        for (let file of files) {
+            if (file.size > 100 * 1024) { 
+                errorMessage.textContent = "File size must not exceed 100KB.";
+                event.preventDefault();
+                return;
+            }
+
+            if (!['image/png', 'image/jpg', 'application/pdf'].includes(file.type)) {
+                errorMessage.textContent = "Only PNG, JPG, and PDF files are allowed.";
+                event.preventDefault(); 
+                return;
+            }
+        }
+    });
+</script>

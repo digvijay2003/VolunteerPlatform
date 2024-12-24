@@ -7,11 +7,16 @@ const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
 
 // render the form for the donation
 router.get('/feedhope-donation-food', (req, res) => {
-    res.render('donation/donateFood', {error:'',title: '',
-        stylesheet: ''});
+    res.render('donation/donate', 
+        {
+            title: 'Food Donation',
+            stylesheet: '',
+            showNavbar: false,
+            showFooter: true,
+        }
+    );
 });
 
-// Handle the donation post request
 router.post('/feedhope-donation-food', async (req, res) => {
     const { foodtype, donor, quantity, location, description } = req.body;
 
@@ -73,15 +78,14 @@ router.post('/nearby-requests', async (req, res) => {
 
         const [longitude, latitude] = response.body.features[0].geometry.coordinates;
 
-        // Redirect to the existing GET route with lat and lng as query parameters
         res.redirect(`/nearby-requests?lat=${latitude}&lng=${longitude}`);
+
     } catch (err) {
         return res.render('error/error', { err,title: '',
             stylesheet: '' });
     }
 });
 
-// Handle the connection between a donor and a requester
 router.post('/connect-with-requester', async (req, res) => {
     
     const { donationId, requestId } = req.body;
@@ -105,35 +109,31 @@ router.post('/connect-with-requester', async (req, res) => {
         await request.save();
         await donation.save();
 
-        // Redirect or send a success response
         res.redirect(`/feedhope-request-donation-list/${requestId}`);
+
     } catch (err) {
         console.error('Error connecting donor with requester:', err);
         res.status(500).send('Internal server error');
     }
 });
 
-// help to display all the nearby requested donations within a specified area
 router.get('/nearby-requests', async (req, res) => {
     const { lat, lng } = req.query;
-    const radius = 20; // kilometers
+    const radius = 20; 
 
     try {
-        // Get nearby requests
         const nearbyRequests = await Request.aggregate([
             {
                 $geoNear: {
                     near: { type: 'Point', coordinates: [parseFloat(lng), parseFloat(lat)] },
                     distanceField: 'distance',
-                    maxDistance: radius * 1000, // convert km to meters
+                    maxDistance: radius * 1000, 
                     spherical: true
                 }
             }
         ]);
 
-        // Get all requests
         const allRequests = await Request.find({});
-        // console.log(nearbyRequests);
 
         res.render('request/nearbyRequests', { nearbyRequests, allRequests, title: '',
             stylesheet: '', donorCoordinates: [parseFloat(lng), parseFloat(lat)] });
@@ -141,37 +141,5 @@ router.get('/nearby-requests', async (req, res) => {
         res.status(500).send('Error finding requests');
     }
 });
-
-
-// router.get('/feedhope-nearby-requests-best-fit', async (req, res) => {
-//     const { lat, lng, foodtype, quantityAmount, quantityUnit } = req.query;
-//     const radius = 20; // kilometers
-
-//     try {
-//         // Aggregate query to find nearby requests
-//         const bestFitRequests = await Request.aggregate([
-//             {
-//                 $geoNear: {
-//                     near: { type: 'Point', coordinates: [parseFloat(lng), parseFloat(lat)] },
-//                     distanceField: 'distance',
-//                     maxDistance: radius * 1000, // convert km to meters
-//                     spherical: true
-//                 }
-//             },
-//             {
-//                 $match: {
-//                     foodtype: foodtype,
-//                 }
-//             },
-//             {
-//                 $sort: { distance: 1 } // Sort by distance
-//             }
-//         ]);
-
-//         res.render('request/bestFitRequests', { requests: bestFitRequests });
-//     } catch (err) {
-//         res.status(500).send('Error finding best-fit requests');
-//     }
-// });
 
 module.exports = router;

@@ -12,7 +12,9 @@ router.get('/feedhope', (req, res) => {
         'home/homepage', 
         {
             title: 'Home',
-            stylesheet: '/stylesheet/home/homepage.css' 
+            stylesheet: '/stylesheet/home/homepage.css',
+            showSpinner: true, 
+            spinnerMessage: 'Loading, please wait...' 
         }
     );
 });

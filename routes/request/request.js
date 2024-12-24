@@ -4,8 +4,8 @@ const RequestDonation = require('../../models/request');
 const Donation = require('../../models/donation');
 const mbxGeoCoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
-const {cloudinary} = require('../../cloudinary');
-const {storage} = require('../../cloudinary');
+const {cloudinary} = require('../../utils/cloudinary');
+const {storage} = require('../../utils/cloudinary');
 const multer = require('multer');
 const upload = multer({storage});
 
@@ -106,7 +106,7 @@ router.get('/feedhope-request-donation-list/:id', async (req, res) => {
             .populate('connectedDonors');
 
         if (!requester) {
-            throw new Error("Not found any request with this username for donation.");
+            res.status(404).send('Requester not found');
         }
 
         // Store requester ID in the session

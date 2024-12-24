@@ -1,0 +1,94 @@
+<div class="profile-dashboard">
+  <h1 class="dashboard-title text-center mb-4">Volunteer Profile Dashboard</h1>
+
+  <div class="profile-container container shadow p-4 rounded">
+    <div class="profile-actions d-flex justify-content-between mb-4">
+      <a href="/volunteer-profile/edit" class="btn btn-primary">Profile Settings</a>
+      <a href="/logout" class="btn btn-danger">Logout</a>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-4 text-center">
+        <img 
+          src="<%= volunteer.profilePicture || '/images/default-avatar.png' %>" 
+          alt="Profile Picture" 
+          class="img-fluid rounded-circle" 
+          style="width: 150px; height: 150px; object-fit: cover;"
+        />
+      </div>
+      <div class="col-md-8">
+        <h3><%= volunteer.username %></h3>
+        <p class="text-muted"><%= volunteer.email %></p>
+        <p class="text-muted">Role: <strong><%= volunteer.role %></strong></p>
+        <p>Status: 
+          <span class="badge bg-<%= volunteer.status === 'active' ? 'success' : 'secondary' %>">
+            <%= volunteer.status %>
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h5>Contact Information</h5>
+        <ul class="list-unstyled">
+          <li><strong>Phone:</strong> <%= volunteer.phone %></li>
+          <li><strong>Location:</strong> <%= volunteer.location %></li>
+          <li><strong>Emergency Contact:</strong> <%= volunteer.emergencyContact.name %> (<%= volunteer.emergencyContact.phone %>)</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h5>Additional Details</h5>
+        <ul class="list-unstyled">
+          <li><strong>Availability:</strong> <%= volunteer.availability %></li>
+          <li><strong>Skills:</strong> <%= volunteer.skills.join(', ') %></li>
+          <li><strong>Rating:</strong> 
+            <span class="badge bg-warning text-dark">
+              <%= volunteer.rating.toFixed(1) %>/5
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <h5 class="mb-3">Government ID Proofs</h5>
+      <div class="col">
+        <% if (volunteer.governmentIdProofs && volunteer.governmentIdProofs.length > 0) { %>
+          <div class="row">
+            <% volunteer.governmentIdProofs.forEach((idProof) => { %>
+              <div class="col-md-4 mb-3">
+                <div class="card">
+                  <img 
+                    src="<%= idProof.url %>" 
+                    class="card-img-top" 
+                    alt="<%= idProof.description %>" 
+                    style="height: 150px; object-fit: cover;"
+                  />
+                  <div class="card-body">
+                    <p class="card-text text-center"><%= idProof.description %></p>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <p>No ID proofs uploaded.</p>
+        <% } %>
+      </div>
+    </div>          
+
+    <!-- Location Map -->
+    <div class="row mt-4">
+      <h5 class="mb-3">Location Map</h5>
+      <div id="map" class="mt-4 rounded" style="height: 400px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const mapToken = '<%- mapboxToken %>';
+  const volunteer = <%- JSON.stringify(volunteer) %>;
+</script>
+
+<script src="../javaScript/map.js"></script>

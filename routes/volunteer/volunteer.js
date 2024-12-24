@@ -1,217 +1,321 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+
 const Volunteer = require('../../models/volunteer');
-const mbxGeoCoding = require('@mapbox/mapbox-sdk/services/geocoding');
-const { request } = require('http');
-const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
+
 const sendEmail = require('../../utils/sendEmail');
+const { getCoordinates } = require('../../utils/geocoding');
+const { upload } = require('../../utils/cloudinary');
 
-router.get('/volunteer-registration', (req, res) => {
-    res.render('auth/register', 
+
+const {
+    validateVolunteerRegistration,
+    validateVolunteerLogin,
+    validateVolunteerEdit,
+} = require('../../validation/volunteerValidation');
+
+const asyncHandler = (fn) => (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+router.get('/volunteer-registration',
+    (req, res) => 
         {
+            res.render('volunteer/register', {
             title: 'Volunteer Registration',
-            stylesheet: 'stylesheet/auth/register.css'
-        }
-    );
-});
-
-router.post('/volunteer-registration', async (req, res) => {
-    const { username, email, password, location } = req.body;
-
-    if (!username || !password || !email || !location) {
-        req.flash('error', 'All fields must be provided');
-        return res.redirect('/volunteer-registration');
-    }
-
-    try {
-        const existingVolunteer = await Volunteer.findOne({ email });
-        if (existingVolunteer) {
-            req.flash('error', 'Username already exists with the same email!');
-            return res.redirect('/volunteer-registration');
-        }
-
-        const response = await geoCoder.forwardGeocode({ query: location, limit: 1 }).send();
-        if (!response.body.features.length) {
-            req.flash('error', 'Location not found');
-            return res.redirect('/volunteer-registration');
-        }
-
-        const [longitude, latitude] = response.body.features[0].center;
-        const newVolunteer = new Volunteer({
-            username,
-            email,
-            password,
-            location,
-            geometry: { type: 'Point', coordinates: [longitude, latitude] }
+            action: '/volunteer-registration', 
+            submitLabel: 'Register',
+            stylesheet: '/stylesheet/volunteer/register.css',
+            showNavbar: false,
+            showFooter: false,
+            fields: [
+                { id: 'username', label: 'Username', type: 'text', name: 'username', required: true },
+                { id: 'email', label: 'Email', type: 'email', name: 'email', required: true },
+                { id: 'password', label: 'Password', type: 'password', name: 'password', required: true },
+                { id: 'phone', label: 'Phone Number', type: 'tel', name: 'phone', pattern: "^\+?\d{10,15}$", required: true },
+                { id: 'location', label: 'Location', type: 'text', name: 'location', required: true },
+                { id: 'role', label: 'Role', type: 'select', name: 'role', options: [ { value: 'driver', label: 'Driver' }, { value: 'coordinator', label: 'Coordinator' }, { value: 'general', label: 'General' }], required: true},
+                { id: 'availability', label: 'Availability', type: 'text', name: 'availability', required: true },
+                { id: 'skills', label: 'Skills', type: 'select',  name: 'skills[]', multiple: true, options: [ { value: 'delivery', label: 'Delivery' }, { value: 'cooking', label: 'Cooking' }, { value: 'communication', label: 'Communication' },{ value: 'logistics', label: 'Logistics' } ]},
+                { id: 'emergencyContactName', label: 'Emergency Contact Name', type: 'text', name: 'emergencyContact[name]', required: true },
+                { id: 'emergencyContactPhone', label: 'Emergency Contact Phone', type: 'tel', name: 'emergencyContact[phone]',  pattern: "^\+?\d{10,15}$", required: true },
+                { id: 'governmentIdProofs', label: 'Government ID Proofs', type: 'file', name: 'governmentIdProofs', multiple: true, required: true}
+            ]
         });
-
-        const resp = await newVolunteer.save();
-        req.session.volunteerId = newVolunteer._id;
-
-        if (resp) {
-            const profileLink = `${process.env.PROD_URL}/volunteer-profile/${newVolunteer._id}`;
-
-             if (process.env.NODE_ENV === 'production') {
-                try {
-                    await sendEmail(
-                        email,
-                        'Welcome to Work for FeedHope!',
-                        'welcomeTemplate.html',
-                        { username, password, profileLink }
-                    );
-                    console.log('Email sent successfully');
-                } catch (emailError) {
-                    console.error('Failed to send email:', emailError);
-                }
-            } else {
-                console.log('Email sending is disabled in development environment');
-            }
-        }
-
-        req.flash('success', 'Work for hope, Successfully registered');
-        res.redirect('/volunteer-login');
-    } catch (error) {
-        console.error(error);
-        req.flash('error', 'Server error');
-        res.status(500).render('auth/register');
-    }
 });
 
-router.get('/volunteer-login', (req, res) => {
-    const showRegisterButton = !req.session.volunteerId;
-    res.render('auth/login',
-        {
-            showRegisterButton,
-            title: 'Volunteer Login',
-            stylesheet: '/stylesheet/auth/login.css'
-        }
-    );
-});
 
-router.post('/volunteer-login', async (req, res) => {
-    const { email, password } = req.body;
-    try {
+router.post(
+  '/volunteer-registration',
+  upload.array('governmentIdProofs', 3),
+  validateVolunteerRegistration,
+
+  asyncHandler(async (req, res) => {
+
+      const { username, email, password, phone, location, role, availability, skills, emergencyContact } = req.body;
+      const existingVolunteer = await Volunteer.findOne({ email });
+
+      if (existingVolunteer) {
+          req.flash('error', 'A volunteer with this email already exists.');
+          return res.redirect('/volunteer-registration');
+      }
+
+      console.log('Cloudinary upload response:', req.files);
+
+      try {
+          const [longitude, latitude] = await getCoordinates(location);
+
+          const files = req.files.map((file) => ({
+              url: file.path,
+              filename: file.filename,
+              description: `ID Proof for ${username}`,
+          }));
+
+
+          const newVolunteer = new Volunteer({
+              username,
+              email,
+              password,
+              phone,
+              location,
+              geometry: { type: 'Point', coordinates: [longitude, latitude] },
+              role,
+              availability,
+              skills,
+              emergencyContact,
+              governmentIdProofs: files,
+          });
+
+          const resp = await newVolunteer.save();
+          req.session.volunteerId = newVolunteer._id;
+
+          if (resp) {
+              const profileLink = `${process.env.PROD_URL}/volunteer-profile`;
+              if (process.env.NODE_ENV === 'production') {
+                  try {
+                      await sendEmail(
+                          email,
+                          'Welcome to Work for FeedHope!',
+                          'welcomeTemplate.html',
+                          { username, profileLink }
+                      );
+                  } catch (emailError) {
+                      console.error('Failed to send email:', emailError);
+                  }
+              } else {
+                  console.log('Email sending is disabled in development environment.');
+              }
+          }
+
+          req.flash('success', 'Volunteer successfully registered!');
+          res.redirect('/volunteer-login');
+
+      } catch (error) {
+          console.error(error);
+          req.flash('error', 'Error during registration.');
+          res.redirect('/volunteer-registration');
+      }
+  })
+);
+
+router.get(
+  '/volunteer-login',
+  (req, res) => {
+    res.render('volunteer/login', {
+      title: 'Volunteer Login',
+      subtitle: 'Please log in to access your profile.',
+      action: '/volunteer-login',
+      stylesheet: '/stylesheet/volunteer/login.css',
+      fields: [
+        { id: 'email', name: 'email', type: 'email', placeholder: 'Enter your email', required: true, icon: 'email',},
+        { id: 'password', name: 'password', type: 'password', placeholder: 'Enter your password', required: true, icon: 'lock',},
+      ],
+      submitLabel: 'Login',
+      showRegisterButton: true,
+      registerLink: '/volunteer-registration',
+    });
+  }
+);
+
+
+router.post(
+    '/volunteer-login',
+    validateVolunteerLogin,
+    asyncHandler(async (req, res) => {
+        const { email, password } = req.body;
 
         const volunteer = await Volunteer.findOne({ email });
-
         if (!volunteer) {
-            req.flash('error','user not found');
-            return res.render('auth/login',
-                {
-                    showRegisterButton: true,
-                    title: 'Volunteer Login',
-                    stylesheet: '/stylesheet/auth/login.css'
-                }
-            );
+            req.flash('error', 'User not found');
+            return res.redirect('/volunteer-login');
         }
 
         const isPasswordValid = await volunteer.comparePassword(password);
         if (!isPasswordValid) {
-            req.flash('error', 'incorrect password');
-            return res.render('auth/login',
-                {
-                    showRegisterButton: false,
-                    title: 'Volunteer Login',
-                    stylesheet: '/stylesheet/auth/login.css'
-                }
-            );
+            req.flash('error', 'Incorrect password');
+            return res.redirect('/volunteer-login');
         }
 
         req.session.volunteerId = volunteer._id;
-
-        req.flash('success', 'Successfully Logged In!')
-        res.redirect(`/volunteer-profile/${volunteer._id}`);
-
-    } catch (error) {
-        console.error(error)
-        res.status(500).send('Server error');
-    }
-});
+        req.flash('success', 'Successfully Logged In!');
+        res.redirect('/volunteer-profile'); 
+    })
+);
 
 router.get('/logout', (req, res) => {
-
-    req.flash('success', 'Logout successful!'); 
-
-    req.session.destroy(err => {
+    req.flash('success', 'Logout successful!');
+    req.session.destroy((err) => {
         if (err) {
             return res.status(500).send('Server error');
         }
-
-        res.clearCookie('connect.sid');  
+        res.clearCookie('connect.sid');
         res.redirect('/volunteer-login');
     });
 });
 
-router.get('/volunteer-profile/:id', async (req, res) => {
-    if (!req.session.volunteerId || req.session.volunteerId != req.params.id) {
+router.get(
+    '/volunteer-profile',
+    asyncHandler(async (req, res) => {
+      if (!req.session.volunteerId) {
         req.flash('error', 'Unauthorized');
         return res.redirect('/volunteer-login');
+      }
+  
+      const volunteer = await Volunteer.findById(req.session.volunteerId).lean();
+      if (!volunteer) {
+        return res.status(404).send('Volunteer not found');
+      }
+  
+      res.render('volunteer/profile', {
+        volunteer,
+        mapboxToken: process.env.MAPBOX_TOKEN,
+        title: 'Volunteer Profile',
+        stylesheet: '/stylesheet/volunteer/profile.css',
+        showNavbar: false,
+        showFooter: false,
+      });
+    })
+);  
+
+router.get(
+    '/volunteer-profile/edit',
+    asyncHandler(async (req, res) => {
+      if (!req.session.volunteerId) {
+        req.flash('error', 'Unauthorized');
+        return res.redirect('/volunteer-login');
+      }
+  
+      const volunteer = await Volunteer.findById(req.session.volunteerId);
+      if (!volunteer) {
+        return res.status(404).send('Volunteer not found');
+      }
+  
+      res.render('volunteer/edit', {
+        volunteer,
+        title: 'Edit Profile',
+        stylesheet: '/stylesheet/edit.css',
+        showNavbar: false,
+        showFooter: false,
+        fields: [
+          { id: 'username', label: 'Username', type: 'text', name: 'username', value: volunteer.username, required: true },
+          { id: 'email', label: 'Email', type: 'email', name: 'email', value: volunteer.email, required: true },
+          { id: 'password', label: 'Password', type: 'password', name: 'password', helpText: 'Leave empty to keep the current password' },
+          { id: 'phone', label: 'Phone Number', type: 'tel', name: 'phone', value: volunteer.phone,pattern: "^\+?\d{10,15}$", required: true},
+          { id: 'location', label: 'Location', type: 'text', name: 'location', value: volunteer.location, required: true },
+          {
+            id: 'role',
+            label: 'Role',
+            type: 'select',
+            name: 'role',
+            options: [
+              { value: 'driver', label: 'Driver', selected: volunteer.role === 'driver' },
+              { value: 'coordinator', label: 'Coordinator', selected: volunteer.role === 'coordinator' },
+              { value: 'general', label: 'General', selected: volunteer.role === 'general' }
+            ]
+          },
+          { id: 'availability', label: 'Availability', type: 'text', name: 'availability', value: volunteer.availability, required: true },
+          {
+            id: 'skills',
+            label: 'Skills',
+            type: 'select',
+            name: 'skills[]',
+            multiple: true,
+            options: [
+              { value: 'delivery', label: 'Delivery', selected: volunteer.skills.includes('delivery') },
+              { value: 'cooking', label: 'Cooking', selected: volunteer.skills.includes('cooking') },
+              { value: 'communication', label: 'Communication', selected: volunteer.skills.includes('communication') },
+              { value: 'logistics', label: 'Logistics', selected: volunteer.skills.includes('logistics') }
+            ]
+          },
+          { id: 'emergencyContactName', label: 'Emergency Contact Name', type: 'text', name: 'emergencyContact[name]', value: volunteer.emergencyContact.name, required: true },
+          {
+            id: 'emergencyContactPhone',
+            label: 'Emergency Contact Phone',
+            type: 'tel',
+            name: 'emergencyContact[phone]',
+            value: volunteer.emergencyContact.phone,
+            pattern: "^\+?\d{10,15}$",
+            required: true
+          },
+          {
+            id: 'governmentIdProofs',
+            label: 'Update Government ID Proofs',
+            type: 'file',
+            name: 'governmentIdProofs',
+            multiple: true
+          }
+        ]
+      });
+    })
+);  
+
+router.post(
+    '/volunteer-profile/edit',
+    validateVolunteerEdit,
+    upload.any(), 
+    asyncHandler(async (req, res) => {
+    const { username, email, phone, location, role, availability, skills, emergencyContact, password, governmentIdProofs } = req.body;
+    
+    const volunteer = await Volunteer.findById(req.session.volunteerId);
+    if (!volunteer) {
+        req.flash('error', 'Volunteer not found');
+        return res.redirect('/volunteer-login');
     }
-    try {
-        const volunteer = await Volunteer.findById(req.params.id);
-        if (!volunteer) {
-            return res.status(404).send('Volunteer not found');
-        }
-        res.render('volunteerProfile/profile', 
-            {
-                volunteer, 
-                mapboxToken: process.env.MAPBOX_TOKEN,
-                title: '',
-                stylesheet: ''
-            }
-        );
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
+
+    volunteer.username = username;
+    volunteer.email = email;
+    volunteer.phone = phone;
+    volunteer.location = location;
+    volunteer.role = role;
+    volunteer.availability = availability;
+    volunteer.skills = skills;
+    volunteer.emergencyContact = emergencyContact;
+
+    if (password) {
+        volunteer.password = password;
     }
-});
 
-router.get('/volunteer-profile/:id/edit', async (req, res) => {
-    try {
-        const volunteer = await Volunteer.findById(req.params.id);
-        if (!volunteer) {
-            return res.status(404).send('Volunteer not found');
-        }
-        res.render('volunteerProfile/edit',
-            { 
-                volunteer,
-                title: '',
-                stylesheet: ''
-            }
-        );
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
+    if (req.files && req.files.length > 0) {
+        const uploadPromises = req.files.map(async (file) => {
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: 'volunteers',
+            });
+            return {
+                url: result.secure_url,
+                filename: result.public_id,
+                description: file.originalname, 
+            };
+        });
+
+        const uploadedIdProofs = await Promise.all(uploadPromises);
+        volunteer.governmentIdProofs = uploadedIdProofs;
     }
-});
 
-router.put('/volunteer-profile/:id', async (req, res) => {
-    try {
-        const { username, email, location } = req.body.volunteer;
-        const updateData = { username, email, location };
+    await volunteer.save();
 
-        if (req.body.volunteer.password) {
-            updateData.password = req.body.volunteer.password;
-        }
-
-        if (!location) {
-            return res.status(400).send('Location is required');
-        }
-
-        const geoData = await geoCoder.forwardGeocode({
-            query: location,
-            limit: 1
-        }).send();
-
-        updateData.geometry = geoData.body.features[0].geometry;
-
-        const updatedVolunteer = await Volunteer.findByIdAndUpdate(req.params.id, updateData, { new: true });
-        req.flash('success','Volunteer updated');
-        res.redirect(`/volunteer-profile/${updatedVolunteer._id}`);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
-    }
-});
+    req.flash('success', 'Profile updated successfully!');
+    res.redirect('/volunteer-profile');
+}));
 
 module.exports = router;
