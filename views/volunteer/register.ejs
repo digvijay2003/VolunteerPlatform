@@ -1,70 +1,191 @@
-<div class="container my-5">
-    <h2 class="mb-4"><%= title %></h2>
-    
+<div class="container my-5">   
+
+    <h1 class="mb-4 text-center"><%= title %></h2>
+
     <div class="alert alert-info">
         <p><strong>Note:</strong> Please make sure to fill in all required fields. The following validation rules apply:</p>
         <ul>
-            <li>All fields are required.</li>
+            <li>Username must be at least 3 characters long.</li>
             <li>Phone numbers must be in the correct format (+91 98050xxxxx).</li>
             <li>Government ID proof images should be less than or equal to 100KB in size.</li>
+            <li>Password must be at least 8 characters long.</li>
+            <li>Enter a valid Email Address.</li>
+            <li>Location is required.</li>
+            <li>Availability is required.</li>
+            <li>Emergency contact name cannot be empty.</li>
         </ul>
     </div>
 
-    <form action="<%= action %>" method="POST" enctype="multipart/form-data" id="volunteer-registration-form">
-        <% fields.forEach(field => { %>
-            <% if (field.type === 'select') { %>
-                <div class="mb-3">
-                    <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
-                    <select 
-                        class="form-select" 
-                        id="<%= field.id %>" 
-                        name="<%= field.name %>" 
-                        <%= field.multiple ? 'multiple' : '' %>
-                        <%= field.required ? 'required' : '' %>
-                    >
-                        <% field.options.forEach(option => { %>
-                            <option value="<%= option.value %>"><%= option.label %></option>
-                        <% }); %>
-                    </select>
-                    <div class="invalid-feedback" id="<%= field.id %>-error"></div>
-                </div>
-            <% } else if (field.type === 'file') { %>
-                <div class="mb-3">
-                    <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
-                    <input 
-                        type="file" 
-                        class="form-control" 
-                        id="<%= field.id %>" 
-                        name="<%= field.name %>" 
-                        <%= field.multiple ? 'multiple' : '' %>
-                        <%= field.required ? 'required' : '' %>
-                    >
-                    <div class="invalid-feedback" id="<%= field.id %>-error"></div>
-                    <small class="form-text text-muted">
-                        Government ID proofs should not exceed 100KB in size and must be in JPG, PDF, or PNG format.   
-                    </small>
-                </div>
-            <% } else { %>
-                <div class="mb-3">
-                    <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
-                    <input 
-                        type="<%= field.type %>" 
-                        class="form-control" 
-                        id="<%= field.id %>" 
-                        name="<%= field.name %>" 
-                        value="<%= field.value || '' %>"
-                        <%= field.attributes || '' %>
-                        <%= field.required ? 'required' : '' %>
-                    >
-                    <div class="invalid-feedback" id="<%= field.id %>-error"></div>
-                </div>
-            <% } %>
-        <% }); %>
-
-        <button type="submit" class="btn btn-primary"><%= submitLabel || 'Submit' %></button>
-    </form>
+    <div class="form-container">
+        <form action="<%= action %>" method="POST" enctype="multipart/form-data" id="volunteer-registration-form" class="needs-validation" novalidate>
+            <div class="row g-3">
+                <% fields.forEach(field => { %>
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <% if (field.type === 'select') { %>
+                            <div class="mb-3">
+                                <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
+                                <select 
+                                    class="form-select" 
+                                    id="<%= field.id %>" 
+                                    name="<%= field.name %>" 
+                                    <%= field.multiple ? 'multiple' : '' %>
+                                    <%= field.required ? 'required' : '' %>
+                                >
+                                    <% field.options.forEach(option => { %>
+                                        <option value="<%= option.value %>"><%= option.label %></option>
+                                    <% }); %>
+                                </select>
+                                <div class="invalid-feedback" id="<%= field.id %>-error">Please select a valid option.</div>
+                            </div>
+                        <% } else if (field.type === 'file') { %>
+                            <div class="mb-3">
+                                <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
+                                <input 
+                                    type="file" 
+                                    class="form-control" 
+                                    id="<%= field.id %>" 
+                                    name="<%= field.name %>" 
+                                    <%= field.multiple ? 'multiple' : '' %>
+                                    <%= field.required ? 'required' : '' %>
+                                >
+                                <div class="invalid-feedback" id="<%= field.id %>-error">Please upload a valid file.</div>
+                                <small class="form-text text-muted">
+                                    Government ID proofs should not exceed 100KB in size and must be in JPG, PDF, or PNG format.
+                                </small>
+                            </div>
+                        <% } else { %>
+                            <div class="mb-3">
+                                <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
+                                <input 
+                                    type="<%= field.type %>" 
+                                    class="form-control" 
+                                    id="<%= field.id %>" 
+                                    name="<%= field.name %>" 
+                                    value="<%= field.value || '' %>"
+                                    <%= field.attributes || '' %>
+                                    <%= field.required ? 'required' : '' %>
+                                >
+                                <div class="invalid-feedback" id="<%= field.id %>-error">This field is required.</div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </div>
+    
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg"><%= submitLabel || 'Submit' %></button>
+            </div>
+        </form>
+    </div>
 </div>
 
+<style>
+    body {
+        font-family: 'Roboto-Slab', sans-serif;
+        background: linear-gradient(to right, #3a6073, #16222a);
+        color: #333;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 15px;
+        background: #d4d6cf;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-family: 'Roboto Slab', sans-serif;
+        font-weight: 700;
+        color: #010913;
+    }
+
+    form {
+        padding: 20px;
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .form-control, .form-select {
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #555;
+    }
+
+    .invalid-feedback {
+        font-size: 14px;
+        color: #dc3545;
+        display: none;
+    }
+
+    .is-invalid ~ .invalid-feedback {
+        display: block;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        border-radius: 5px;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #0056b3, #004085);
+        transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+        .form-label {
+            font-size: 14px;
+        }
+        .form-control, .form-select {
+            font-size: 14px;
+        }
+        .btn-primary {
+            font-size: 16px;
+        }
+    }
+
+    .alert {
+        background: #e9f7ff;
+        border: 1px solid #bce5ff;
+        color: #0056b3;
+        border-radius: 5px;
+        padding: 15px;
+    }
+
+    .alert p, .alert ul {
+        margin-bottom: 0;
+    }
+
+    .alert ul {
+        padding-left: 20px;
+        list-style: disc;
+    }
+
+    .form-text {
+        font-size: 12px;
+        color: #6c757d;
+    }
+</style>
 
 <script>
     document.getElementById("volunteer-registration-form").addEventListener("submit", function(event) {
@@ -87,5 +208,15 @@
                 return;
             }
         }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const welcomeModal = new bootstrap.Modal(document.getElementById("welcomeModal"));
+        welcomeModal.show();
+        document.getElementById("maybeLaterButton").addEventListener("click", function() {
+            window.location.href = "/feedhope";
+        });
     });
 </script>

@@ -1,36 +1,30 @@
-<div class="profile-dashboard">
-  <h1 class="dashboard-title text-center mb-4">Volunteer Profile Dashboard</h1>
+<div class="container-fluid my-5">
+  <h1 class="dashboard-title text-center mb-5 text-white opacity-75"><u>DASHBOARD</u></h1>
 
-  <div class="profile-container container shadow p-4 rounded">
+  <div class="profile-container container p-4 rounded-3 bg-light">
+
     <div class="profile-actions d-flex justify-content-between mb-4">
-      <a href="/volunteer-profile/edit" class="btn btn-primary">Profile Settings</a>
-      <a href="/logout" class="btn btn-danger">Logout</a>
+      
+      <a href="/volunteer-profile/edit" class="btn btn-primary btn-sm">Profile Settings</a>
+      <a href="/logout" class="btn btn-danger btn-sm ">Logout</a>
     </div>
 
-    <div class="row mb-4">
-      <div class="col-md-4 text-center">
-        <img 
-          src="<%= volunteer.profilePicture || '/images/default-avatar.png' %>" 
-          alt="Profile Picture" 
-          class="img-fluid rounded-circle" 
-          style="width: 150px; height: 150px; object-fit: cover;"
-        />
-      </div>
+    <div class="row mb-5">
       <div class="col-md-8">
-        <h3><%= volunteer.username %></h3>
-        <p class="text-muted"><%= volunteer.email %></p>
+        <h3 class="fw-bold text-dark"><%= volunteer.username %></h3>
+        <p class="text-muted">Email : <%= volunteer.email %></p>
         <p class="text-muted">Role: <strong><%= volunteer.role %></strong></p>
         <p>Status: 
-          <span class="badge bg-<%= volunteer.status === 'active' ? 'success' : 'secondary' %>">
+          <span class="badge bg-<%= volunteer.status === 'active' ? 'success' : 'danger' %>">
             <%= volunteer.status %>
           </span>
         </p>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-4">
       <div class="col-md-6">
-        <h5>Contact Information</h5>
+        <h5 class="fw-bold">Contact Information</h5>
         <ul class="list-unstyled">
           <li><strong>Phone:</strong> <%= volunteer.phone %></li>
           <li><strong>Location:</strong> <%= volunteer.location %></li>
@@ -38,7 +32,7 @@
         </ul>
       </div>
       <div class="col-md-6">
-        <h5>Additional Details</h5>
+        <h5 class="fw-bold">Additional Details</h5>
         <ul class="list-unstyled">
           <li><strong>Availability:</strong> <%= volunteer.availability %></li>
           <li><strong>Skills:</strong> <%= volunteer.skills.join(', ') %></li>
@@ -52,37 +46,10 @@
     </div>
 
     <div class="row mt-4">
-      <h5 class="mb-3">Government ID Proofs</h5>
-      <div class="col">
-        <% if (volunteer.governmentIdProofs && volunteer.governmentIdProofs.length > 0) { %>
-          <div class="row">
-            <% volunteer.governmentIdProofs.forEach((idProof) => { %>
-              <div class="col-md-4 mb-3">
-                <div class="card">
-                  <img 
-                    src="<%= idProof.url %>" 
-                    class="card-img-top" 
-                    alt="<%= idProof.description %>" 
-                    style="height: 150px; object-fit: cover;"
-                  />
-                  <div class="card-body">
-                    <p class="card-text text-center"><%= idProof.description %></p>
-                  </div>
-                </div>
-              </div>
-            <% }); %>
-          </div>
-        <% } else { %>
-          <p>No ID proofs uploaded.</p>
-        <% } %>
-      </div>
-    </div>          
-
-    <!-- Location Map -->
-    <div class="row mt-4">
       <h5 class="mb-3">Location Map</h5>
-      <div id="map" class="mt-4 rounded" style="height: 400px;"></div>
+      <div id="map" class="mt-4 rounded shadow-sm" style="height: 400px;"></div>
     </div>
+
   </div>
 </div>
 
@@ -92,3 +59,92 @@
 </script>
 
 <script src="../javaScript/map.js"></script>
+
+<!-- Professional CSS -->
+<style>
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to right, #475e02, #728e0f); /* Cool gradient */
+    color: #333;
+  }
+
+  .profile-container {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 30px;
+  }
+
+  .dashboard-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .profile-actions .btn {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 12px 20px;
+  }
+
+  .profile-actions .btn-primary {
+    background: #007bff;
+    border-color: #007bff;
+  }
+
+  .profile-actions .btn-primary:hover {
+    background: #0056b3;
+    border-color: #0056b3;
+  }
+
+  .profile-actions .btn-danger {
+    background: #dc3545;
+    border-color: #dc3545;
+  }
+
+  .profile-actions .btn-danger:hover {
+    background: #c82333;
+    border-color: #c82333;
+  }
+
+  .profile-container h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .profile-container .badge {
+    font-size: 1rem;
+  }
+
+  .card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+
+  .card-img-top {
+    border-radius: 8px;
+  }
+
+  .mt-4 {
+    margin-top: 1.5rem !important;
+  }
+
+  .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+
+  .btn-lg {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+  }
+</style>

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ContactUs = require('../../models/contactUs');
-const { lazy } = require('react');
+const Event = require('../../models/event');
 
 router.get('/', (req, res) => {
     res.render('development', {title: '', stylesheet:'', layout:false});
@@ -50,13 +50,22 @@ router.get('/feedhope-about-us', (req, res) => {
 });
 
 
-router.get('/feedhope-events', (req, res) => {
-    res.render(
-        'home/events',{
-            title: 'Events',
-            stylesheet: '/stylesheet/home/events.css'
-        }
-    )
+router.get('/feedhope-events', async (req, res) => {
+    try {
+        const events = await Event.find(); 
+        res.render(
+            'home/events', 
+            { 
+                title: 'Events',
+                stylesheet: '/stylesheet/home/events.css',
+                events,
+                showFooter: false
+            }
+        );
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

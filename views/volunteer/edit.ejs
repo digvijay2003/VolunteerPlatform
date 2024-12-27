@@ -1,34 +1,32 @@
-<div class="container my-5">
-    <form action="/volunteer-profile/edit" method="POST" enctype="multipart/form-data">
-      <h1 class="text-center mb-4"><%= title || 'Edit Your Profile' %></h1>
-  
-      <% fields.forEach(field => { %>
-        <div class="mb-3">
-          <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
-          <% if (field.type === 'select') { %>
-            <select class="form-select" id="<%= field.id %>" name="<%= field.name %>" <%= field.multiple ? 'multiple' : '' %>>
-              <% field.options.forEach(option => { %>
-                <option value="<%= option.value %>" <%= option.selected ? 'selected' : '' %>><%= option.label %></option>
-              <% }); %>
-            </select>
-          <% } else { %>
-            <input
-              type="<%= field.type %>"
-              class="form-control"
-              id="<%= field.id %>"
-              name="<%= field.name %>"
-              value="<%= field.value || '' %>"
-              placeholder="<%= field.placeholder || '' %>"
-              <%= field.pattern ? `pattern="${field.pattern}"` : '' %>
-              <%= field.required ? 'required' : '' %>
-            >
-            <% if (field.helpText) { %>
-              <small class="form-text text-muted"><%= field.helpText %></small>
-            <% } %>
-          <% } %>
-        </div>
-      <% }); %>
-  
-      <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
-</div>  
+<form action="/volunteer-profile/edit" method="POST" enctype="multipart/form-data">
+  <h1 class="text-center mb-4"><%= title || 'Edit Your Profile' %></h1>
+
+  <% fields.forEach(field => { %>
+    <div class="mb-3">
+      <label for="<%= field.id %>" class="form-label"><%= field.label %></label>
+      <% if (field.type === 'select') { %>
+        <select class="form-select" id="<%= field.id %>" name="<%= field.name %>" <%= field.multiple ? 'multiple' : '' %>>
+          <% field.options.forEach(option => { %>
+            <option value="<%= option.value %>" <%= option.selected ? 'selected' : '' %>><%= option.label %></option>
+          <% }); %>
+        </select>
+      <% } else { %>
+        <input
+          type="<%= field.type %>"
+          class="form-control"
+          id="<%= field.id %>"
+          name="<%= field.name %>"
+          value="<%= field.value || '' %>"
+          placeholder="<%= field.placeholder || '' %>"
+          <%= field.pattern ? `pattern="${field.pattern}"` : '' %>
+          <%= field.required ? 'required' : '' %>
+        >
+        <% if (field.helpText) { %>
+          <small class="form-text text-muted"><%= field.helpText %></small>
+        <% } %>
+      <% } %>
+    </div>
+  <% }); %>
+
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

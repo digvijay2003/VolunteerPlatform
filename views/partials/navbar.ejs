@@ -1,21 +1,22 @@
-<nav class="navbar navbar-expand-lg fixed-top">
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color: #e3f2fd;">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/feedhope">FeedHope</a>
+    <a class="navbar-brand d-flex align-items-center" href="/feedhope">
+      <img src="/images/feedhope-logo.webp" class="rounded-3" alt="FeedHope Logo" style="height: 25px; margin-right: 10px;">
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="offcanvas offcanvas-end bg-success" id="offcanvasNavbar" tabindex="-1" aria-labelledby="offcanvasNavbarLabel">
+    <div class="offcanvas offcanvas-end" id="offcanvasNavbar" tabindex="-1" aria-labelledby="offcanvasNavbarLabel">
       <div class="offcanvas-header">
-        <h5 class="offcanvas-title text-white" id="offcanvasNavbarLabel">FeedHope</h5>
-        <button type="button" class="btn-close btn-close-info" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto mb-lg-0">
           <li class="nav-item">
             <a class="nav-link active" href="/feedhope-about-us">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/feedhope-how-it-works">Our Procees</a>
+            <a class="nav-link" href="/feedhope-how-it-works">Our Process</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/feedhope-events">Events</a>
@@ -27,45 +28,53 @@
             <a class="nav-link" href="/feedhope-contact-us">Contact Us</a>
           </li>
         </ul>
-        <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav ms-auto mx-5">
           <li class="nav-item">
-            <a class="nav-link" href="/volunteer-registration">Become a Volunteer <span class="material-symbols-outlined">heart_plus</span></a>
+            <a class="nav-link" href="/volunteer-registration"><span class="text-dark">Become a Volunteer</span></a>
           </li>
         </ul>
       </div>
     </div>
   </div>
 </nav>
-
 <style>
-.navbar {
-  background-color: #234a3f; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-}
+  .navbar a {
+    font-size: 1rem;
+    color: #090000 !important;
+    text-align: center;
+    padding: 5px 30px;
+    text-decoration: none;
+    font-weight: 350;
+    font-family: "Roboto Slab", monospace;
+    white-space: nowrap;
+    position: relative; 
+  }
 
-.navbar a {
-  font-size: 1.1rem;
-  color: #ffffff !important;
-  text-align: center;
-  padding: 5px 30px;
-  text-decoration: none;
-  font-weight: 300;
-  font-family: "Roboto Slab", monospace;
-  white-space: nowrap;
-}
+  .navbar a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #090000; 
+    transition: width 0.3s ease-in-out; 
+  }
 
-.navbar a:hover {
-  background-color: #266d5a;
-  color: #f4f4f4; 
-  transition: 0.3s ease-in-out;
-}
+  .navbar a:hover::after {
+    width: 100%; 
+  }
 
-.offcanvas-header {
-  background-color: #284940; 
-}
+  .navbar-nav.me-auto li.nav-item {
+    margin-right: 20px; 
+  }
 
-.offcanvas-title {
-  color: #ffffff; 
-}
+  .navbar a:hover {
+    color: #040000;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
 
+  .offcanvas-title {
+    color: #010000; 
+  }
 </style>

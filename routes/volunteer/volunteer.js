@@ -23,7 +23,7 @@ router.get('/volunteer-registration',
     (req, res) => 
         {
             res.render('volunteer/register', {
-            title: 'Volunteer Registration',
+            title: 'VOLUNTEER REGISTRATION',
             action: '/volunteer-registration', 
             submitLabel: 'Register',
             stylesheet: '/stylesheet/volunteer/register.css',
@@ -35,9 +35,9 @@ router.get('/volunteer-registration',
                 { id: 'password', label: 'Password', type: 'password', name: 'password', required: true },
                 { id: 'phone', label: 'Phone Number', type: 'tel', name: 'phone', pattern: "^\+?\d{10,15}$", required: true },
                 { id: 'location', label: 'Location', type: 'text', name: 'location', required: true },
-                { id: 'role', label: 'Role', type: 'select', name: 'role', options: [ { value: 'driver', label: 'Driver' }, { value: 'coordinator', label: 'Coordinator' }, { value: 'general', label: 'General' }], required: true},
                 { id: 'availability', label: 'Availability', type: 'text', name: 'availability', required: true },
                 { id: 'skills', label: 'Skills', type: 'select',  name: 'skills[]', multiple: true, options: [ { value: 'delivery', label: 'Delivery' }, { value: 'cooking', label: 'Cooking' }, { value: 'communication', label: 'Communication' },{ value: 'logistics', label: 'Logistics' } ]},
+                { id: 'role', label: 'Role', type: 'select', name: 'role', options: [ { value: 'driver', label: 'Driver' }, { value: 'coordinator', label: 'Coordinator' }, { value: 'general', label: 'General' }], required: true},
                 { id: 'emergencyContactName', label: 'Emergency Contact Name', type: 'text', name: 'emergencyContact[name]', required: true },
                 { id: 'emergencyContactPhone', label: 'Emergency Contact Phone', type: 'tel', name: 'emergencyContact[phone]',  pattern: "^\+?\d{10,15}$", required: true },
                 { id: 'governmentIdProofs', label: 'Government ID Proofs', type: 'file', name: 'governmentIdProofs', multiple: true, required: true}
@@ -175,27 +175,33 @@ router.get('/logout', (req, res) => {
 });
 
 router.get(
-    '/volunteer-profile',
-    asyncHandler(async (req, res) => {
-      if (!req.session.volunteerId) {
-        req.flash('error', 'Unauthorized');
-        return res.redirect('/volunteer-login');
-      }
-  
-      const volunteer = await Volunteer.findById(req.session.volunteerId).lean();
-      if (!volunteer) {
-        return res.status(404).send('Volunteer not found');
-      }
-  
-      res.render('volunteer/profile', {
-        volunteer,
-        mapboxToken: process.env.MAPBOX_TOKEN,
-        title: 'Volunteer Profile',
-        stylesheet: '/stylesheet/volunteer/profile.css',
-        showNavbar: false,
-        showFooter: false,
-      });
-    })
+  '/volunteer-profile',
+  asyncHandler(async (req, res) => {
+    if (!req.session.volunteerId) {
+      req.flash('error', 'Unauthorized');
+      return res.redirect('/volunteer-login');
+    }
+
+    const volunteer = await Volunteer.findById(req.session.volunteerId).lean();
+
+    if (!volunteer) {
+      return res.status(404).send('Volunteer not found');
+    }
+
+    if (volunteer.status !== 'active') {
+      req.flash('error', 'Your profile is inactive. You cannot access it.');
+      return res.redirect('/volunteer-login'); 
+    }
+
+    res.render('volunteer/profile', {
+      volunteer,
+      mapboxToken: process.env.MAPBOX_TOKEN,
+      title: 'Volunteer Profile',
+      stylesheet: '/stylesheet/volunteer/profile.css',
+      showNavbar: false,
+      showFooter: false,
+    });
+  })
 );  
 
 router.get(
@@ -211,10 +217,12 @@ router.get(
         return res.status(404).send('Volunteer not found');
       }
   
-      res.render('volunteer/edit', {
+      res.render('volunteer/register', {
         volunteer,
         title: 'Edit Profile',
         stylesheet: '/stylesheet/edit.css',
+        action: '/volunteer-profile/edit',
+        submitLabel: 'Save Changes',
         showNavbar: false,
         showFooter: false,
         fields: [
@@ -223,58 +231,21 @@ router.get(
           { id: 'password', label: 'Password', type: 'password', name: 'password', helpText: 'Leave empty to keep the current password' },
           { id: 'phone', label: 'Phone Number', type: 'tel', name: 'phone', value: volunteer.phone,pattern: "^\+?\d{10,15}$", required: true},
           { id: 'location', label: 'Location', type: 'text', name: 'location', value: volunteer.location, required: true },
-          {
-            id: 'role',
-            label: 'Role',
-            type: 'select',
-            name: 'role',
-            options: [
-              { value: 'driver', label: 'Driver', selected: volunteer.role === 'driver' },
-              { value: 'coordinator', label: 'Coordinator', selected: volunteer.role === 'coordinator' },
-              { value: 'general', label: 'General', selected: volunteer.role === 'general' }
-            ]
-          },
+          { id: 'role', label: 'Role', type: 'select', name: 'role', options: [{ value: 'driver', label: 'Driver', selected: volunteer.role === 'driver' }, { value: 'coordinator', label: 'Coordinator', selected: volunteer.role === 'coordinator' }, { value: 'general', label: 'General', selected: volunteer.role === 'general' }] },
           { id: 'availability', label: 'Availability', type: 'text', name: 'availability', value: volunteer.availability, required: true },
-          {
-            id: 'skills',
-            label: 'Skills',
-            type: 'select',
-            name: 'skills[]',
-            multiple: true,
-            options: [
-              { value: 'delivery', label: 'Delivery', selected: volunteer.skills.includes('delivery') },
-              { value: 'cooking', label: 'Cooking', selected: volunteer.skills.includes('cooking') },
-              { value: 'communication', label: 'Communication', selected: volunteer.skills.includes('communication') },
-              { value: 'logistics', label: 'Logistics', selected: volunteer.skills.includes('logistics') }
-            ]
-          },
+          { id: 'skills', label: 'Skills', type: 'select', name: 'skills[]', multiple: true, options: [{ value: 'delivery', label: 'Delivery', selected: volunteer.skills.includes('delivery') }, { value: 'cooking', label: 'Cooking', selected: volunteer.skills.includes('cooking') }, { value: 'communication', label: 'Communication', selected: volunteer.skills.includes('communication') },{ value: 'logistics', label: 'Logistics', selected: volunteer.skills.includes('logistics') }] },
           { id: 'emergencyContactName', label: 'Emergency Contact Name', type: 'text', name: 'emergencyContact[name]', value: volunteer.emergencyContact.name, required: true },
-          {
-            id: 'emergencyContactPhone',
-            label: 'Emergency Contact Phone',
-            type: 'tel',
-            name: 'emergencyContact[phone]',
-            value: volunteer.emergencyContact.phone,
-            pattern: "^\+?\d{10,15}$",
-            required: true
-          },
-          {
-            id: 'governmentIdProofs',
-            label: 'Update Government ID Proofs',
-            type: 'file',
-            name: 'governmentIdProofs',
-            multiple: true
-          }
+          { id: 'emergencyContactPhone',  label: 'Emergency Contact Phone', type: 'tel', name: 'emergencyContact[phone]', value: volunteer.emergencyContact.phone,  pattern: "^\+?\d{10,15}$", required: true},
+          { id: 'governmentIdProofs', label: 'Update Government ID Proofs',  type: 'file',name: 'governmentIdProofs', multiple: true }
         ]
       });
     })
 );  
 
 router.post(
-    '/volunteer-profile/edit',
-    validateVolunteerEdit,
-    upload.any(), 
-    asyncHandler(async (req, res) => {
+  '/volunteer-profile/edit',
+  upload.any(), 
+  asyncHandler(async (req, res) => {
     const { username, email, phone, location, role, availability, skills, emergencyContact, password, governmentIdProofs } = req.body;
     
     const volunteer = await Volunteer.findById(req.session.volunteerId);
@@ -316,6 +287,7 @@ router.post(
 
     req.flash('success', 'Profile updated successfully!');
     res.redirect('/volunteer-profile');
-}));
+  })
+);
 
 module.exports = router;
