@@ -134,6 +134,7 @@ router.get(
       submitLabel: 'Login',
       showRegisterButton: true,
       registerLink: '/volunteer-registration',
+      showNavbar: false,
     });
   }
 );
