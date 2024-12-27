@@ -146,6 +146,8 @@ router.post(
         const { email, password } = req.body;
 
         const volunteer = await Volunteer.findOne({ email });
+        console.log('Volunteer found:', volunteer);
+
         if (!volunteer) {
             req.flash('error', 'User not found');
             return res.redirect('/volunteer-login');
