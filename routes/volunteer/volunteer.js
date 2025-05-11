@@ -146,8 +146,7 @@ router.post(
     asyncHandler(async (req, res) => {
         const { email, password } = req.body;
 
-        const volunteer = await Volunteer.findOne({ email });
-        console.log('Volunteer found:', volunteer);
+        const volunteer = await Volunteer.findOne({ email });    
 
         if (!volunteer) {
             req.flash('error', 'User not found');

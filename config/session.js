@@ -9,6 +9,6 @@ module.exports = session({
     store: MongoStore.create({ mongoUrl: process.env.DB_URL}),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        secure: process.env.NODE_ENV === 'production' 
+        secure: false,
     }
 });

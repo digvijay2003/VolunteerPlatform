@@ -1,17 +1,21 @@
 <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #e3f2fd;">
   <div class="container-fluid">
-    <img src="/images/feedhope-logo.webp" class="rounded-3" alt="FeedHope Logo" style="height: 25px; margin-right: 10px;">
+    <!-- <a href="/feedhope" class="navbar-brand d-flex align-items-center"> -->
+      <img src="/images/feedhope-logo.webp" class="rounded-3" alt="FeedHope Logo" style="height: 25px; margin-right: 10px; margin-right: 50px;">
+      <!-- <span style="font-weight: 600; font-family: 'Roboto Slab', sans-serif;">FeedHope</span> -->
+    <!-- </a> -->
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="offcanvas offcanvas-end" id="offcanvasNavbar" tabindex="-1" aria-labelledby="offcanvasNavbarLabel">
       <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">FeedHope</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
-        <ul class="navbar-nav me-auto mb-lg-0">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" href="/feedhope-about-us">About Us</a>
+            <a class="nav-link" href="/feedhope-about-us">About Us</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/feedhope-how-it-works">Our Process</a>
@@ -26,53 +30,54 @@
             <a class="nav-link" href="/feedhope-contact-us">Contact Us</a>
           </li>
         </ul>
-        <ul class="navbar-nav ms-auto mx-5">
-          <li class="nav-item">
-            <a class="nav-link" href="/volunteer-registration"><span class="text-dark">Become a Volunteer</span></a>
-          </li>
-        </ul>
+        <div class="d-flex mx-2">
+          <a class="btn btn-danger px-4" href="/volunteer-registration"><span class="text-white">Become a Volunteer</span></a>
+        </div>
       </div>
     </div>
   </div>
 </nav>
+
 <style>
-  .navbar a {
+  .navbar a { 
     font-size: 1rem;
     color: #090000 !important;
-    text-align: center;
-    padding: 5px 30px;
     text-decoration: none;
-    font-weight: 350;
-    font-family: "Roboto Slab", monospace;
-    white-space: nowrap;
-    position: relative; 
+    font-family: "Roboto Slab", sans-serif;
+    position: relative;
   }
 
   .navbar a::after {
     content: '';
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: -2px;
     width: 0;
     height: 2px;
-    background-color: #090000; 
-    transition: width 0.3s ease-in-out; 
+    background-color: #090000;
+    transition: width 0.3s ease-in-out;
   }
 
   .navbar a:hover::after {
-    width: 100%; 
+    width: 100%;
   }
 
-  .navbar-nav.me-auto li.nav-item {
-    margin-right: 20px; 
+  .navbar .btn {
+    font-weight: 500;
   }
 
-  .navbar a:hover {
-    color: #040000;
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  .navbar-toggler {
+    border: none;
+    padding: 0;
   }
 
-  .offcanvas-title {
-    color: #010000; 
+  @media (max-width: 768px) {
+    .navbar-brand span {
+      font-size: 0.9rem;
+    }
+    .offcanvas-body .btn {
+      width: 100%;
+      margin-top: 10px;
+    }
   }
 </style>
