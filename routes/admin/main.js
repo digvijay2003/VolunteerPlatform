@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const flash = require('connect-flash');
-const RequestDonation = require('../../models/request');
-const ContactUs = require('../../models/contactUs');
+const FoodRequest = require('../../models/food_request');
+const ContactUs = require('../../models/contact_us');
 const Volunteer = require('../../models/volunteer');
-const Donation = require('../../models/donation');
+const FoodDonation = require('../../models/food_donation');
 const { sendSMS } = require('../../utils/twilio');
 
 // Environment variables
@@ -89,10 +89,10 @@ router.post('/login', async (req, res) => {
 router.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
         // Request Donations Stats
-        const totalRequests = await RequestDonation.countDocuments({});
-        const pendingRequests = await RequestDonation.countDocuments({ status: 'pending' });
-        const completedRequests = await RequestDonation.countDocuments({ status: 'success' });
-        const rejectedRequests = await RequestDonation.countDocuments({ status: 'rejected' });
+        const totalRequests = await FoodRequest.countDocuments({});
+        const pendingRequests = await FoodRequest.countDocuments({ status: 'pending' });
+        const completedRequests = await FoodRequest.countDocuments({ status: 'success' });
+        const rejectedRequests = await FoodRequest.countDocuments({ status: 'rejected' });
 
         // Contact Us Queries Stats
         const totalQueries = await ContactUs.countDocuments({});
@@ -101,9 +101,9 @@ router.get('/dashboard', ensureAuthenticated, async (req, res) => {
         const totalVolunteers = await Volunteer.countDocuments({});
 
         // Donations Stats
-        const totalDonations = await Donation.countDocuments({});
-        const pendingDonations = await Donation.countDocuments({ status: 'pending' });
-        const successfulDonations = await Donation.countDocuments({ status: 'success' });
+        const totalDonations = await FoodDonation.countDocuments({});
+        const pendingDonations = await FoodDonation.countDocuments({ status: 'pending' });
+        const successfulDonations = await FoodDonation.countDocuments({ status: 'success' });
 
         res.render('admin/dashboard/ADMIN_panel', {
             title: 'Admin Dashboard',
@@ -157,10 +157,10 @@ router.get('/request-donations', isAuthenticatedAdmin, async (req, res) => {
             filter.status = statusFilter;
         }
 
-        const totalRequests = await RequestDonation.countDocuments(filter);
+        const totalRequests = await FoodRequest.countDocuments(filter);
         const totalPages = Math.ceil(totalRequests / limit);
 
-        const donations = await RequestDonation.find(filter)
+        const donations = await FoodRequest.find(filter)
             .skip(skip)
             .limit(limit);
 
@@ -182,7 +182,7 @@ router.get('/request-donations', isAuthenticatedAdmin, async (req, res) => {
 
 router.get('/request-donations/:id', isAuthenticatedAdmin, async (req, res) => {
     try {
-        const requester = await RequestDonation.findById(req.params.id)
+        const requester = await FoodRequest.findById(req.params.id)
             .populate('connectedDonors');
 
         if (!requester) {
@@ -203,7 +203,7 @@ router.get('/request-donations/:id', isAuthenticatedAdmin, async (req, res) => {
 // Get a specific request for editing (Admin View)
 router.get('/request-donations/:id/edit', isAuthenticatedAdmin, async (req, res) => {
     try {
-        const donationRequest = await RequestDonation.findById(req.params.id);
+        const donationRequest = await FoodRequest.findById(req.params.id);
         if (!donationRequest) {
             req.flash('error', 'Donation request not found');
             return res.redirect('/admin/request-donations');
@@ -262,7 +262,7 @@ router.put('/request-donations/:id', isAuthenticatedAdmin, async (req, res) => {
         };
 
         // Update the request
-        const updatedRequest = await RequestDonation.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+        const updatedRequest = await FoodRequest.findByIdAndUpdate(req.params.id, updatedData, { new: true });
 
         // Handle the result
         if (!updatedRequest) {
@@ -281,7 +281,7 @@ router.put('/request-donations/:id', isAuthenticatedAdmin, async (req, res) => {
 // Delete donation request (Admin Action)
 router.delete('/request-donations/:id', isAuthenticatedAdmin, async (req, res) => {
     try {
-        await RequestDonation.findByIdAndDelete(req.params.id);
+        await FoodRequest.findByIdAndDelete(req.params.id);
         req.flash('success', 'Donation request deleted successfully');
         res.redirect('/admin/request-donations');
     } catch (error) {

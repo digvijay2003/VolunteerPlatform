@@ -12,7 +12,7 @@ module.exports = (app) => {
     // General Middlewares
     app.use(morgan);
     app.use(compression());
-    app.use(bodyParser.json({ limit: '10kb' }));
+    app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(methodOverride('_method'));
 

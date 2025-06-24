@@ -46,77 +46,135 @@ router.get('/volunteer-registration',
 });
 
 
+const buildFieldData = (reqBody) => {
+    return [
+        { id: 'username', label: 'Username', type: 'text', name: 'username', required: true, value: reqBody.username },
+        { id: 'email', label: 'Email', type: 'email', name: 'email', required: true, value: reqBody.email },
+        { id: 'password', label: 'Password', type: 'password', name: 'password', required: true, value: reqBody.password },
+        { id: 'phone', label: 'Phone Number', type: 'tel', name: 'phone', pattern: "^\+?\d{10,15}$", required: true, value: reqBody.phone },
+        { id: 'location', label: 'Location', type: 'text', name: 'location', required: true, value: reqBody.location },
+        { id: 'availability', label: 'Availability', type: 'text', name: 'availability', required: true, value: reqBody.availability },
+        {
+            id: 'skills', label: 'Skills', type: 'select', name: 'skills[]', multiple: true,
+            value: reqBody.skills || [],
+            options: [
+                { value: 'delivery', label: 'Delivery' },
+                { value: 'cooking', label: 'Cooking' },
+                { value: 'communication', label: 'Communication' },
+                { value: 'logistics', label: 'Logistics' }
+            ]
+        },
+        {
+            id: 'role', label: 'Role', type: 'select', name: 'role', required: true,
+            value: reqBody.role,
+            options: [
+                { value: 'driver', label: 'Driver' },
+                { value: 'coordinator', label: 'Coordinator' },
+                { value: 'general', label: 'General' }
+            ]
+        },
+        {
+            id: 'emergencyContactName', label: 'Emergency Contact Name', type: 'text',
+            name: 'emergencyContact[name]', required: true,
+            value: reqBody.emergencyContact?.name
+        },
+        {
+            id: 'emergencyContactPhone', label: 'Emergency Contact Phone', type: 'tel',
+            name: 'emergencyContact[phone]', pattern: "^\+?\d{10,15}$", required: true,
+            value: reqBody.emergencyContact?.phone
+        },
+        {
+            id: 'governmentIdProofs', label: 'Government ID Proofs', type: 'file',
+            name: 'governmentIdProofs', multiple: true, required: true
+        }
+    ];
+};
+
 router.post(
-  '/volunteer-registration',
-  upload.array('governmentIdProofs', 3),
-  validateVolunteerRegistration,
+    '/volunteer-registration',
+    upload.array('governmentIdProofs', 3),
+    asyncHandler(async (req, res) => {
+        const { username, email, password, phone, location, role, availability, skills, emergencyContact } = req.body;
+        const fields = buildFieldData(req.body);
 
-  asyncHandler(async (req, res) => {
+        try {
+            const existingVolunteer = await Volunteer.findOne({ email });
 
-      const { username, email, password, phone, location, role, availability, skills, emergencyContact } = req.body;
-      const existingVolunteer = await Volunteer.findOne({ email });
+            if (existingVolunteer) {
+                req.flash('error', 'A volunteer with this email already exists.');
+                return res.status(400).render('volunteer/register', {
+                    title: 'VOLUNTEER REGISTRATION',
+                    action: '/volunteer-registration',
+                    submitLabel: 'Register',
+                    stylesheet: '/stylesheet/volunteer/register.css',
+                    showNavbar: false,
+                    showFooter: false,
+                    fields,
+                    error: 'Email already registered.'
+                });
+            }
 
-      if (existingVolunteer) {
-          req.flash('error', 'A volunteer with this email already exists.');
-          return res.redirect('/volunteer-registration');
-      }
+            const [longitude, latitude] = await getCoordinates(location);
 
-      console.log('Cloudinary upload response:', req.files);
+            const files = req.files.map((file) => ({
+                url: file.path,
+                filename: file.filename,
+                description: `ID Proof for ${username}`,
+            }));
 
-      try {
-          const [longitude, latitude] = await getCoordinates(location);
+            const newVolunteer = new Volunteer({
+                username,
+                email,
+                password,
+                phone,
+                location,
+                geometry: { type: 'Point', coordinates: [longitude, latitude] },
+                role,
+                availability,
+                skills,
+                emergencyContact,
+                governmentIdProofs: files,
+            });
 
-          const files = req.files.map((file) => ({
-              url: file.path,
-              filename: file.filename,
-              description: `ID Proof for ${username}`,
-          }));
+            const resp = await newVolunteer.save();
+            req.session.volunteerId = newVolunteer._id;
 
+            if (resp) {
+                const profileLink = `${process.env.PROD_URL}/volunteer-profile`;
+                if (process.env.NODE_ENV === 'production') {
+                    try {
+                        await sendEmail(
+                            email,
+                            'Welcome to Work for FeedHope!',
+                            'welcomeTemplate.html',
+                            { username, profileLink }
+                        );
+                    } catch (emailError) {
+                        console.error('Failed to send email:', emailError);
+                    }
+                } else {
+                    console.log('Email sending is disabled in development environment.');
+                }
+            }
 
-          const newVolunteer = new Volunteer({
-              username,
-              email,
-              password,
-              phone,
-              location,
-              geometry: { type: 'Point', coordinates: [longitude, latitude] },
-              role,
-              availability,
-              skills,
-              emergencyContact,
-              governmentIdProofs: files,
-          });
+            req.flash('success', 'Volunteer successfully registered!');
+            res.redirect('/volunteer-login');
 
-          const resp = await newVolunteer.save();
-          req.session.volunteerId = newVolunteer._id;
-
-          if (resp) {
-              const profileLink = `${process.env.PROD_URL}/volunteer-profile`;
-              if (process.env.NODE_ENV === 'production') {
-                  try {
-                      await sendEmail(
-                          email,
-                          'Welcome to Work for FeedHope!',
-                          'welcomeTemplate.html',
-                          { username, profileLink }
-                      );
-                  } catch (emailError) {
-                      console.error('Failed to send email:', emailError);
-                  }
-              } else {
-                  console.log('Email sending is disabled in development environment.');
-              }
-          }
-
-          req.flash('success', 'Volunteer successfully registered!');
-          res.redirect('/volunteer-login');
-
-      } catch (error) {
-          console.error(error);
-          req.flash('error', 'Error during registration.');
-          res.redirect('/volunteer-registration');
-      }
-  })
+        } catch (error) {
+            console.error(error);
+            req.flash('error', 'Error during registration.');
+            return res.status(500).render('volunteer/register', {
+                title: 'VOLUNTEER REGISTRATION',
+                action: '/volunteer-registration',
+                submitLabel: 'Register',
+                stylesheet: '/stylesheet/volunteer/register.css',
+                showNavbar: false,
+                showFooter: false,
+                fields,
+                error: 'Something went wrong. Please try again.'
+            });
+        }
+    })
 );
 
 router.get(

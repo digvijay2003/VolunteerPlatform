@@ -1,0 +1,403 @@
+openapi: 3.0.0
+info:
+  title: Volunteer Platform API
+  version: 1.0.0
+  description: Public API docs for donor, volunteer registration & food request flows
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /feedhope-donation-food:
+    get:
+      summary: Render food donation page (View only)
+      responses:
+        '200':
+          description: Donation page rendered (HTML)
+    post:
+      summary: Submit food donation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - donor
+                - foodtype
+                - quantity
+                - location
+                - description
+              properties:
+                donor:
+                  type: string
+                foodtype:
+                  type: string
+                quantity:
+                  type: object
+                  required: [amount, unit, description]
+                  properties:
+                    amount:
+                      type: number
+                    unit:
+                      type: string
+                    description:
+                      type: string
+                location:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '302':
+          description: Redirects to nearby requests
+
+  /nearby-requests:
+    get:
+      summary: Get nearby food requests based on lat/lng
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: lng
+          in: query
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: List of nearby requests rendered (HTML)
+    post:
+      summary: Find nearby food requests from location input
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - location_nearby
+              properties:
+                location_nearby:
+                  type: string
+      responses:
+        '302':
+          description: Redirects to GET /nearby-requests with coordinates
+
+  /connect-with-requester:
+    post:
+      summary: Link a donation to a request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - donationId
+                - requestId
+              properties:
+                donationId:
+                  type: string
+                requestId:
+                  type: string
+      responses:
+        '302':
+          description: Redirects to request list page
+
+  /feedhope:
+    get:
+      summary: Render homepage
+      responses:
+        '200':
+          description: Homepage rendered (HTML)
+
+  /feedhope-contact-us:
+    get:
+      summary: Render contact us page
+      responses:
+        '200':
+          description: Contact us page rendered (HTML)
+
+  /feedhope-how-it-works:
+    get:
+      summary: Render how it works page
+      responses:
+        '200':
+          description: How it works page rendered (HTML)
+
+  /feedhope-about-us:
+    get:
+      summary: Render about us page
+      responses:
+        '200':
+          description: About us page rendered (HTML)
+
+  /feedhope-events:
+    get:
+      summary: Render events page with upcoming events
+      responses:
+        '200':
+          description: Events page rendered with list of events
+
+  /feedhope-contact_Us:
+    post:
+      summary: Submit contact form
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - contact
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                contact:
+                  type: string
+                message:
+                  type: string
+      responses:
+        '302':
+          description: Redirects back to contact page with success or error
+
+  /feedhope-request-donation:
+    get:
+      summary: Render donation request form (View only)
+      responses:
+        '200':
+          description: Request form page rendered
+    post:
+      summary: Submit donation request
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - requester_name
+                - requester_phone
+                - foodtype
+                - quantity
+                - location
+              properties:
+                requester_name:
+                  type: string
+                requester_phone:
+                  type: string
+                foodtype:
+                  type: string
+                quantity:
+                  type: string
+                location:
+                  type: string
+                need_description:
+                  type: string
+                assign_volunteer:
+                  type: boolean
+                volunteer_id:
+                  type: string
+                urgency:
+                  type: string
+                number_of_people:
+                  type: integer
+                expiration_date:
+                  type: string
+                images:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '302':
+          description: Redirects to feedhope page on success
+
+  /feedhope-request-donation-list:
+    get:
+      summary: View all donation requests (UI only)
+      responses:
+        '200':
+          description: Render all request list
+
+  /feedhope-request-donation-list/{id}:
+    get:
+      summary: View details of a specific donation request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Render detailed request info
+        '404':
+          description: Request not found
+
+  /connect-donor-with-requester:
+    post:
+      summary: Connect donor with requester (Internal use)
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - donoor
+              properties:
+                donoor:
+                  type: string
+      responses:
+        '302':
+          description: Redirect to request detail after linking
+
+  /volunteer-registration:
+    get:
+      summary: Render volunteer registration form
+      responses:
+        '200':
+          description: Registration form rendered
+    post:
+      summary: Submit volunteer registration
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+                - phone
+                - location
+                - role
+                - availability
+                - emergencyContact
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                phone:
+                  type: string
+                location:
+                  type: string
+                role:
+                  type: string
+                availability:
+                  type: string
+                skills:
+                  type: array
+                  items:
+                    type: string
+                emergencyContact:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    phone:
+                      type: string
+                governmentIdProofs:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '302':
+          description: Redirect to login on success
+
+  /volunteer-login:
+    get:
+      summary: Render login page for volunteers
+      responses:
+        '200':
+          description: Login form rendered
+    post:
+      summary: Authenticate volunteer and redirect to profile
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '302':
+          description: Redirect to volunteer profile
+
+  /logout:
+    get:
+      summary: Logout volunteer and destroy session
+      responses:
+        '302':
+          description: Redirect to login
+
+  /volunteer-profile:
+    get:
+      summary: Render logged-in volunteer profile (Internal use)
+      responses:
+        '200':
+          description: Profile view rendered
+
+  /volunteer-profile/edit:
+    get:
+      summary: Render edit form for volunteer profile (Internal use)
+      responses:
+        '200':
+          description: Edit form rendered
+    post:
+      summary: Submit updated volunteer profile data (Internal use)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+                location:
+                  type: string
+                role:
+                  type: string
+                availability:
+                  type: string
+                skills:
+                  type: array
+                  items:
+                    type: string
+                emergencyContact:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    phone:
+                      type: string
+                password:
+                  type: string
+                governmentIdProofs:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '302':
+          description: Redirect to volunteer profile

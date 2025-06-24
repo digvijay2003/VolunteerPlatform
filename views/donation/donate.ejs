@@ -1,187 +1,136 @@
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
-        }
-
-        .intro {
-            background-image: url('https://source.unsplash.com/1600x900/?food');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-            padding: 2rem;
-            color: #fff;
-        }
-
-        .card {
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 1rem;
-        }
-
-        .card-body {
-            padding: 2.5rem;
-        }
-
-        .form-outline {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-outline label {
-            margin-top: 0.5rem;
-            color: #495057;
-            font-weight: 500;
-        }
-
-        .form-control {
-            border-radius: 0.5rem;
-            height: 3rem;
-            padding-left: 1rem;
-            font-size: 1rem;
-        }
-
-        textarea.form-control {
-            height: 6rem;
-        }
-
-        .btn {
-            border-radius: 0.5rem;
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 0.75rem;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-success {
-            background-color: #28a745;
-            border-color: #28a745;
-        }
-
-        .text-center h2,
-        .text-center h1 {
-            font-family: 'Margarine', cursive;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-
-        .btn-check-requests {
-            margin-top: 2rem;
-            text-align: center;
-        }
-
-        .btn-check-requests a {
-            text-decoration: none;
-        }
-
-        .btn-check-requests button {
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            background-color: #ffc107;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            color: #fff;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-check-requests button:hover {
-            background-color: #e0a800;
-        }
-
-        @media (max-width: 767.98px) {
-            .intro {
-                padding: 1rem;
-            }
-
-            .card-body {
-                padding: 1.5rem;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <section class="intro">
-        <div class="container">
-            <div class="row justify-content-center my-5">
-                <div class="col-12 col-md-10 col-lg-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2 class="mb-5 text-center">Find Nearby Requests</h2>
-                            <form action="/nearby-requests" method="post">
-                                <div class="form-outline">
-                                    <input type="text" id="location_nearby" name="location_nearby" class="form-control" required />
-                                    <label class="form-label" for="location_nearby">Enter Your Location</label>
-                                </div>
-                                <button type="submit" class="btn btn-primary col-12 btn-rounded btn-block">Find Requests</button>
-                            </form>
-                        </div>
-                    </div>
+<section class="py-5" style="background-color: #f8f9fa;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="card shadow rounded-4">
+          <div class="card-body p-5">
+            <h2 class="text-center mb-4">Donate Food</h2>
+            <form action="/feedhope-donation-food" method="POST" enctype="multipart/form-data">
+              <div class="row g-3">
+                <!-- Donor Name -->
+                <div class="col-md-6">
+                  <label for="donor_name" class="form-label">Your Name</label>
+                  <input type="text" class="form-control" id="donor_name" name="donor_name" required>
                 </div>
+
+                <!-- Phone -->
+                <div class="col-md-6">
+                  <label for="donor_phone" class="form-label">Phone Number</label>
+                  <input type="text" class="form-control" id="donor_phone" name="donor_phone" placeholder="+91xxxxxxxxxx" pattern="^\+?\d{10,15}$" required>
+                </div>
+
+                <!-- Food Type -->
+                <div class="col-md-6">
+                  <label for="food_type" class="form-label">Type of Food</label>
+                  <input type="text" class="form-control" id="food_type" name="food_type" required>
+                </div>
+
+                <!-- Quantity -->
+                <div class="col-md-3">
+                  <label for="quantity_amount" class="form-label">Quantity</label>
+                  <input type="number" class="form-control" id="quantity_amount" name="quantity[amount]" min="1" required>
+                </div>
+
+                <div class="col-md-3">
+                  <label for="quantity_unit" class="form-label">Unit</label>
+                  <select class="form-select" id="quantity_unit" name="quantity[unit]" required>
+                    <option value="kg">kg</option>
+                    <option value="liter">liter</option>
+                    <option value="pieces">pieces</option>
+                  </select>
+                </div>
+
+                <!-- Quantity Description -->
+                <div class="col-12">
+                  <label for="quantity_description" class="form-label">Quantity Description</label>
+                  <textarea class="form-control" id="quantity_description" name="quantity[description]" rows="2" required></textarea>
+                </div>
+
+                <!-- Location -->
+                <div class="col-12">
+                  <label for="location_text" class="form-label">Location</label>
+                  <input type="text" class="form-control" id="location_text" name="location_text" required>
+                </div>
+
+                <!-- Hidden Geo Coordinates -->
+                <input type="hidden" id="location_geo_lat" name="location_geo[coordinates][1]">
+                <input type="hidden" id="location_geo_lng" name="location_geo[coordinates][0]">
+                <input type="hidden" name="location_geo[type]" value="Point">
+
+                <!-- Description -->
+                <div class="col-12">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                </div>
+
+                <!-- Expiration Date -->
+                <div class="col-md-6">
+                  <label for="expiration_date" class="form-label">Expiration Date</label>
+                  <input type="date" class="form-control" id="expiration_date" name="expiration_date">
+                </div>
+
+                <!-- Upload Proof Images -->
+                <div class="col-12">
+                  <div class="mb-3">
+                    <label class="form-label" for="proof_images">
+                      Upload up to 3 Proof Images (JPG/PNG, Max 100KB Each) <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="file"
+                      class="form-control mb-2"
+                      id="proof_images"
+                      name="proof_images"
+                      multiple
+                      accept=".jpg,.jpeg,.png"
+                      required
+                    >
+                    <small class="text-muted">Minimum 1 image required.</small>
+                  </div>
+                </div>
+
+
+                <!-- Submit -->
+                <div class="col-12 mt-4 text-center">
+                  <button type="submit" class="btn btn-success w-100">Submit Donation</button>
+                </div>
+
+              </div>
+            </form>
+
+            <div class="text-center mt-4">
+              <a href="/feedhope-request-food-list" class="btn btn-warning">Check Existing Food Requests</a>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-10 col-lg-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <h1 class="mb-5 text-center">Donate Food</h1>
-                            <form action="/feedhope-donation-food" method="post">
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <div class="form-outline">
-                                            <input type="text" id="donor" name="donor" class="form-control" required />
-                                            <label class="form-label" for="donor">Your Name</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="form-outline">
-                                            <input type="text" id="foodtype" name="foodtype" class="form-control" required />
-                                            <label class="form-label" for="foodtype">Type of Food</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-outline">
-                                    <input type="number" id="amount" name="quantity[amount]" class="form-control" required min="1" />
-                                    <label class="form-label" for="amount">Quantity</label>
-                                </div>
-
-                                <div class="form-outline">
-                                    <select id="unit" name="quantity[unit]" class="form-control" required>
-                                        <option value="kg">kg</option>
-                                        <option value="liter">liter</option>
-                                        <option value="pieces">pieces</option>
-                                    </select>
-                                    <label class="form-label" for="unit">Unit</label>
-                                </div>
-
-                                <div class="form-outline">
-                                    <textarea id="quantity_description" name="quantity[description]" class="form-control" required></textarea>
-                                    <label class="form-label" for="quantity_description">Quantity Description</label>
-                                </div>
-
-                                <div class="form-outline">
-                                    <input type="text" id="location" name="location" class="form-control" required />
-                                    <label class="form-label" for="location">Location</label>
-                                </div>
-
-                                <div class="form-outline">
-                                    <textarea id="description" name="description" class="form-control" required></textarea>
-                                    <label class="form-label" for="description">Description</label>
-                                </div>
-
-                                <button type="submit" class="btn btn-success col-12 btn-rounded btn-block">Submit Donation</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 text-center btn-check-requests">
-                    <a href="/feedhope-request-donation-list"><button>Check Existing Requests</button></a>
-                </div>
-            </div>
+            
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('proof_images');
+  input.addEventListener('change', function(event) {
+    const files = event.target.files;
+
+    if (files.length === 0) {
+      alert('Please upload at least one image.');
+      event.target.value = '';
+      return;
+    }
+
+    if (files.length > 3) {
+      alert('You can upload a maximum of 3 images.');
+      event.target.value = '';
+      return;
+    }
+
+    for (let file of files) {
+      if (file.size > 100 * 1024) {
+        alert('Each file must be less than 100KB.');
+        event.target.value = ''; // Reset
+        break;
+      }
+    }
+  });
+</script>

@@ -5,12 +5,14 @@
             <hr>
             <div class="mt-3">
                 <form action="/connect-donor-with-requester" method="POST">
-                    <div class="mb-3">
+                    <div class="my-3">
                         <label for="donor" class="form-label">Enter your name</label>
                         <p class="small text-muted">Enter only if the form for Donation has been submitted.</p>
-                        <input type="text" name="donor" class="form-control" placeholder="Enter your name">
+                        <input type="text" name="donoor" class="form-control" placeholder="Enter your name">
                     </div>
-                    <button type="submit" class="btn btn-success">Connect with Requester</button>
+                    <div class="my-5">
+                        <button type="submit" class="btn btn-success">Connect with Requester</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -35,7 +37,7 @@
                         <% } %>
                     </ul>
 
-                    <% if (requester.images.length > 0) { %>
+                    <% if (requester.images && requester.images.length > 0) { %>
                     <div id="imageCarousel" class="carousel slide mt-4">
                         <div class="carousel-inner">
                             <% requester.images.forEach((image, index) => { %>
@@ -54,26 +56,27 @@
                         </a>
                     </div>
                     <% } %>
-
-                    <h3 class="mt-5">Connected Donors:</h3>
-                    <div class="row">
-                        <% requester.connectedDonors.forEach(donor => { %>
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="text-info"><%= donor.donor %></h4>
-                                        <p><strong>Food Type:</strong> <%= donor.foodtype %><br>
-                                        <strong>Quantity:</strong> <%= donor.quantity.amount %> <%= donor.quantity.unit %><br>
-                                        <strong>Location:</strong> <%= donor.location %></p>
-                                    </div>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item"><strong>Description:</strong> <%= donor.description %></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        <% }) %>
-                    </div>
                 </div>
+            </div>
+            <h3 class="my-5">Connected Donors:</h3>
+            <div class="row">
+                <% if (Array.isArray(requester.connectedDonors)) { %>
+                <% requester.connectedDonors.forEach(donor => { %>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-info"><%= donor.donor %></h4>
+                                    <p><strong>Food Type:</strong> <%= donor.foodtype %><br>
+                                    <strong>Quantity:</strong> <%= donor.quantity.amount %> <%= donor.quantity.unit %><br>
+                                    <strong>Location:</strong> <%= donor.location %></p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Description:</strong> <%= donor.description %></li>
+                            </ul>
+                        </div>
+                    </div>
+                <% }) %>
+                <% } %>
             </div>
         </div>
     </div>

@@ -1,0 +1,113 @@
+<style>
+  .card {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 1rem;
+  }
+  .badge-status {
+    text-transform: capitalize;
+  }
+  .img-thumbnail {
+    height: 80px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  .table thead th {
+    background-color: #f8f9fa;
+  }
+  .modal-img {
+    width: 100%;
+    height: auto;
+  }
+  .filter-form {
+    background: #f1f1f1;
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+  }
+  .info-box {
+    background-color: #e9f5ff;
+    border-left: 5px solid #007bff;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+  }
+</style>
+
+<div class="container py-3">
+  <h2 class="text-center">All Food Donation Requests</h2>
+
+  <!-- Info Description -->
+  <div class="info-box">
+    <strong>Want to help?</strong> If you can fulfill the requirements of a request, click <b>"Request Connection"</b> to initiate the process. You’ll be redirected to the donation form or asked to confirm your intent.
+  </div>
+
+  <!-- Filter Form -->
+  <form class="row g-2 filter-form" method="GET" action="/feedhope-request-food-list">
+    <div class="col-md-6 col-lg-4">
+      <input type="text" name="city" value="<%= filterCity %>" class="form-control" placeholder="Filter by City">
+    </div>
+    <div class="col-md-6 col-lg-4 d-flex align-items-start">
+      <button type="submit" class="btn btn-primary me-2">Filter</button>
+      <a href="/feedhope-request-food-list" class="btn btn-outline-secondary">Reset</a>
+    </div>
+  </form>
+
+  <!-- Table -->
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Food Details</th>
+          <th>Location</th>
+          <th>Urgency</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (filteredFoodRequests.length === 0) { %>
+          <tr>
+            <td colspan="8" class="text-center text-muted">No food requests found for this filter.</td>
+          </tr>
+        <% } else { %>
+          <% filteredFoodRequests.forEach((req, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><strong><%= req.requester_name %></strong></td>
+              <td>
+                <strong><%= req.food_type %></strong><br>
+                <%= req.quantity.amount %> <%= req.quantity.unit %> - <%= req.quantity.description %><br>
+                For <%= req.number_of_people %> people
+              </td>
+              <td>
+                <%= req.location_text %><br>
+                <small class="text-muted">Lat: <%= req.location_geo.coordinates[1] %>, Lng: <%= req.location_geo.coordinates[0] %></small>
+              </td>
+              <td>
+                <span class="badge bg-<%= req.urgency_level === 'high' ? 'danger' : req.urgency_level === 'medium' ? 'warning' : 'success' %> badge-status">
+                  <%= req.urgency_level %>
+                </span>
+              </td>
+              <td>
+                <span class="badge bg-<%= req.status === 'pending' ? 'secondary' : req.status === 'approved' ? 'success' : 'danger' %> badge-status">
+                  <%= req.status %>
+                </span>
+              </td>
+              <td>
+                <%= new Date(req.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) %>
+              </td>
+              <td>
+                <a href="#" class="btn btn-outline-primary btn-sm">
+                  Request Connection
+                </a>
+              </td>
+            </tr>
+          <% }) %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

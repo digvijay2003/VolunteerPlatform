@@ -9,12 +9,13 @@ cloudinary.config({
 });
 
 const storage = new CloudinaryStorage({
-    cloudinary,
-    params: {
-        folder: 'FeedHope',
-        allowed_formats: ['jpg', 'png', 'pdf'],
-    },
+  cloudinary,
+  params: {
+    folder: 'FeedHope',
+    allowed_formats: ['jpg', 'png', 'pdf'],
+  },
 });
+
 
 const upload = multer({
     storage,
@@ -22,7 +23,7 @@ const upload = multer({
         fileSize: 100 * 1024,
     },
     fileFilter: (req, file, cb) => {
-        const allowedTypes = ['application/pdf', 'image/png', 'image/jpg'];
+        const allowedTypes = ['application/pdf', 'image/png', 'image/jpg', 'image/jpeg'];
         if (!allowedTypes.includes(file.mimetype)) {
             return cb(new Error('Invalid file type. Only PDF, PNG, and JPG are allowed.'));
         }

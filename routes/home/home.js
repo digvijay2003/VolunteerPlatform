@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ContactUs = require('../../models/contactUs');
+const ContactUs = require('../../models/contact_us');
 const Event = require('../../models/event');
 
 router.get('/', (req, res) => {

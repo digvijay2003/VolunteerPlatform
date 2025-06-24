@@ -11,7 +11,7 @@
     <% } %>
 
     <% if (error && error.length) { %>
-        <% error.forEach(function(err) { %>
+        <% (Array.isArray(error) ? error : [error]).forEach(function(err) { %>
             <div class="alert alert-danger alert-dismissible fade show shadow-sm rounded-3" 
                  role="alert" 
                  style="max-width: 600px; margin: 15px auto; text-align: center;">
