@@ -1,0 +1,131 @@
+<div class="container-fluid my-5">
+  <h1 class="dashboard-title text-center mb-5 text-white">
+    <u>DASHBOARD</u>
+  </h1>
+
+  <div class="profile-container container p-4 bg-white shadow rounded-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="fw-bold text-primary">Welcome, <%= volunteer.username %>!</h3>
+      <div>
+        <a href="/volunteer-profile/edit" class="btn btn-outline-primary me-2">
+          <i class="bi bi-gear"></i> Profile Settings
+        </a>
+        <a href="/logout" class="btn btn-outline-danger">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-md-6">
+        <h5 class="fw-bold text-secondary">Profile Details</h5>
+        <p class="mb-2"><strong>Email:</strong> <%= volunteer.email %></p>
+        <p class="mb-2"><strong>Role:</strong> <%= volunteer.role %></p>
+        <p class="mb-2">
+          <strong>Status:</strong> 
+          <span class="status-badge bg-<%= volunteer.status === 'active' ? 'success' : 'danger' %>">
+            <i class="bi <%= volunteer.status === 'active' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill' %> me-1"></i>
+            <%= volunteer.status === 'active' ? 'Active' : 'Inactive' %>
+          </span>
+        </p>        
+      </div>
+      <div class="col-md-6">
+        <h5 class="fw-bold text-secondary">Additional Info</h5>
+        <p class="mb-2"><strong>Phone:</strong> <%= volunteer.phone %></p>
+        <p class="mb-2"><strong>Location:</strong> <%= volunteer.location %></p>
+        <p class="mb-2">
+          <strong>Emergency Contact:</strong> 
+          <%= volunteer.emergencyContact.name %> (<%= volunteer.emergencyContact.phone %>)
+        </p>
+        <p class="mb-2"><strong>Availability:</strong> <%= volunteer.availability %></p>
+        <p class="mb-2">
+          <strong>Rating:</strong> 
+          <span class="badge bg-warning text-dark">
+            <%= volunteer.rating.toFixed(1) %>/5
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <h5 class="mb-3">Location Map</h5>
+      <div id="map" class="rounded shadow-sm" style="height: 400px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const mapToken = '<%- mapboxToken %>';
+  const volunteer = <%- JSON.stringify(volunteer) %>;
+</script>
+
+<script src="../javaScript/map.js"></script>
+
+<style>
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to right, #c9a5ef, #b1c6ea);
+    color: #333;
+  }
+
+  .dashboard-title {
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .profile-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn {
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+
+  .btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-outline-primary:hover {
+    background: #007bff;
+    color: #fff;
+  }
+
+  .btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  .btn-outline-danger:hover {
+    background: #dc3545;
+    color: #fff;
+  }
+
+  .fw-bold {
+    font-weight: 700 !important;
+  }
+
+  .text-primary {
+    color: #007bff !important;
+  }
+
+  .text-secondary {
+    color: #6c757d !important;
+  }
+
+  .badge {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+
+  #map {
+    background: #f8f9fa;
+  }
+</style>

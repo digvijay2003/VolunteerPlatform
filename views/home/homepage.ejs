@@ -1,216 +1,259 @@
-  <!-- section 1 -->
-  <div class="container-fluid hero-section">
-    <h1 class="hero-title">FeedHope</h1>
-    <p class="lead fw-bolder display-5">Share More, Waste Less</p>
-    <div class="hero-buttons">
-      <a href="/feedhope-donation-food" class="hero-button button-primary">
-        Contribute Food <span class="material-symbols-outlined mx-2">double_arrow</span>
+<!-- section 1 -->
+<div class="container-fluid hero-section">
+  <h1 class="hero-title">FeedHope</h1>
+  <p class="lead">Empowering Communities, One Meal at a Time</p>
+  <div class="hero-buttons">
+      <a href="/feedhope-donation-food" class="hero-button">
+          Contribute Food <span class="material-symbols-outlined">double_arrow</span>
       </a>
-      <a href="/feedhope-request-donation" class="hero-button button-success">
-        Request Assistance <span class="material-symbols-outlined mx-2">double_arrow</span>
+      <a href="/feedhope-request-food" class="hero-button">
+          Request Assistance <span class="material-symbols-outlined">double_arrow</span>
       </a>      
+  </div>
+</div>
+
+<!-- section 4 -->
+<div class="container-fluid donation-section">
+  <div class="container py-5">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-5 donation-section-image"></div>
+      <div class="col-12 col-md-7 donation-section-content">
+        <div class="donation-content-wrapper">
+          <h2 class="donation-title text-center text-md-end">Make a Difference Today</h2>
+          <p class="donation-description text-center text-md-end">
+            Your generosity helps us support those in need. Join our cause and contribute to creating a brighter future for everyone.
+          </p>
+          <div class="donation-button-wrapper justify-content-center justify-content-md-end">
+            <button class="btn btn-donate bg-danger text-white" type="button" data-bs-toggle="modal" data-bs-target="#donationModal">
+              Donate Now <span class="material-symbols-outlined">send_money</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  
+</div>
+<div class="modal fade" id="donationModal" tabindex="-1" aria-labelledby="donationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-black" id="donationModalLabel">Donate Now</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="donationForm" action="/api/donate" method="POST">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email address" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" required />
+          </div>
+          <div class="form-group">
+            <label for="amount">Donation Amount (in ₹)</label>
+            <select id="amount" name="amount" class="form-control" required>
+              <option value="" disabled selected>Select amount</option>
+              <option value="500">₹500</option>
+              <option value="1000">₹1000</option>
+              <option value="2000">₹2000</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Message (Optional)</label>
+            <textarea id="message" name="message" class="form-control" rows="4" placeholder="Add a message to support our cause (optional)"></textarea>
+          </div>
+          <p class="text-center text-muted">
+            Your contribution helps support our platform and the welfare of those in need. Thank you for making a difference!
+          </p>
+          <button type="submit" class="btn btn-primary btn-block">Donate Now</button>
+        </form>        
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!-- section 2 -->
-  <div class="container-fluid hunger-status-section my-2">
-    <h2 class="section-title text-center pb-3 mb-2">Hunger Status in India(2023)</h2>
-    <div id="hungerAccordion" class="accordion d-md-none">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            Hunger Index
-          </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#hungerAccordion">
-          <div class="accordion-body">
-            <h5>Global Hunger Index (GHI) for India</h5>
-             <ul class="list-unstyled">
-              <li>In the 2023 Global Hunger Index, India ranks 111th out of the <a href="https://www.globalhungerindex.org/ranking.html" class="link-success" target="_blank">125 countries with sufficient data to calculate 2023 GHI scores.</a> With a score of 28.7 in the 2023 Global Hunger Index, India has a level of hunger that is serious.</li>
-              <li><strong>Severity:</strong> While there has been some improvement since 2000, India's hunger situation is still considered serious.</li>
-              <li><strong>Score:</strong> A lower score is better on the GHI's 100-point scale (0 representing no hunger and 100 the worst). India's score of 28.7 reflects this seriousness.</li>
-              <li><strong>Rank Decline:</strong> India's ranking actually slipped slightly from 107 in 2022 to 111 in 2023.</li>
-            </ul>    
+<!-- section 3 -->
+<div class="clearfix custom-section mb-2">
+  <h2 class="text-center py-4">Food Wastage in India 2024: From Farm to Bin, Hidden Truth</h2>
+  <div class="row mb-2">
+    <div class="col-md-5 px-5 ms-lg-3 video-container">
+      <div class="ratio ratio-16x9 my-5">
+        <iframe src="https://www.youtube.com/embed/ITYwmG3GgVc" title="YouTube video" allowfullscreen></iframe>
+      </div>
+      <div class="ratio ratio-16x9">
+        <iframe src="https://www.youtube.com/embed/yFFP_D9sdWo" title="YouTube video" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="col-md-6 mb-2">
+      <p>India is a country of rich heritage with abundant culture, flavors, and cuisines. Yet it is grappling with a serious issue that impacts nearly 23 crore people living in the country – Food Wastage in India. The Ministry of Agriculture, India reported that nearly 50,000 INR crores worth of food gets wasted each year.</p>
+      <p>This alarming amount of food that is getting wasted every single day in a country where millions of people still go to bed hungry each night is an appalling reality that demands our immediate attention and action. Come with us to know the food wastage facts in India.</p>
+      <h3>Causes of Food Wastage in India</h3>
+      <div class="accordion" id="causesAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingPostHarvestLosses">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePostHarvestLosses" aria-expanded="false" aria-controls="collapsePostHarvestLosses">
+              Post-Harvest Losses
+            </button>
+          </h2>
+          <div id="collapsePostHarvestLosses" class="accordion-collapse collapse" aria-labelledby="headingPostHarvestLosses" data-bs-parent="#causesAccordion">
+            <div class="accordion-body">
+              Believe it or not, a large quantity of food gets wasted even before it reaches the consumer’s plate. Right after harvest, the food commodities begin to deteriorate in quality if they are not handled properly. This includes poor transportation facilities, overloading in warehouses, the warehouses being maintained very poorly and finally improper handling during distribution.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingLackOfAwareness">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLackOfAwareness" aria-expanded="false" aria-controls="collapseLackOfAwareness">
+              Lack of Awareness
+            </button>
+          </h2>
+          <div id="collapseLackOfAwareness" class="accordion-collapse collapse" aria-labelledby="headingLackOfAwareness" data-bs-parent="#causesAccordion">
+            <div class="accordion-body">
+              Be it eating from restaurants or at home, most people think it is okay to waste food because they have paid for it. Of course, the restaurants or vendors will not be facing any loss as they are charging us, consumers, for the same, but the real cost is to the economy and the planet. The food that was wasted because we couldn’t priorly plan if we could consume it or not; would land in the trash, thus not being of any use to anybody.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingBigFatWeddings">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBigFatWeddings" aria-expanded="false" aria-controls="collapseBigFatWeddings">
+              The Big Fat Weddings
+            </button>
+          </h2>
+          <div id="collapseBigFatWeddings" class="accordion-collapse collapse" aria-labelledby="headingBigFatWeddings" data-bs-parent="#causesAccordion">
+            <div class="accordion-body">
+              India is famously known for its ultra-grand weddings throwing extravagance wherever possible but what it is not known for is that it is one of the leading causes of food wastage. Enormous amounts of food go to waste during such occasions. According to research, about 40% of the food prepared goes to waste and is simply thrown away after the wedding ends.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingMarketNeeds">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMarketNeeds" aria-expanded="false" aria-controls="collapseMarketNeeds">
+              Market Needs
+            </button>
+          </h2>
+          <div id="collapseMarketNeeds" class="accordion-collapse collapse" aria-labelledby="headingMarketNeeds" data-bs-parent="#causesAccordion">
+            <div class="accordion-body">
+              One of the most problematic causes of food wastage these days is the usage of edible foods in markets such as Cosmetics, Healthcare etc., When the foods do not comply to the standards set by these markets they would straight up get rejected although they are perfectly edible. This is a grave mistake that would cost the economy largely.
+            </div>
           </div>
         </div>
       </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingThree">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-            Challenges
-          </button>
-        </h2>
-        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#hungerAccordion">
-          <div class="accordion-body">
-            <h5>Challenges</h5>
-              <ul class="list-unstyled">
-               <li>India faces a complex challenge when it comes to hunger, despite being a major agricultural producer.</li>
-               <li><strong>Post-Harvest Management:</strong> Limited access to cold storage facilities and inefficient handling practices lead to spoilage and significant losses during harvest, processing, and transportation</li>
-               <li><strong>Excess Purchases & Overconsumption:</strong> Indian households, though not the highest per capita wasters globally, still contribute significantly. Buying in bulk without proper planning, lack of awareness about storage techniques, and cultural norms around large portions at meals can lead to food waste.</li>
-               <li><strong>Wastage and Hunger:</strong> The staggering amount of food wasted in India, estimated at around 50 kg per person annually, could significantly contribute to feeding the millions who suffer from malnutrition.</li>
-               <li><strong>Distribution Issues:</strong> Inefficient distribution networks can lead to food shortages in certain regions despite national surpluses.</li>
-              </ul>
+      <h3>Consequences of Food Waste</h3>
+      <div class="accordion" id="consequencesAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingHungerMalnutrition">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHungerMalnutrition" aria-expanded="false" aria-controls="collapseHungerMalnutrition">
+              Hunger & Malnutrition
+            </button>
+          </h2>
+          <div id="collapseHungerMalnutrition" class="accordion-collapse collapse" aria-labelledby="headingHungerMalnutrition" data-bs-parent="#consequencesAccordion">
+            <div class="accordion-body">
+              The leading consequence of food wastage on the country is its direct contribution to malnutrition and starvation. According to a report released by Feeding India, around 194.4 million people or 14.3% of the population are not receiving adequate nutrition. India is also ranked in the 111th position out of 125 countries in the Global Hunger Index, 2023.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingGlobalImpact">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGlobalImpact" aria-expanded="false" aria-controls="collapseGlobalImpact">
+              Global Impact
+            </button>
+          </h2>
+          <div id="collapseGlobalImpact" class="accordion-collapse collapse" aria-labelledby="headingGlobalImpact" data-bs-parent="#consequencesAccordion">
+            <div class="accordion-body">
+              Food waste in India is not just a national issue; it also affects the planet on a large scale as food is a universal commodity and is not just restricted to people of a particular country. The environmental hazards associated with the wastage are also immense resulting in the emission of unnecessary carbon that could result in a devastating note.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingEconomicLoss">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEconomicLoss" aria-expanded="false" aria-controls="collapseEconomicLoss">
+              Economic Loss
+            </button>
+          </h2>
+          <div id="collapseEconomicLoss" class="accordion-collapse collapse" aria-labelledby="headingEconomicLoss" data-bs-parent="#consequencesAccordion">
+            <div class="accordion-body">
+              In India, 40% of the food wasted is equivalent to nearly 92,000 crore/year. This is equivalent to nearly 1% of the GDP which is depleted in the form of food wastage in India. Each person in India wastes 55 kg of food per year as per <a href="https://www.unep.org/resources/report/unep-food-waste-index-report-2021" target="_blank">UN Environment Programme’s report</a>. What might look like a harmless wastage of food deeply impacts the agricultural sector and affects the nation’s economy. We also need to keep in mind that it is not just the food that is getting wasted but also all the resources such as water, land, energy and most importantly the hard labour of the farmers and all the people involved in the production of food. This is the food wastage statistics in India..
+            </div>
           </div>
         </div>
       </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- section 2 -->
+<div class="container-fluid hunger-status-section my-1">
+  <h2 class="section-title">Hunger Status in India (2023)</h2>
+  <div id="hungerAccordion" class="accordion d-md-none">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Hunger Index
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#hungerAccordion">
+        <div class="accordion-body">
+          <h5>Global Hunger Index (GHI) for India</h5>
+          <ul class="list-unstyled">
+            <li>In the 2023 Global Hunger Index, India ranks 111th out of the <a href="https://www.globalhungerindex.org/ranking.html" class="link-success" target="_blank">125 countries with sufficient data to calculate 2023 GHI scores.</a> With a score of 28.7 in the 2023 Global Hunger Index, India has a level of hunger that is serious.</li>
+            <li><strong>Severity:</strong> While there has been some improvement since 2000, India's hunger situation is still considered serious.</li>
+            <li><strong>Score:</strong> A lower score is better on the GHI's 100-point scale (0 representing no hunger and 100 the worst). India's score of 28.7 reflects this seriousness.</li>
+            <li><strong>Rank Decline:</strong> India's ranking actually slipped slightly from 107 in 2022 to 111 in 2023.</li>
+          </ul>    
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Challenges
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#hungerAccordion">
+        <div class="accordion-body">
+          <h5>Challenges</h5>
+          <ul class="list-unstyled">
+            <li>India faces a complex challenge when it comes to hunger, despite being a major agricultural producer.</li>
+            <li><strong>Post-Harvest Management:</strong> Limited access to cold storage facilities and inefficient handling practices lead to spoilage and significant losses during harvest, processing, and transportation.</li>
+            <li><strong>Excess Purchases & Overconsumption:</strong> Indian households, though not the highest per capita wasters globally, still contribute significantly. Buying in bulk without proper planning, lack of awareness about storage techniques, and cultural norms around large portions at meals can lead to food waste.</li>
+            <li><strong>Wastage and Hunger:</strong> The staggering amount of food wasted in India, estimated at around 50 kg per person annually, could significantly contribute to feeding the millions who suffer from malnutrition.</li>
+            <li><strong>Distribution Issues:</strong> Inefficient distribution networks can lead to food shortages in certain regions despite national surpluses.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="hunger-status-section-image"></div>
+  </div>
+  <div class="row d-none d-md-flex mx-2">
+    <div class="alert alert-info" role="alert">
+      Source of information <a href="https://www.globalhungerindex.org/india.html" class="alert-link" target="_blank">click here</a>.
+    </div>
+    <div class="col-md-6">
+      <h5>Global Hunger Index (GHI) for India</h5>
+      <ul class="list-unstyled">
+        <li>In the 2023 Global Hunger Index, India ranks 111th out of the <a href="https://www.globalhungerindex.org/ranking.html" class="link-success" target="_blank">125 countries with sufficient data to calculate 2023 GHI scores.</a> With a score of 28.7 in the 2023 Global Hunger Index, India has a level of hunger that is <span style="color: red;">serious</span>.</li>
+        <li><strong>Severity:</strong> While there has been some improvement since 2000, India's hunger situation is still considered serious.</li>
+        <li><strong>Score:</strong> A lower score is better on the GHI's 100-point scale (0 representing no hunger and 100 the worst). India's score of <b>28.7</b> reflects this seriousness.</li>
+        <li><strong>Rank Decline:</strong> India's ranking actually slipped slightly from 107 in 2022 to 111 in 2023.</li>
+      </ul>
       <div class="hunger-status-section-image"></div>
     </div>
-
-    <div class="row d-none d-md-flex mx-2">
-      <div class="alert alert-info" role="alert">
-        Source of information <a href="https://www.globalhungerindex.org/india.html" class="alert-link" target="_blank">click here</a>.
-      </div>
-      <div class="col-md-6">
-        <h5>Global Hunger Index (GHI) for India</h5>
-        <ul class="list-unstyled">
-          <li>In the 2023 Global Hunger Index, India ranks 111th out of the <a href="https://www.globalhungerindex.org/ranking.html" class="link-success" target="_blank">125 countries with sufficient data to calculate 2023 GHI scores.</a> With a score of 28.7 in the 2023 Global Hunger Index, India has a level of hunger that is <span style="color: red;">serious</span>.</li>
-          <li><strong>Severity:</strong> While there has been some improvement since 2000, India's hunger situation is still considered serious.</li>
-          <li><strong>Score:</strong> A lower score is better on the GHI's 100-point scale (0 representing no hunger and 100 the worst). India's score of <b>28.7</b> reflects this seriousness.</li>
-          <li><strong>Rank Decline:</strong> India's ranking actually slipped slightly from 107 in 2022 to 111 in 2023.</li>
-        </ul>
-        <div class="hunger-status-section-image"></div>
-      </div>
-      <div class="col-md-1"></div>
-      <div class="col-md-5">
-        <h5>Challenges</h5>
-        <ul class="list-unstyled">
-          <li>India faces a complex challenge when it comes to hunger, despite being a major agricultural producer.</li>
-               <li><strong>Post-Harvest Management:</strong> Limited access to cold storage facilities and inefficient handling practices lead to spoilage and significant losses during harvest, processing, and transportation</li>
-               <li><strong>Excess Purchases & Overconsumption:</strong> Indian households, though not the highest per capita wasters globally, still contribute significantly. Buying in bulk without proper planning, lack of awareness about storage techniques, and cultural norms around large portions at meals can lead to food waste.</li>
-               <li><strong>Wastage and Hunger:</strong> The staggering amount of food wasted in India, estimated at around 50 kg per person annually, could significantly contribute to feeding the millions who suffer from malnutrition.</li>
-               <li><strong>Distribution Issues:</strong> Inefficient distribution networks can lead to food shortages in certain regions despite national surpluses.</li>  
-        </ul>
-      </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-5">
+      <h5>Challenges</h5>
+      <ul class="list-unstyled">
+        <li>India faces a complex challenge when it comes to hunger, despite being a major agricultural producer.</li>
+        <li><strong>Post-Harvest Management:</strong> Limited access to cold storage facilities and inefficient handling practices lead to spoilage and significant losses during harvest, processing, and transportation.</li>
+        <li><strong>Excess Purchases & Overconsumption:</strong> Indian households, though not the highest per capita wasters globally, still contribute significantly. Buying in bulk without proper planning, lack of awareness about storage techniques, and cultural norms around large portions at meals can lead to food waste.</li>
+        <li><strong>Wastage and Hunger:</strong> The staggering amount of food wasted in India, estimated at around 50 kg per person annually, could significantly contribute to feeding the millions who suffer from malnutrition.</li>
+        <li><strong>Distribution Issues:</strong> Inefficient distribution networks can lead to food shortages in certain regions despite national surpluses.</li>
+      </ul>
     </div>
   </div>
-  
-
-  <!-- section 3     -->
-  <div class="clearfix custom-section mb-2 rounded-bottom-5">
-    <h2 class="text-center py-4">Food Wastage in India 2024: From Farm to Bin, Hidden Truth</h2>
-    <div class="row mb-2">
-      <div class="col-md-5 px-5 ms-lg-3 video-container">
-        <div class="ratio ratio-16x9 my-5">
-          <iframe src="https://www.youtube.com/embed/ITYwmG3GgVc" title="YouTube video" allowfullscreen></iframe>
-        </div>
-        <div class="ratio ratio-16x9">
-          <iframe src="https://www.youtube.com/embed/yFFP_D9sdWo" title="YouTube video" allowfullscreen></iframe>
-        </div>
-      </div>
-      <div class="col-md-6 mb-2">
-        <p>India is a country of rich heritage with abundant culture, flavors, and cuisines. Yet it is grappling with a serious issue that impacts nearly 23 crore people living in the country – Food Wastage in India. The Ministry of Agriculture, India reported that nearly 50,000 INR crores worth of food gets wasted each year.</p>
-        <p>This alarming amount of food that is getting wasted every single day in a country where millions of people still go to bed hungry each night is an appalling reality that demands our immediate attention and action. Come with us to know the food wastage facts in India.</p>
-        
-        <h3>Causes of Food Wastage in India</h3>
-        <div class="accordion" id="causesAccordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingPostHarvestLosses">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePostHarvestLosses" aria-expanded="false" aria-controls="collapsePostHarvestLosses">
-                Post-Harvest Losses
-              </button>
-            </h2>
-            <div id="collapsePostHarvestLosses" class="accordion-collapse collapse" aria-labelledby="headingPostHarvestLosses" data-bs-parent="#causesAccordion">
-              <div class="accordion-body">
-                Believe it or not, a large quantity of food gets wasted even before it reaches the consumer’s plate. Right after harvest, the food commodities begin to deteriorate in quality if they are not handled properly. This includes poor transportation facilities, overloading in warehouses, the warehouses being maintained very poorly and finally improper handling during distribution.
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingLackOfAwareness">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLackOfAwareness" aria-expanded="false" aria-controls="collapseLackOfAwareness">
-                Lack of Awareness
-              </button>
-            </h2>
-            <div id="collapseLackOfAwareness" class="accordion-collapse collapse" aria-labelledby="headingLackOfAwareness" data-bs-parent="#causesAccordion">
-              <div class="accordion-body">
-                Be it eating from restaurants or at home, most people think it is okay to waste food because they have paid for it. Of course, the restaurants or vendors will not be facing any loss as they are charging us, consumers, for the same, but the real cost is to the economy and the planet. The food that was wasted because we couldn’t priorly plan if we could consume it or not; would land in the trash, thus not being of any use to anybody.
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingBigFatWeddings">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBigFatWeddings" aria-expanded="false" aria-controls="collapseBigFatWeddings">
-                The Big Fat Weddings
-              </button>
-            </h2>
-            <div id="collapseBigFatWeddings" class="accordion-collapse collapse" aria-labelledby="headingBigFatWeddings" data-bs-parent="#causesAccordion">
-              <div class="accordion-body">
-                India is famously known for its ultra-grand weddings throwing extravagance wherever possible but what it is not known for is that it is one of the leading causes of food wastage. Enormous amounts of food go to waste during such occasions. According to research, about 40% of the food prepared goes to waste and is simply thrown away after the wedding ends.
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingMarketNeeds">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMarketNeeds" aria-expanded="false" aria-controls="collapseMarketNeeds">
-                Market Needs
-              </button>
-            </h2>
-            <div id="collapseMarketNeeds" class="accordion-collapse collapse" aria-labelledby="headingMarketNeeds" data-bs-parent="#causesAccordion">
-              <div class="accordion-body">
-                One of the most problematic causes of food wastage these days is the usage of edible foods in markets such as Cosmetics, Healthcare etc., When the foods do not comply to the standards set by these markets they would straight up get rejected although they are perfectly edible. This is a grave mistake that would cost the economy largely.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h3>Consequences of Food Waste</h3>
-        <div class="accordion" id="consequencesAccordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingHungerMalnutrition">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHungerMalnutrition" aria-expanded="false" aria-controls="collapseHungerMalnutrition">
-                Hunger & Malnutrition
-              </button>
-            </h2>
-            <div id="collapseHungerMalnutrition" class="accordion-collapse collapse" aria-labelledby="headingHungerMalnutrition" data-bs-parent="#consequencesAccordion">
-              <div class="accordion-body">
-                The leading consequence of food wastage on the country is its direct contribution to malnutrition and starvation. According to a report released by Feeding India, around 194.4 million people or 14.3% of the population are not receiving adequate nutrition. India is also ranked in the 111th position out of 125 countries in the Global Hunger Index, 2023.
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingGlobalImpact">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGlobalImpact" aria-expanded="false" aria-controls="collapseGlobalImpact">
-                Global Impact
-              </button>
-            </h2>
-            <div id="collapseGlobalImpact" class="accordion-collapse collapse" aria-labelledby="headingGlobalImpact" data-bs-parent="#consequencesAccordion">
-              <div class="accordion-body">
-                Food waste in India is not just a national issue; it also affects the planet on a large scale as food is a universal commodity and is not just restricted to people of a particular country. The environmental hazards associated with the wastage are also immense resulting in the emission of unnecessary carbon that could result in a devastating note.
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingEconomicLoss">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEconomicLoss" aria-expanded="false" aria-controls="collapseEconomicLoss">
-                Economic Loss
-              </button>
-            </h2>
-            <div id="collapseEconomicLoss" class="accordion-collapse collapse" aria-labelledby="headingEconomicLoss" data-bs-parent="#consequencesAccordion">
-              <div class="accordion-body">
-                In India, 40% of the food wasted is equivalent to nearly 92,000 crore/year. This is equivalent to nearly 1% of the GDP which is depleted in the form of food wastage in India. Each person in India wastes 55 kg of food per year as per <a href="https://www.unep.org/resources/report/unep-food-waste-index-report-2021" target="_blank">UN Environment Programme’s report</a>. What might look like a harmless wastage of food deeply impacts the agricultural sector and affects the nation’s economy. We also need to keep in mind that it is not just the food that is getting wasted but also all the resources such as water, land, energy and most importantly the hard labour of the farmers and all the people involved in the production of food. This is the food wastage statistics in India..
-              </div>
-            </div>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <!-- section 4 -->
-  <div class="container-fluid donation-section">
-    <div class="container" style="padding: 50px;">
-        <div class="row">
-            <div class="col-12 col-md-5 donation-section-image"></div>
-            <div class="col-12 col-md-7 donation-section-content">
-                <div class="donation-button-wrapper justify-content-center">
-                    <button class="btn btn-primary btn-donate"><a href="/donate" style="color: aliceblue;">Make a Difference</a></button>
-                    <div class="arrow-wrapper">
-                      <span class="material-symbols-outlined arrow">double_arrow</span>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

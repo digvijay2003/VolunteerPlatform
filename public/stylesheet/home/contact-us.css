@@ -1,0 +1,10 @@
+.contactUs-image{
+    background-image: url("img-01.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+h1{
+    font-family: "Margarine", sans-serif;
+    font-weight: bolder;
+}

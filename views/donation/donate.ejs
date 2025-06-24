@@ -1,0 +1,136 @@
+<section class="py-5" style="background-color: #f8f9fa;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="card shadow rounded-4">
+          <div class="card-body p-5">
+            <h2 class="text-center mb-4">Donate Food</h2>
+            <form action="/feedhope-donation-food" method="POST" enctype="multipart/form-data">
+              <div class="row g-3">
+                <!-- Donor Name -->
+                <div class="col-md-6">
+                  <label for="donor_name" class="form-label">Your Name</label>
+                  <input type="text" class="form-control" id="donor_name" name="donor_name" required>
+                </div>
+
+                <!-- Phone -->
+                <div class="col-md-6">
+                  <label for="donor_phone" class="form-label">Phone Number</label>
+                  <input type="text" class="form-control" id="donor_phone" name="donor_phone" placeholder="+91xxxxxxxxxx" pattern="^\+?\d{10,15}$" required>
+                </div>
+
+                <!-- Food Type -->
+                <div class="col-md-6">
+                  <label for="food_type" class="form-label">Type of Food</label>
+                  <input type="text" class="form-control" id="food_type" name="food_type" required>
+                </div>
+
+                <!-- Quantity -->
+                <div class="col-md-3">
+                  <label for="quantity_amount" class="form-label">Quantity</label>
+                  <input type="number" class="form-control" id="quantity_amount" name="quantity[amount]" min="1" required>
+                </div>
+
+                <div class="col-md-3">
+                  <label for="quantity_unit" class="form-label">Unit</label>
+                  <select class="form-select" id="quantity_unit" name="quantity[unit]" required>
+                    <option value="kg">kg</option>
+                    <option value="liter">liter</option>
+                    <option value="pieces">pieces</option>
+                  </select>
+                </div>
+
+                <!-- Quantity Description -->
+                <div class="col-12">
+                  <label for="quantity_description" class="form-label">Quantity Description</label>
+                  <textarea class="form-control" id="quantity_description" name="quantity[description]" rows="2" required></textarea>
+                </div>
+
+                <!-- Location -->
+                <div class="col-12">
+                  <label for="location_text" class="form-label">Location</label>
+                  <input type="text" class="form-control" id="location_text" name="location_text" required>
+                </div>
+
+                <!-- Hidden Geo Coordinates -->
+                <input type="hidden" id="location_geo_lat" name="location_geo[coordinates][1]">
+                <input type="hidden" id="location_geo_lng" name="location_geo[coordinates][0]">
+                <input type="hidden" name="location_geo[type]" value="Point">
+
+                <!-- Description -->
+                <div class="col-12">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                </div>
+
+                <!-- Expiration Date -->
+                <div class="col-md-6">
+                  <label for="expiration_date" class="form-label">Expiration Date</label>
+                  <input type="date" class="form-control" id="expiration_date" name="expiration_date">
+                </div>
+
+                <!-- Upload Proof Images -->
+                <div class="col-12">
+                  <div class="mb-3">
+                    <label class="form-label" for="proof_images">
+                      Upload up to 3 Proof Images (JPG/PNG, Max 100KB Each) <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="file"
+                      class="form-control mb-2"
+                      id="proof_images"
+                      name="proof_images"
+                      multiple
+                      accept=".jpg,.jpeg,.png"
+                      required
+                    >
+                    <small class="text-muted">Minimum 1 image required.</small>
+                  </div>
+                </div>
+
+
+                <!-- Submit -->
+                <div class="col-12 mt-4 text-center">
+                  <button type="submit" class="btn btn-success w-100">Submit Donation</button>
+                </div>
+
+              </div>
+            </form>
+
+            <div class="text-center mt-4">
+              <a href="/feedhope-request-food-list" class="btn btn-warning">Check Existing Food Requests</a>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('proof_images');
+  input.addEventListener('change', function(event) {
+    const files = event.target.files;
+
+    if (files.length === 0) {
+      alert('Please upload at least one image.');
+      event.target.value = '';
+      return;
+    }
+
+    if (files.length > 3) {
+      alert('You can upload a maximum of 3 images.');
+      event.target.value = '';
+      return;
+    }
+
+    for (let file of files) {
+      if (file.size > 100 * 1024) {
+        alert('Each file must be less than 100KB.');
+        event.target.value = ''; // Reset
+        break;
+      }
+    }
+  });
+</script>

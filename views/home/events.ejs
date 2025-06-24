@@ -1,0 +1,84 @@
+<div class="container">
+    <header>
+      <h1>Upcoming Events</h1>
+    </header>
+
+    <% if (events && events.length > 0)  { %>
+      <div class="events-grid">
+        <% events.forEach(event => { %>
+          <div class="event-card">
+            <h2><%= event.title %></h2>
+            <p><strong>Description:</strong> <%= event.description %></p>
+            <p><strong>Date:</strong> <%= event.date.toDateString() %></p>
+            <p><strong>Location:</strong> <%= event.location.city %>, <%= event.location.state %></p>
+            <p><strong>Organizer:</strong> <%= event.organizer.name %></p>
+            <p><strong>Status:</strong> <%= event.status %></p>
+            <a class="btn btn-danger" href="#">Check Details</a>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <p>No events found. Check back later!</p>
+    <% } %>
+</div>
+
+<style>
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+    font-family: 'Roboto Slab', 'Sans-serif';
+    font-size: 2.5rem;
+    color: #00050b;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.event-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.event-card h2 {
+  margin: 0 0 10px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.event-card p {
+  margin: 5px 0;
+  font-size: 1rem;
+}
+
+.event-card .btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 15px;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.event-card .btn:hover {
+  background-color: #0056b3;
+}
+
+</style>

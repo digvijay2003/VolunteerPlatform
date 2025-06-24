@@ -3,54 +3,31 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const connectDB = require('./config/db');
-const bodyParser = require('body-parser');
-const session = require('./config/session');
-const methodOverride = require('method-override');
-const flash = require('connect-flash');
-const expressLayouts = require('express-ejs-layouts');
 
-// Initialize Express
 const app = express();
 
-// Connect to the database
+// Connect to Database
 connectDB();
 
-// Middleware
+// View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.set('layout', 'layout/boilerplate'); 
+app.set('layout', 'layout/boilerplate');
+app.use(require('express-ejs-layouts'));
 
-app.use(expressLayouts);
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session);
-app.use(flash());
-app.use((req, res, next) => {
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-    next();
-});
+// Startup Modules
+require('./startup/security')(app);
+require('./startup/middleware')(app);
+// require('./startup/sanitize')(app);
 
+// swagger documentation
+require('./startup/swagger')(app); 
 
 // Routes
-app.use('/', require('./routes/home'));
-app.use('/', require('./routes/auth'));
-app.use('/', require('./routes/profile'));
-app.use('/', require('./routes/donateFood'));
-app.use('/', require('./routes/requestDonation'));
-app.use('/', require('./routes/aboutUs'));
-app.use('/admin', require('./routes/admin'));
+require('./startup/routes')(app);
 
-// Error handling middleware
-app.use((req, res, next) => {
-    res.status(404).render('errorHandling/error', { error: 'Page not found!' });
-});
+// Error Handling
+require('./startup/errorHandler')(app);
 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render('errorHandling/error', { error: 'Something went wrong!' });
-});
-
-// Start the server
-app.listen(3000, () => console.log('Server running on port 3000'));
+// Server Startup
+require('./startup/server')(app);

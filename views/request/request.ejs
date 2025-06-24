@@ -1,0 +1,152 @@
+  <section class="py-5" style="background-color: #f8f9fa;">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-lg-10">
+            <div class="card" style="border-radius: 1rem;">
+              <div class="card-body p-5">
+                <h1 class="mb-5 text-center">Food Request</h1>
+
+                <form action="/feedhope-request-food" method="POST" enctype="multipart/form-data">
+                  <div class="row">
+                      <div class="col-12 col-md-6 mb-4">
+                          <div class="form-outline">
+                              <input type="text" id="requester_name" name="requester_name" class="form-control" required />
+                              <label class="form-label" for="requester_name">Requester Name <span class="text-danger">*</span></label>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md-6 mb-4">
+                          <div class="form-outline">
+                              <input type="text" id="requester_phone" name="requester_phone" class="form-control" pattern="\d{10}" title="Please enter a valid 10-digit phone number" required />
+                              <label class="form-label" for="requester_phone">Requester Phone <span class="text-danger">*</span></label>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md-6 mb-4">
+                          <div class="form-outline">
+                              <input type="text" id="foodtype" name="foodtype" class="form-control" required />
+                              <label class="form-label" for="foodtype">Type of Food <span class="text-danger">*</span></label>
+                          </div>
+                      </div>
+
+                      <div class="col-12 col-md-6 mb-4">
+                        <div class="form-outline">
+                            <input type="file" name="proof_images" multiple accept="image/png, image/jpg, image/pdf" />
+                            <label class="form-label" for="proof_images">Upload the Images for Proof<span class="text-danger">*</span></label>
+                        </div>
+                      </div>
+                  </div>
+              
+                  <div class="row">
+                      <div class="col-12 col-md-6 mb-4">
+                          <div class="form-outline">
+                              <input type="number" id="quantity_amount" name="quantity[amount]" class="form-control" required min="1" />
+                              <label class="form-label" for="quantity_amount">Quantity <span class="text-danger">*</span></label>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md-6 mb-4">
+                          <div class="form-outline">
+                              <select id="quantity_unit" name="quantity[unit]" class="form-select" required>
+                                  <option value="kg">kg</option>
+                                  <option value="liter">liter</option>
+                                  <option value="pieces">pieces</option>
+                              </select>
+                              <label class="form-label" for="quantity_unit">Unit <span class="text-danger">*</span></label>
+                          </div>
+                      </div>
+                  </div>
+              
+                  <div class="form-outline mb-4">
+                      <textarea id="quantity_description" name="quantity[description]" class="form-control" required></textarea>
+                      <label class="form-label" for="quantity_description">Quantity Description <span class="text-danger">*</span></label>
+                  </div>
+              
+                  <div class="form-outline mb-4">
+                      <input type="text" id="location" name="location" class="form-control" required />
+                      <label class="form-label" for="location">Location <span class="text-danger">*</span></label>
+                  </div>
+              
+                  <div class="form-outline mb-4">
+                      <textarea id="need_description" name="need_description" class="form-control" required></textarea>
+                      <label class="form-label" for="need_description">Why do you need food? <span class="text-danger">*</span></label>
+                  </div>
+              
+                  <div class="row">
+                      <div class="col-12 col-md-6 mb-4">
+                          <div class="form-outline">
+                              <select id="urgency" name="urgency" class="form-select" required>
+                                  <option value="low">Low</option>
+                                  <option value="medium" selected>Medium</option>
+                                  <option value="high">High</option>
+                              </select>
+                              <label class="form-label" for="urgency">Urgency Level <span class="text-danger">*</span></label>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md-6 mb-4">
+                          <div class="form-outline">
+                              <input type="number" id="number_of_people" name="number_of_people" class="form-control" required min="1" />
+                              <label class="form-label" for="number_of_people">Number of People <span class="text-danger">*</span></label>
+                          </div>
+                      </div>
+                  </div>
+              
+                <div class="form-outline mb-4">
+                    <input type="date" id="expiration_date" name="expiration_date" class="form-control" />
+                    <label class="form-label" for="expiration_date">Request Expiration Date</label>
+              </div>
+
+                <div class="form-outline mb-4">
+                    <input type="text" id="government_id_number" name="government_id_number" class="form-control" required accept="image/png, image/jpg, image/pdf" />
+                    <label class="form-label" for="government_id_number">Government ID Number <span class="text-danger">*</span></label>
+                </div>
+
+                <div class="form-outline mb-4">
+                    <input type="file" name="government_id_images" multiple required />
+                    <label class="form-label" for="government_id_images">Upload Government ID Images <span class="text-danger">*</span></label>
+                </div>
+              
+                  <button type="submit" class="btn btn-success col-12 btn-rounded btn-block">Submit Request</button>
+
+              </form>         
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+
+<script>
+  const input = document.getElementById('proof_images');
+  input.addEventListener('change', function(event) {
+    const files = event.target.files;
+
+    if (files.length === 0) {
+      alert('Please upload at least one image.');
+      event.target.value = '';
+      return;
+    }
+
+    if (files.length > 3) {
+      alert('You can upload a maximum of 3 images.');
+      event.target.value = '';
+      return;
+    }
+
+    for (let file of files) {
+      if (file.size > 100 * 1024) {
+        alert('Each file must be less than 100KB.');
+        event.target.value = ''; // Reset
+        break;
+      }
+    }
+  });
+
+  document.querySelector('form').addEventListener('submit', () => {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  });
+
+  document.getElementById('expiration_date').min = new Date().toISOString().split('T')[0];
+
+
+</script>

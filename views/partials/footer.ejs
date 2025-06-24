@@ -1,16 +1,59 @@
-<footer class="footer bg-dark text-white text-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div>Quick Links:
-            <a href="/">Home</a> |
-            <a href="/feedhope-about-us">About Us</a> |
-            <a href="/how-it-works">How It Works</a> |
-            <a href="/feedhope-contact_Us">Contact Us</a>
-          </div>
-          <div>Contact: digupathania25@gmail.com</div>
-          <div>&copy; 2024 FeedHope. All rights reserved.</div>
+<footer class="footer bg-dark text-white text-center py-2 mt-auto bg-dark bg-gradient">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="quick-links">
+          Quick Links:
+          <a href="/">Home</a> |
+          <a href="/feedhope-about-us">About Us</a> |
+          <a href="/how-it-works">How It Works</a> |
+          <a href="/feedhope-contact-us">Contact Us</a>
         </div>
+        <div class="contact">Contact: <a href="mailto:digupathania25@gmail.com">digupathania25@gmail.com</a></div>
+        <div class="copyright">&copy; 2024 FeedHope. All rights reserved.</div>
       </div>
     </div>
+  </div>
 </footer>
+<style>
+  .footer {
+    margin-top: auto; /* Ensures the footer stays at the bottom */
+}
+
+.footer .quick-links {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.footer .quick-links a {
+    color: #00cc99;
+    text-decoration: none;
+    padding: 0 5px;
+    transition: color 0.3s;
+}
+
+.footer .quick-links a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.footer .contact {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.footer .contact a {
+    color: #00cc99;
+    text-decoration: none;
+}
+
+.footer .contact a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.footer .copyright {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+</style>

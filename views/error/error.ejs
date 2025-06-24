@@ -1,0 +1,126 @@
+<style>
+    .error-handler-container {
+        font-family: 'Roboto', Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        position: relative;
+        padding: 20px;
+    }
+
+    .error-card {
+        max-width: 500px;
+        width: 100%;
+        padding: 2rem;
+        border-radius: 10px;
+        /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+        text-align: center;
+        color: #333333;
+    }
+
+    .error-card h1 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #d32f2f;
+        margin-bottom: 1rem;
+    }
+
+    .error-card p {
+        font-size: 3rem;
+        color: #555555;
+        margin-bottom: 1.5rem;
+    }
+
+    .error-card img {
+        width: 80px;
+        margin-bottom: 1rem;
+    }
+
+    .error-card .btn {
+        margin: 0.5rem;
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 5px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .error-card .btn-primary {
+        background-color: #1976d2;
+        color: #ffffff;
+    }
+
+    .error-card .btn-primary:hover {
+        background-color: #2196f3;
+        color: #ffffff;
+    }
+
+    .error-card .btn-secondary {
+        background-color: #757575;
+        color: #ffffff;
+    }
+
+    .error-card .btn-secondary:hover {
+        background-color: #bdbdbd;
+        color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+        .error-card {
+            padding: 1.5rem;
+            width: 90%;
+        }
+
+        .error-card h1 {
+            font-size: 1.6rem;
+        }
+
+        .error-card p {
+            font-size: 0.9rem;
+        }
+
+        .error-card img {
+            width: 60px;
+        }
+
+        .error-card .btn {
+            font-size: 0.8rem;
+            padding: 0.7rem 1.2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .error-card h1 {
+            font-size: 1.4rem;
+        }
+
+        .error-card p {
+            font-size: 0.85rem;
+        }
+
+        .error-card img {
+            width: 50px;
+        }
+
+        .error-card .btn {
+            font-size: 0.75rem;
+            padding: 0.6rem 1rem;
+        }
+    }
+</style>
+
+<div class="error-handler-container">
+    <div class="error-card">
+        <img src="error.jpeg" alt="Error Image" style="width: 200px; height: 200px;">
+        <p class=""><%= error_message %></p>
+        <div>
+            <a href="/feedhope" class="btn btn-primary">Back to Home</a>
+            <button class="btn btn-secondary" onclick="history.back()">Go Back</button>
+        </div>
+    </div>
+</div>

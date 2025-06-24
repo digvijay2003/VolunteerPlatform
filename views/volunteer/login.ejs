@@ -1,0 +1,186 @@
+<div class="container d-flex justify-content-center align-items-center vh-100 login p-0">
+  <div class="card shadow-lg p-4">
+    <h1 class="text-center mb-4"><%= title || 'Login' %></h1>
+    <p class="text-center text-muted mb-4"><%= subtitle || 'Please log in to access your profile.' %></p>
+    <form action="<%= action %>" method="POST">
+      <% fields.forEach(field => { %>
+        <div class="mb-3">
+          <label for="<%= field.id %>" class="form-label">
+            <% if (field.icon) { %>
+              <span class="material-symbols-outlined"><%= field.icon %></span>
+            <% } %>
+          </label>
+          <input 
+            type="<%= field.type %>" 
+            class="form-control" 
+            id="<%= field.id %>" 
+            name="<%= field.name %>" 
+            placeholder="<%= field.placeholder || '' %>" 
+            <%= field.required ? 'required' : '' %>
+          >
+        </div>
+      <% }); %>
+      <div class="d-flex flex-column align-items-center">
+        <button type="submit" class="btn btn-primary d-grid gap-2 col-12 col-md-6"><%= submitLabel || 'Submit' %></button>
+        <% if (showRegisterButton) { %>
+          <div class="mt-3 text-center">
+            <span>Don't have an account?</span>
+            <a href="<%= registerLink || '#' %>" class="text-danger mt-2">Create an account</a>
+          </div>
+        <% } %>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .login {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff; 
+  transition: transform 0.5s ease, background 0.5s ease;
+}
+
+.card {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+.card h1 {
+  font-family: "Wittgenstein", serif;
+  font-size: 1.8rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #6c757d;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #1e90ff;
+  box-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+  outline: none;
+}
+
+.material-symbols-outlined {
+  font-size: 1.2rem;
+  color: #666;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.btn {
+  border-radius: 5px;
+  padding: 12px;
+  font-size: 1rem;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #1e90ff;
+  border-color: #1e90ff;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #1a7ccd;
+  border-color: #1a7ccd;
+  transform: translateY(-2px);
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.text-danger:hover {
+  text-decoration: underline;
+  color: #bd2130;
+}
+
+.mt-3.text-center {
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .card {
+    max-width: 90%;
+    padding: 20px;
+  }
+
+  .form-control,
+  .btn {
+    font-size: 0.95rem;
+  }
+
+  .card h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    max-width: 95%;
+    padding: 15px;
+  }
+
+  .form-control,
+  .btn {
+    font-size: 0.9rem;
+  }
+
+  .card h1 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .card {
+    padding: 15px;
+  }
+
+  .form-control,
+  .btn {
+    font-size: 0.85rem;
+  }
+
+  .card h1 {
+    font-size: 1.2rem;
+  }
+}
+</style>

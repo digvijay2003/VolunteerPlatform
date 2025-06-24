@@ -1,5 +1,6 @@
 // connectDB.js
 const mongoose = require('mongoose');
+const logger = require('./logger');
 const URL = process.env.DB_URL;
 
 const connectDB = async () => {
@@ -9,7 +10,7 @@ const connectDB = async () => {
             useUnifiedTopology: true,
             socketTimeoutMS: 45000,  
         });
-        console.log('MongoDB connected.......');
+        logger.info(`MongoDB connected`);
 
         mongoose.connection.on('connected', () => {
             console.log('Mongoose connected to MongoDB Atlas.');
@@ -24,6 +25,7 @@ const connectDB = async () => {
         });
         
     } catch (error) {
+        logger.error(`Error: ${error}`);
         console.error('MongoDB connection error:', error);
         process.exit(1); 
     }

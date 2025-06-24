@@ -1,15 +1,24 @@
-<div class="alert-messages mt-2">
-    <% if(success && success.length) {%>
-        <div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
-            <strong><%=success%></strong>
+<div class="alert-container mt-5">
+    <% if (success && success.length) { %>
+        <div class="alert alert-success alert-dismissible fade show shadow-sm rounded-3" 
+             role="alert" 
+             style="max-width: 600px; margin: 15px auto; text-align: center;">
+            <i class="material-symbols-outlined me-2" style="vertical-align: middle;">check_circle</i>
+            <%= success %>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        <audio id="success-sound" src="/success.mp3"></audio>
     <% } %>
-    
-    <% if(error && error.length) {%>
-        <div class="alert alert-danger alert-dismissible fade show mt-5" role="alert">
-            <strong><%=error%></strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <% } %>
+
+    <% if (error && error.length) { %>
+        <% (Array.isArray(error) ? error : [error]).forEach(function(err) { %>
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm rounded-3" 
+                 role="alert" 
+                 style="max-width: 600px; margin: 15px auto; text-align: center;">
+                <i class="material-symbols-outlined me-2" style="vertical-align: middle;">error</i>
+                <%= err %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <% }); %>
+    <% } %>    
 </div>
