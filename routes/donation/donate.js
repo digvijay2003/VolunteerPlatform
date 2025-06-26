@@ -6,7 +6,7 @@ const mbxGeoCoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
 const logger = require('../../config/logger');
 const {upload} = require('../../utils/cloudinary');
-const protect_user = require('../../middleware/user_auth');
+const requireUserAuth = require('../../middleware/user_auth');
 
 // GET: render food donation
 router.get(
@@ -24,7 +24,7 @@ router.get(
 // POST: handle food donation
 router.post(
   '/feedhope-donation-food',
-  protect_user,
+  requireUserAuth,
   upload.array('proof_images', 3),
   async (req, res) => {
     console.log('FILES RECEIVED:', req.files);

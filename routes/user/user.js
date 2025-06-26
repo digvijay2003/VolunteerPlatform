@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/user');
 const generateToken = require('../../utils/generateToken');
-const protect_user = require('../../middleware/user_auth');
+const requireUserAuth = require('../../middleware/user_auth');
 
-router.get('/feedhope-user-profile', protect_user, (req, res) => {
+router.get('/feedhope-user-profile', 
+  requireUserAuth, (req, res) => {
   res.json({ message: 'Access granted', user: req.user });
 });
 

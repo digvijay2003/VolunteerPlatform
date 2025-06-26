@@ -9,7 +9,7 @@ const {storage} = require('../../utils/cloudinary');
 const multer = require('multer');
 const upload = multer({storage});
 const mongoose = require('mongoose');
-const protect_user = require('../../middleware/user_auth');
+const requireUserAuth = require('../../middleware/user_auth');
 const logger = require('../../config/logger');
 
 // Handle GET request to render the food request form
@@ -25,7 +25,7 @@ router.get('/feedhope-request-food', (req, res) => {
 // Handle POST request to submit a food request 
 router.post(
   '/feedhope-request-food',
-  protect_user,
+  requireUserAuth,
   upload.fields([
     { name: 'proof_images', maxCount: 3 },
     { name: 'government_id_images', maxCount: 3 }
