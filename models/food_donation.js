@@ -7,7 +7,7 @@ const foodDonationSchema = new mongoose.Schema({
   donor_phone: { type: String, required: true, match: [/^\+?\d{10,15}$/, 'Please enter a valid phone number'] },
   food_type: { type: String, required: true, trim: true },
   quantity: quantitySchema,
-  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  status: { type: String, enum: ['pending', 'approved', 'rejected', 'matched'], default: 'pending' },
   location_text: { type: String, required: true },
   location_geo: geoSchema,
   description: { type: String, required: true, trim: true },

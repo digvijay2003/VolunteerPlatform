@@ -7,7 +7,7 @@ const foodRequestSchema = new mongoose.Schema({
   requester_phone: { type: String, required: true, match: [/^\+?\d{10,15}$/, 'Please enter a valid phone number'] },
   food_type: { type: String, required: true, trim: true },
   quantity: quantitySchema,
-  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  status: { type: String, enum: ['pending', 'approved', 'rejected', 'matched'], default: 'pending' },
   location_text: { type: String, required: true },
   location_geo: geoSchema,
   need_description: { type: String, required: true, trim: true },
@@ -19,7 +19,7 @@ const foodRequestSchema = new mongoose.Schema({
   government_id_images: [imageSchema],
   is_verified: { type: Boolean, default: false },
   verified_by: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
-  connected_donations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Donation' }],
+  connected_donations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodDonation' }],
   fulfilled_at: { type: Date }
 }, { timestamps: true });
 
