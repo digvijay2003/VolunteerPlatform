@@ -7,6 +7,7 @@ const geoCoder = mbxGeoCoding({ accessToken: process.env.MAPBOX_TOKEN });
 const logger = require('../../config/logger');
 const {upload} = require('../../utils/cloudinary');
 const requireUserAuth = require('../../middleware/user_auth');
+const {matchFoodDonation} = require('../../utils/match_service');
 
 // GET: render food donation
 router.get(
@@ -29,7 +30,6 @@ router.post(
   async (req, res) => {
     console.log('FILES RECEIVED:', req.files);
     console.log('BODY RECEIVED:', req.body);
-    logger.info('🧾 Raw body:', JSON.stringify(req.body));
     try {
       const {
         donor_name,
@@ -74,12 +74,12 @@ router.post(
       }
 
       // Limit to 3 requests in last 24 hours
-      const recentRequests = await FoodRequest.find({
+      const recentFoodRequests = await FoodDonation.find({
         user_id: req.user._id,
         createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
       });
 
-      if (recentRequests.length >= 3) {
+      if (recentFoodRequests.length >= 3) {
         logger.info(`❌ 24-hour request limit reached for ${req.user.email}`);
         req.flash('error', 'You can only submit 3 requests per 24 hours.');
         return res.redirect('/feedhope-request-food');
@@ -106,7 +106,7 @@ router.post(
         return res.redirect('/feedhope-donation-food');
       }
 
-      const foodRequest = await FoodDonation.create({
+      const foodDonation = await FoodDonation.create({
         user_id: req.user._id,
         donor_name,
         donor_phone,
@@ -122,13 +122,16 @@ router.post(
         proof_images
       });
 
-      req.user.food_donations.push(foodRequest._id);
+      req.user.food_donations.push(foodDonation._id);
       await req.user.save();
 
-      logger.info(`✅ Donation submitted by ${req.user.email} (Donation ID: ${foodRequest._id})`);
+      logger.info(`✅ Donation submitted by ${req.user.email} (Donation ID: ${foodDonation._id})`);
+      
+      matchFoodDonation(foodDonation).catch(err => console.error('Match error:', err));
 
       req.flash('success', 'Donation submitted successfully!');
-      return res.redirect('/feedhope-donation-food');
+      return res.redirect('/feedhope-user-profile');
+
     } catch (err) {
       logger.error(`❗ Donation error: ${err.message}`);
       req.flash('error', 'Something went wrong. Please try again.');

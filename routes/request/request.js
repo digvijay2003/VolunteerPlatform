@@ -11,6 +11,7 @@ const upload = multer({storage});
 const mongoose = require('mongoose');
 const requireUserAuth = require('../../middleware/user_auth');
 const logger = require('../../config/logger');
+const {matchFoodRequest} = require('../../utils/match_service');
 
 // Handle GET request to render the food request form
 router.get('/feedhope-request-food', (req, res) => {
@@ -145,6 +146,8 @@ router.post(
       await req.user.save();
 
       logger.info(`✅ Request submitted by ${req.user.email} (Request ID: ${foodRequest._id})`);
+
+      matchFoodRequest(foodRequest).catch(err => console.error('Match error:', err));
 
       req.flash('success', 'Food request submitted. We will contact you soon.');
 
