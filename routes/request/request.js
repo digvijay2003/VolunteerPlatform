@@ -38,7 +38,7 @@ router.post(
         requester_phone,
         foodtype,
         location,
-        need_description,
+        description,
         urgency,
         number_of_people,
         expiration_date,
@@ -133,7 +133,7 @@ router.post(
           type: 'Point',
           coordinates: [longitude, latitude]
         },
-        need_description,
+        description,
         urgency_level: urgency,
         number_of_people: Number(number_of_people),
         expiration_date: expiration_date || null,

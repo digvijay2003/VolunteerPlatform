@@ -29,7 +29,7 @@
                         <li class="list-group-item"><strong>Description:</strong> <%= requester.quantity.description %></li>
                         <li class="list-group-item"><strong>Status:</strong> <span class="badge bg-primary"><%= requester.status %></span></li>
                         <li class="list-group-item"><strong>Location:</strong> <%= requester.location %></li>
-                        <li class="list-group-item"><strong>Need Description:</strong> <%= requester.need_description %></li>
+                        <li class="list-group-item"><strong>Need Description:</strong> <%= requester.description %></li>
                         <li class="list-group-item"><strong>Created At:</strong> <%= new Date(requester.createdAt).toLocaleString() %></li>
                         <li class="list-group-item"><strong>Phone Number:</strong> <%= requester.requester_phone %></li>
                         <% if (requester.fulfilledAt) { %>

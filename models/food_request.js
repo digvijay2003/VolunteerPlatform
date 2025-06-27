@@ -10,7 +10,7 @@ const foodRequestSchema = new mongoose.Schema({
   status: { type: String, enum: ['pending', 'approved', 'rejected', 'matched'], default: 'pending' },
   location_text: { type: String, required: true },
   location_geo: geoSchema,
-  need_description: { type: String, required: true, trim: true },
+  description: { type: String, required: true, trim: true },
   urgency_level: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
   number_of_people: { type: Number, required: true, min: [1, 'Must be at least 1'] },
   expiration_date: { type: Date },

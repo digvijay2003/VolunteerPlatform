@@ -32,7 +32,7 @@ function getFoodTypeSimilarityScore(requestType, donationType) {
   let maxScore = 0;
 
   for (let req of requestKeywords) {
-    const searcher = new Searcher(donationKeywords, { returnMatchData: true }); // ✅ Fix here
+    const searcher = new Searcher(donationKeywords, { returnMatchData: true });
     const results = searcher.search(req);
     const similarity = results?.[0]?.score || 0;
     if (similarity > maxScore) maxScore = similarity;
