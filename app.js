@@ -38,10 +38,7 @@ app.use(require('express-ejs-layouts'));
 // Startup Modules
 require('./startup/security')(app);
 require('./startup/middleware')(app);
-// require('./startup/sanitize')(app);
-
-// swagger documentation
-require('./startup/swagger')(app); 
+require('./startup/sanitize')(app);
 
 // Routes
 require('./startup/routes')(app);
