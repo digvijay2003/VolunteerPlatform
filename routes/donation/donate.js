@@ -37,8 +37,11 @@ router.post(
         food_type,
         location_text,
         description,
-        expiration_date
+        expiration_date,
+
       } = req.body;
+
+      const delivery_willing = req.body.delivery_willing === 'on';
 
       const quantity = {
         amount: Number(req.body.quantity?.amount),
@@ -119,7 +122,8 @@ router.post(
         },
         description,
         expiration_date: expiration_date || null,
-        proof_images
+        proof_images,
+        delivery_willing,
       });
 
       req.user.food_donations.push(foodDonation._id);

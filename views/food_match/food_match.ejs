@@ -1,0 +1,42 @@
+<div class="container my-4"> <h1 class="text-center mb-4 pb-3 border-bottom text-secondary"><%= title %></h1> <% if (matches.length > 0) { %>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"> <% matches.forEach(m => { %>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0"> <div class="card-header bg-success text-white d-flex justify-content-between align-items-center"> <h5 class="mb-0">Match ID: <span class="fw-bold"><%= m.id.toString().slice(-8) %></span></h5> <span class="badge bg-light text-success fs-6">Score: <%= m.matchScore %></span> </div>
+                            <div class="card-body d-flex flex-column"> <% if (m.request) { %>
+                                    <div class="mb-3 p-3 bg-light rounded border"> <h6 class="text-primary border-bottom pb-2 mb-2">Food Request</h6> <p class="mb-1"><strong>Name:</strong> <%= m.request.requester_name %></p>
+                                        <p class="mb-1"><strong>Type:</strong> <%= m.request.food_type %></p>
+                                        <p class="mb-1"><strong>Quantity:</strong> <%= m.request.quantity.amount %> <%= m.request.quantity.unit %></p>
+                                        <p class="mb-1"><strong>Location:</strong> <%= m.request.location_text %></p>
+                                        <p class="mb-1"><strong>People:</strong> <%= m.request.number_of_people %></p>
+                                        <p class="mb-0"><strong>Urgency:</strong> <span class="badge <%= m.request.urgency_level === 'high' ? 'bg-danger' : m.request.urgency_level === 'medium' ? 'bg-warning text-dark' : 'bg-info' %>"><%= m.request.urgency_level.charAt(0).toUpperCase() + m.request.urgency_level.slice(1) %></span></p> </div>
+                                <% } else { %>
+                                    <div class="mb-3 p-3 bg-light rounded border">
+                                        <h6 class="text-primary border-bottom pb-2 mb-2">Food Request</h6>
+                                        <p class="text-muted fst-italic">Request details not available.</p> </div>
+                                <% } %>
+
+                                <% if (m.donation) { %>
+                                    <div class="p-3 bg-light rounded border flex-grow-1"> <h6 class="text-info border-bottom pb-2 mb-2">Food Donation</h6> <p class="mb-1"><strong>Donor:</strong> <%= m.donation.donor_name %></p>
+                                        <p class="mb-1"><strong>Type:</strong> <%= m.donation.food_type %></p>
+                                        <p class="mb-1"><strong>Quantity:</strong> <%= m.donation.quantity.amount %> <%= m.donation.quantity.unit %></p>
+                                        <p class="mb-1"><strong>Location:</strong> <%= m.donation.location_text %></p>
+                                        <p class="mb-0"><strong>Expiration:</strong> <%= m.donation.expiration_date ? m.donation.expiration_date.toLocaleDateString('en-IN') : 'N/A' %></p>
+                                    </div>
+                                <% } else { %>
+                                    <div class="p-3 bg-light rounded border flex-grow-1">
+                                        <h6 class="text-info border-bottom pb-2 mb-2">Food Donation</h6>
+                                        <p class="text-muted fst-italic">Donation details not available.</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="card-footer text-end text-muted small"> Matched on: <%= m.matchedAt.toLocaleDateString('en-IN') %> at <%= m.matchedAt.toLocaleTimeString('en-IN') %>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="alert alert-info text-center mt-5" role="alert"> <p class="mb-0">No matched food requests found at this time.</p>
+            </div>
+        <% } %>
+</div>

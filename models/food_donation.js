@@ -16,7 +16,9 @@ const foodDonationSchema = new mongoose.Schema({
   is_verified: { type: Boolean, default: false },
   verified_by: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
   connected_requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodRequest' }],
-  fulfilled_at: { type: Date }
+  fulfilled_at: { type: Date },
+  delivered_by_volunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'Volunteer' },
+  delivery_willing: { type: Boolean, default: false },
 }, { timestamps: true });
 
 // Indexes

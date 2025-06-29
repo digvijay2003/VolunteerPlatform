@@ -4,6 +4,7 @@ const donateRoutes = require('../routes/donation/donate');
 const requestRoutes = require('../routes/request/request');
 const adminRoutes = require('../routes/admin/main');
 const userRoutes = require('../routes/user/user');
+const foodMatchRoutes = require('../routes/food_match/food_match');
 
 module.exports = (app) => {
     app.use('/', homeRoutes);
@@ -12,4 +13,5 @@ module.exports = (app) => {
     app.use('/', requestRoutes);
     app.use('/admin', adminRoutes);
     app.use('/', userRoutes);
+    app.use('/', foodMatchRoutes);
 };

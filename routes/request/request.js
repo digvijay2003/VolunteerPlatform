@@ -45,6 +45,13 @@ router.post(
         government_id_number
       } = req.body;
 
+      const can_pickup = req.body.can_pickup === 'on'; 
+
+      // if (!can_pickup) {
+      //   req.flash('error', 'You must confirm that you can pick up the food yourself.');
+      //   return res.redirect('/feedhope-request-food');
+      // }
+
       const quantity = {
         amount: Number(req.body.quantity?.amount),
         unit: req.body.quantity?.unit,
@@ -139,7 +146,8 @@ router.post(
         expiration_date: expiration_date || null,
         proof_images,
         government_id_number,
-        government_id_images
+        government_id_images,
+        can_pickup,
       });
 
       req.user.food_requests.push(foodRequest._id);

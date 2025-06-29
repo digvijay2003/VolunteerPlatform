@@ -12,11 +12,6 @@ connectDB().then(() => {
   startAgenda(); 
 });
 
-const Agenda = require('agenda');
-const agenda = new Agenda({
-  db: { address: process.env.DB_URL, collection: 'agendaJobs' }
-});
-
 process.on('SIGTERM', async () => {
   console.log('SIGTERM received. Shutting down Agenda gracefully...');
   await agenda.stop();
