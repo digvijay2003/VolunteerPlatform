@@ -10,16 +10,15 @@ const matchFoodRequestDonationSchema = new mongoose.Schema({
   autoMatched: { type: Boolean, default: false },
   matchScore: { type: Number, default: 0 },
   assignedVolunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'Volunteer' },
-  failureReason:  { type : String},
-  deliveryStatus: { type: String, enum: ['pending', 'assigned', 'delivered', 'failed'], default: 'pending' },
+  deliveryfailureReason:  { type : String},
+  deliveryStatus: { type: String, enum: ['pending', 'assigned', 'delivered','in_transit','failed'], default: 'pending' },
   deliveryRoute: { type: { type: String, enum: ['LineString'], default: 'LineString' }, coordinates: { type: [[Number]], default: [] },},
   deliveryMode: { type: String, enum: ['volunteer', 'requester', 'donor'], default: 'volunteer' },
-  actualDeliveryTime: {type: Date},
+  deliveryactualDeliveryTime: {type: Date},
   deliveryFeedback: { volunteer: { type : String}, requester: { type : String}, },
-  ratings: { requester: { type: Number, min: 0, max: 5 }},
-  notifications: { donorNotified: { type: Boolean, default: false }, requesterNotified: { type: Boolean, default: false },
+  deliveryratings: { requester: { type: Number, min: 0, max: 5 }},
+  deliverynotifications: { donorNotified: { type: Boolean, default: false }, requesterNotified: { type: Boolean, default: false }, volunteerNotified: { type: Boolean, default: false }},
   deliveryRetryCount: { type: Number, default: 0,},
-  },
 }, { timestamps: true });
 
 matchFoodRequestDonationSchema.index({ assignedVolunteer: 1 });

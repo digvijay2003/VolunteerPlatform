@@ -21,20 +21,20 @@ async function assignDeliveryAgent(matchId) {
   const { food_donation, food_request } = match;
 
   // Step 1: Donor willing to deliver
-  if (food_donation.delivery_willing) {
-    match.deliveryMode = 'donor';
-    match.deliveryStatus = 'assigned';
-    await match.save();
-    return;
-  }
+  // if (food_donation.delivery_willing) {
+  //   match.deliveryMode = 'donor';
+  //   match.deliveryStatus = 'assigned';
+  //   await match.save();
+  //   return;
+  // }
 
-  // Step 2: Requester can pick up
-  if (food_request.can_pickup) {
-    match.deliveryMode = 'requester';
-    match.deliveryStatus = 'assigned';
-    await match.save();
-    return;
-  }
+  // // Step 2: Requester can pick up
+  // if (food_request.can_pickup) {
+  //   match.deliveryMode = 'requester';
+  //   match.deliveryStatus = 'assigned';
+  //   await match.save();
+  //   return;
+  // }
 
   // Step 3: Assign volunteer based on urgency
   const maxDistance = getDistanceByUrgency(food_request.urgency_level);
