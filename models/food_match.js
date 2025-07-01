@@ -19,6 +19,10 @@ const matchFoodRequestDonationSchema = new mongoose.Schema({
   deliveryratings: { requester: { type: Number, min: 0, max: 5 }},
   deliverynotifications: { donorNotified: { type: Boolean, default: false }, requesterNotified: { type: Boolean, default: false }, volunteerNotified: { type: Boolean, default: false }},
   deliveryRetryCount: { type: Number, default: 0,},
+  donorOtp: { type: String }, 
+  requesterOtp: { type: String }, 
+  verifyOtpWithDonor: { type: Boolean, default: false },
+  verifyOtpWithRequester: { type: Boolean, default: false },
 }, { timestamps: true });
 
 matchFoodRequestDonationSchema.index({ assignedVolunteer: 1 });

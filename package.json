@@ -42,6 +42,7 @@
     "jsonwebtoken": "^9.0.2",
     "mailgun-js": "^0.22.0",
     "mailgun.js": "^10.2.4",
+    "mapbox-gl": "^2.15.0",
     "method-override": "^3.0.0",
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.1",

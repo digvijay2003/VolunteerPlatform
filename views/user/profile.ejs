@@ -1,418 +1,593 @@
 <style>
-    /* Custom styles to refine the UI */
     :root {
-        --bs-primary: #007788;
-        --bs-success: #28a745;
-        --bs-info: #17a2b8;
+        --bs-primary: #005A6A; /* Darker, more professional teal */
+        --bs-primary-rgb: 0, 90, 106;
+        --bs-secondary: #6c757d;
+        --bs-success: #198754;
+        --bs-info: #0dcaf0;
         --bs-warning: #ffc107;
         --bs-danger: #dc3545;
         --bs-light: #f8f9fa;
-        --bs-dark: #343a40;
+        --bs-dark: #212529;
+        --body-bg: #f4f7f9; 
+        --card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        --card-shadow-hover: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+        --border-color: #dee2e6;
     }
 
     body {
-        /* Add a subtle background gradient */
-        background: linear-gradient(135deg, #e0f7fa, #f0f4f8);
-        min-height: 100vh;
+        background-color: var(--body-bg);
+        font-family: 'Inter', sans-serif; /* A clean, modern font */
+    }
+
+    .dashboard-header {
+        font-weight: 600;
+        color: var(--bs-dark);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, var(--bs-primary), #007788);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 1rem;
+        position: relative;
+        overflow: hidden;
     }
 
     .profile-avatar {
-        box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.5); /* Add a subtle white halo */
+        width: 90px;
+        height: 90px;
+        background-color: white;
+        color: var(--bs-primary);
+        border: 4px solid rgba(255, 255, 255, 0.8);
     }
+
+    .stat-card {
+        background-color: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow-hover);
+    }
+
+    .stat-card .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--bs-dark);
+    }
+
+    .stat-card .stat-label {
+        font-size: 1rem;
+        color: var(--bs-secondary);
+    }
+
+    .card {
+        border: none;
+        box-shadow: var(--card-shadow);
+        border-radius: 0.75rem;
+        transition: box-shadow 0.2s ease;
+    }
+    
+    .card:hover {
+        box-shadow: var(--card-shadow-hover);
+    }
+
+    .card .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid var(--border-color);
+        font-weight: 600;
+    }
+
+    .list-group-item {
+        border-color: var(--border-color);
+        padding: 1rem 0;
+    }
+    
+    .list-group-item:first-child {
+        padding-top: 0;
+    }
+    
+    .list-group-item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
     .card-header-primary {
         background-color: var(--bs-primary);
         color: white;
-        border-radius: var(--bs-card-border-radius) var(--bs-card-border-radius) 0 0;
-        padding: 1rem 1.5rem;
     }
-    .card-footer-transparent {
-        background-color: transparent;
-        border-top: none;
+    
+    .btn-primary {
+        background-color: var(--bs-primary);
+        border-color: var(--bs-primary);
     }
-    .status-badge-success {
-        background-color: var(--bs-success);
-        color: white;
-    }
-    .status-badge-warning {
-        background-color: var(--bs-warning);
-        color: var(--bs-dark);
-    }
-    .status-badge-danger {
-        background-color: var(--bs-danger);
-        color: white;
-    }
-    .status-badge-secondary {
-        background-color: var(--bs-secondary);
-        color: white;
-    }
-    .list-group-item:first-child {
-        border-top-width: 0;
+
+    .btn-primary:hover {
+        background-color: #00434f;
+        border-color: #00434f;
     }
 </style>
 
-<div class="text-center text-muted h5" style="font-weight: 500;">DASHBOARD</div>
+<div class="container-fluid py-4">
+    <h2 class="dashboard-header">
+        <i class="bi bi-person-circle me-2"></i>My Dashboard
+    </h2>
 
-<div class="container py-3">
-    <div class="row g-4">
-        <div class="col-md-12">
-        <div class="card shadow-lg border-0 mb-4 rounded-4 overflow-hidden">
-            <div class="card-body p-5">
-                <div class="d-flex align-items-center mb-4">
-                    <div class="flex-shrink-0 me-4">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center profile-avatar" style="width: 100px; height: 100px;">
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="profile-header mb-4">
+                <div class="d-flex flex-column flex-md-row align-items-center">
+                    <div class="flex-shrink-0 mb-3 mb-md-0 me-md-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center profile-avatar">
                             <span class="fs-1 fw-bold"><%= user.name.split(' ').map(n => n[0]).join('').toUpperCase() %></span>
                         </div>
                     </div>
-                    <div class="flex-grow-1">
+                    <div class="flex-grow-1 text-center text-md-start">
                         <h1 class="display-6 fw-bold mb-1"><%= user.name %></h1>
-                        <p class="text-muted lead"><%= user.email %></p>
-                        <span class="badge bg-secondary text-white rounded-pill px-3 py-2">Member since <%= new Date(user.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
-                    </div>
-                </div>
-                <hr class="my-4">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <p class="mb-0 fs-5"><strong class="me-3 text-primary"><i class="bi bi-telephone-fill"></i></strong><%= user.phone %></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="mb-0 fs-5"><strong class="me-3 text-primary"><i class="bi bi-geo-alt-fill"></i></strong><%= user.address ? `${user.address.city}, ${user.address.state}` : 'N/A' %></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        <div class="col-lg-8">
-
-            <% if (user.volunteer && user.volunteer.currentAssignments) { %>
-                <% const assignment = user.volunteer.currentAssignments; %>
-                <% const donation = assignment.food_donation; %>
-                <% const request = assignment.food_request; %>
-
-                <div class="card shadow-lg border-0 mb-4 rounded-4" id="active-delivery-card">
-                    <div class="card-header card-header-primary">
-                        <h4 class="mb-0"><i class="bi bi-truck-fill me-2"></i>Active Delivery Task</h4>
-                    </div>
-                    <div class="card-body p-4">
-                        <div id='map' style='width: 100%; height: 500px;' class="mb-4 rounded"></div>
-
-                        <div class="row g-4">
-                            <div class="col-md-12">
-                                <h5 class="fw-bold text-success mb-3"><i class="bi bi-box-arrow-in-right me-2"></i>Pickup from Donor</h5>
-                                <p class="mb-2"><strong>Name:</strong> <%= donation.donor_name %></p>
-                                <p class="mb-2"><strong>Address:</strong> <%= donation.location_text %></p>
-                                <p class="mb-2"><strong>Phone:</strong> <%= donation.donor_phone %></p>
-                                <p class="mb-0"><strong>Food:</strong> <%= donation.food_type %> (<%= donation.quantity.amount %> <%= donation.quantity.unit %>)</p>
-                            </div>
-                            <div class="col-md-12">
-                                <h5 class="fw-bold text-info mb-3"><i class="bi bi-flag-fill me-2"></i>Deliver to Requester</h5>
-                                <p class="mb-2"><strong>Name:</strong> <%= request.requester_name %></p>
-                                <p class="mb-2"><strong>Address:</strong> <%= request.location_text %></p>
-                                <p class="mb-2"><strong>Phone:</strong> <%= request.requester_phone %></p>
-                            </div>
-                        </div>
-                        <hr class="my-4">
-
-                        <div class="d-grid gap-3">
-                            <% if (assignment.deliveryStatus === 'assigned') { %>
-                                <form action="/delivery/<%= assignment._id %>/pickup" method="POST">
-                                    <button type="submit" class="btn btn-success btn-sm w-100 rounded-pill py-3 fw-bold shadow-sm">Confirm Food Pickup</button>
-                                </form>
-                            <% } else if (assignment.deliveryStatus === 'in_transit') { %>
-                                <form action="/delivery/<%= assignment._id %>/deliver" method="POST">
-                                    <button type="submit" class="btn btn-info btn-lg w-100 rounded-pill py-3 fw-bold shadow-sm">Confirm Delivery to Requester</button>
-                                </form>
-                            <% } else if (assignment.deliveryStatus === 'delivered') { %>
-                                <div class="alert alert-success text-center py-3 rounded-3">
-                                    <h5 class="mb-0"><i class="bi bi-check-circle-fill me-2"></i>Delivery Completed!</h5>
-                                    <p class="mb-0 mt-1">Thank you for your service.</p>
-                                </div>
-                            <% } %>
-
-                            <% if (assignment.deliveryStatus !== 'delivered') { %>
-                                <form action="/delivery/<%= assignment._id %>/fail" method="POST">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm w-100 mt-2 rounded-pill fw-bold">Report an Issue</button>
-                                </form>
-                            <% } %>
-                        </div>
-                    </div>
-                </div>
-            <% } %>
-
-
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="card shadow-sm border-0 h-100 rounded-4">
-                        <div class="card-header bg-white pb-0 pt-4 px-4 border-bottom-0">
-                            <h5 class="card-title mb-0">
-                                <i class="bi bi-box-seam-fill me-2 text-success"></i>Recent Donations
-                            </h5>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <tbody>
-                                    <% if(user.food_donations && user.food_donations.length > 0) { %>
-                                        <% user.food_donations.slice(0, 5).forEach(donation => { %>
-                                            <tr>
-                                                <td class="ps-4 py-3">
-                                                    <a href="/donations/<%= donation._id %>" class="text-decoration-none text-dark">
-                                                        <strong class="d-block"><%= donation.food_type %> - <%= donation.quantity.amount %> <%= donation.quantity.unit %></strong>
-                                                        <span class="text-muted small"><i class="bi bi-calendar-event me-1"></i> <%= new Date(donation.createdAt).toLocaleDateString() %></span><br>
-                                                        <span class="text-muted small"><i class="bi bi-geo-alt-fill me-1"></i> <%= donation.location_text %></span>
-                                                    </a>
-                                                </td>
-                                                <td class="text-end pe-4 py-3">
-                                                    <span class="badge rounded-pill <%= getStatusBadge(donation.status) %> text-uppercase">
-                                                        <%= donation.status %>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        <% }) %>
-                                    <% } else { %>
-                                        <tr>
-                                            <td colspan="2" class="text-center text-muted p-4">
-                                                <i class="bi bi-exclamation-circle-fill me-1"></i>No donations found.
-                                            </td>
-                                        </tr>
-                                    <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="card-footer card-footer-transparent text-center pt-3 pb-4">
-                            <a href="/donations" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                                View All Donations
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="card shadow-sm border-0 h-100 rounded-4">
-                        <div class="card-header bg-white pb-0 pt-4 px-4 border-bottom-0">
-                            <h5 class="card-title mb-0"><i class="bi bi-card-checklist me-2 text-info"></i>Recent Requests</h5>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <tbody>
-                                    <% if(user.food_requests && user.food_requests.length > 0) { %>
-                                        <% user.food_requests.slice(0, 5).forEach(request => { %>
-                                            <tr>
-                                                <td class="ps-4 py-3">
-                                                    <a href="/requests/<%= request._id %>" class="text-decoration-none text-dark">
-                                                        <strong class="d-block"><%= request.food_type %></strong>
-                                                        <span class="text-muted small"><%= new Date(request.createdAt).toLocaleDateString() %></span>
-                                                    </a>
-                                                </td>
-                                                <td class="text-end pe-4 py-3">
-                                                    <span class="badge rounded-pill <%= getStatusBadge(request.status) %>"><%= request.status %></span>
-                                                </td>
-                                            </tr>
-                                        <% }) %>
-                                    <% } else { %>
-                                        <tr><td colspan="2" class="text-center text-muted p-4">No requests found.</td></tr>
-                                    <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="card-footer card-footer-transparent text-center pt-3 pb-4">
-                            <a href="/requests" class="btn btn-outline-secondary btn-sm rounded-pill px-3">View All Requests</a>
-                        </div>
+                        <p class="lead mb-2 opacity-75"><%= user.email %></p>
+                        <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-normal">
+                           <i class="bi bi-calendar-check me-1"></i> Member since <%= new Date(user.createdAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'long' }) %>
+                        </span>
                     </div>
                 </div>
             </div>
 
             <% if (user.volunteer) { %>
-                <div class="card shadow-lg border-0 my-4 rounded-4 overflow-hidden">
-                    <div class="card-header card-header-primary">
-                        <h4 class="mb-0"><i class="bi bi-heart-fill me-2"></i>Volunteer Profile</h4>
-                    </div>
-                    <div class="card-body p-5">
-                        <% if (user.volunteer.isBanned) { %>
-                            <div class="alert alert-danger p-4 rounded-3">
-                                <h5 class="alert-heading fw-bold"><i class="bi bi-x-circle-fill me-2"></i>Account Banned</h5>
-                                <p class="mb-0"><strong>Reason:</strong> <%= user.volunteer.bannedReason || 'No reason provided.' %></p>
-                            </div>
-                        <% } %>
-
-                        <div class="row g-4 mb-4">
-                            <div class="col-md-6">
-                                <p class="text-muted small mb-1">Username</p>
-                                <p class="fs-5 fw-bold mb-0"><%= user.volunteer.username %></p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="text-muted small mb-1">Email</p>
-                                <p class="fs-5 fw-bold mb-0"><%= user.volunteer.email %></p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="text-muted small mb-1">Phone</p>
-                                <p class="fs-5 fw-bold mb-0"><%= user.volunteer.phone %></p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="text-muted small mb-1">Location</p>
-                                <p class="fs-5 fw-bold mb-0"><%= user.volunteer.location %></p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="mt-4">
-                            <h5 class="mb-3"><i class="bi bi-tools me-2 text-secondary"></i>Skills</h5>
-                            <% if (user.volunteer.skills && user.volunteer.skills.length > 0) { %>
-                                <% user.volunteer.skills.forEach(skill => { %>
-                                    <span class="badge rounded-pill bg-dark fw-normal me-2 fs-6 px-3 py-2"><%= skill.charAt(0).toUpperCase() + skill.slice(1) %></span>
-                                <% }) %>
-                            <% } else { %>
-                                <p class="text-muted">No skills listed.</p>
-                            <% } %>
-                        </div>
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                           <div class="stat-icon text-warning"><i class="bi bi-star-fill"></i></div>
+                           <div class="stat-value"><%= user.volunteer.rating.toFixed(1) %></div>
+                           <div class="stat-label">Rating</div>
                     </div>
                 </div>
-            <% } else { %>
-                <div class="card shadow-lg border-0 my-4 rounded-4">
-                    <div class="card-body text-center p-5">
-                        <i class="bi bi-person-plus-fill text-primary display-2"></i>
-                        <h3 class="card-title fw-bold mt-4 mb-2">Ready to Make a Difference?</h3>
-                        <p class="card-text text-muted mx-auto" style="max-width: 500px;">Join our team of dedicated volunteers and become a vital part of our community's support system.</p>
-                        <a href="/volunteer/register" class="btn btn-primary btn-lg mt-3 rounded-pill px-5 py-3 fw-bold shadow-sm">Become a Volunteer</a>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                           <div class="stat-icon text-success"><i class="bi bi-check-all"></i></div>
+                           <div class="stat-value"><%= user.volunteer.completedAssignments ? user.volunteer.completedAssignments.length : 0 %></div>
+                           <div class="stat-label">Completed Deliveries</div>
+                    </div>
+                </div>
+                   <div class="col-md-4">
+                    <div class="stat-card">
+                           <div class="stat-icon text-primary"><i class="bi bi-truck"></i></div>
+                           <div class="stat-value"><%= user.volunteer.currentAssignments ? 1 : 0 %></div>
+                           <div class="stat-label">Active Delivery</div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+
+            <% if (user.volunteer) { %>
+                <div class="card">
+                       <div class="card-header">
+                         <h5><i class="bi bi-person-badge-fill me-2"></i>Volunteer Profile</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <% if (user.volunteer.isBanned) { %>
+                            <div class="alert alert-danger"><i class="bi bi-x-circle-fill me-2"></i><strong>Account Banned:</strong> <%= user.volunteer.bannedReason || 'No reason provided.' %></div>
+                        <% } %>
+                        <div class="row g-4">
+                            <div class="col-sm-6"><p class="mb-0 text-muted">Username</p><p class="fw-bold mb-0"><%= user.volunteer.username %></p></div>
+                            <div class="col-sm-6"><p class="mb-0 text-muted">Contact</p><p class="fw-bold mb-0"><%= user.volunteer.phone %></p></div>
+                            <div class="col-sm-12"><p class="mb-0 text-muted">Location</p><p class="fw-bold mb-0"><%= user.volunteer.location %></p></div>
+                            <div class="col-sm-12">
+                                <p class="text-muted mb-2">Skills</p>
+                                <div>
+                                <% if (user.volunteer.skills && user.volunteer.skills.length > 0) { %>
+                                    <% user.volunteer.skills.forEach(skill => { %>
+                                        <span class="badge rounded-pill bg-secondary fw-normal me-1 fs-6 px-3 py-2"><%= skill %></span>
+                                    <% }) %>
+                                <% } else { %><p class="text-muted">No skills listed.</p><% } %>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             <% } %>
         </div>
 
         <div class="col-lg-4">
-
-            <div class="card shadow-lg border-0 mb-4 rounded-4">
-                <div class="card-body p-5 text-center">
-                    <h4 class="card-title fw-bold mb-4"><i class="bi bi-lightning-charge-fill me-2"></i>Quick Actions</h4>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-lightning-charge-fill me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body p-4">
                     <div class="d-grid gap-3">
-                        <a href="/donations/new" class="btn btn-success btn-lg rounded-pill py-3 fw-bold shadow-sm"><i class="bi bi-box-seam-fill me-2"></i>Donate Food</a>
-                        <a href="/requests/new" class="btn btn-info btn-lg rounded-pill py-3 fw-bold shadow-sm"><i class="bi bi-card-checklist me-2"></i>Request Food</a>
+                        <a href="/donations/new" class="btn btn-success btn-lg py-3 fw-bold"><i class="bi bi-box-seam me-2"></i>Donate Food</a>
+                        <a href="/requests/new" class="btn btn-info btn-lg py-3 fw-bold text-dark"><i class="bi bi-card-checklist me-2"></i>Request Food</a>
                     </div>
                 </div>
             </div>
 
             <% if (user.volunteer) { %>
-                <div class="card shadow-sm border-0 mb-4 rounded-4">
-                    <div class="card-header bg-white py-4 px-4">
-                        <h5 class="card-title mb-0"><i class="bi bi-person-check-fill me-2 text-primary"></i>Volunteer Status</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <% if (user.volunteer.governmentIdVerified) { %>
-                            <div class="alert alert-success d-flex align-items-center py-3 px-4 rounded-3">
-                                <i class="bi bi-patch-check-fill me-3 fs-4"></i> <strong class="me-auto fs-6">ID Verified</strong>
-                            </div>
-                        <% } else { %>
-                            <div class="alert alert-warning d-flex align-items-center py-3 px-4 rounded-3">
-                                <div class="d-flex w-100 align-items-center">
-                                    <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
-                                    <div class="flex-grow-1">
-                                        <strong class="d-block fs-6">ID Not Verified</strong>
-                                        <small class="text-muted">Verification required for assignments.</small>
-                                    </div>
-                                    <a href="/volunteer/verify-id" class="btn btn-warning btn-sm fw-bold">Verify Now</a>
-                                </div>
-                            </div>
-                        <% } %>
-                        
-                        <ul class="list-group list-group-flush mt-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                                <span>Status</span> 
-                                <% if (user.volunteer.status === 'active') { %><span class="badge bg-success rounded-pill px-3 py-2">Active</span><% } %>
-                                <% if (user.volunteer.status === 'inactive') { %><span class="badge bg-warning text-dark rounded-pill px-3 py-2">Inactive</span><% } %>
-                                <% if (user.volunteer.status === 'suspended') { %><span class="badge bg-danger rounded-pill px-3 py-2">Suspended</span><% } %>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                                <span>Availability</span> 
-                                <% if (user.volunteer.availability) { %><span class="badge bg-info rounded-pill px-3 py-2">Available</span><% } else { %><span class="badge bg-secondary rounded-pill px-3 py-2">Unavailable</span><% } %>
-                            </li>
-                            <li class="list-group-item px-0 py-3">
-                                <span class="d-block mb-2">Rating</span>
-                                <div class="progress" style="height: 25px;">
-                                    <div class="progress-bar bg-warning text-dark fw-bold" role="progressbar" style="width: <%= (user.volunteer.rating / 5) * 100 %>%;" aria-valuenow="<%= user.volunteer.rating %>" aria-valuemin="0" aria-valuemax="5">
-                                        <%= user.volunteer.rating.toFixed(1) %> / 5.0
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                                <span>Current Assignments</span>
-                                <span class="badge bg-primary rounded-pill fs-6 px-3 py-2"><%= user.volunteer.currentAssignments ? 1 : 0 %></span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                                <span>Completed Assignments</span>
-                                <span class="badge bg-primary rounded-pill fs-6 px-3 py-2"><%= user.volunteer.completedAssignments ? user.volunteer.completedAssignments.length : 0 %></span>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-person-check-fill me-2"></i>Volunteer Status</h5>
                 </div>
+                <div class="card-body p-4">
+                     <% if (!user.volunteer.governmentIdVerified) { %>
+                         <div class="alert alert-warning d-flex align-items-center">
+                             <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+                             <div>
+                                 <strong class="d-block">ID Not Verified</strong>
+                                 <a href="#" class="btn btn-warning btn-sm fw-bold mt-1">Verify Now</a>
+                            </div>
+                        </div>
+                    <% } %>
+                    <ul class="list-group list-group-flush">
+                           <li class="list-group-item d-flex justify-content-between align-items-center">
+                             <span>ID Verification</span>
+                               <% if (user.volunteer.governmentIdVerified) { %><span class="badge bg-success-subtle text-success-emphasis rounded-pill">Verified</span><% } else { %><span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">Not Verified</span><% } %>
+                         </li>
+                         <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Profile Status</span>
+                            <% if (user.volunteer.status === 'active') { %><span class="badge bg-success-subtle text-success-emphasis rounded-pill">Active</span><% } %>
+                            <% if (user.volunteer.status === 'inactive') { %><span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">Inactive</span><% } %>
+                             <% if (user.volunteer.status === 'suspended') { %><span class="badge bg-danger-subtle text-danger-emphasis rounded-pill">Suspended</span><% } %>
+                         </li>
+                         <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Availability</span>
+                            <div class="f">
+                                <% if(user.volunteer.availability === true){ %>
+                                    <span class="badge bg-success-subtle text-success-emphasis rounded-pill">Available</span>
+                                <% } else { %>
+                                    <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">Not Available</span>
+                                <% } %>
+                            </div>
+                         </li>
+                    </ul>
+                </div>
+            </div>
             <% } %>
         </div>
     </div>
+
+    <div class="row g-4">
+        <% if (user.volunteer && user.volunteer.currentAssignments) { %>
+            <% const assignment = user.volunteer.currentAssignments; %>
+            <% const donation = assignment.food_donation; %>
+            <% const request = assignment.food_request; %>
+            <div class="col-lg-10 col-xl-8">
+                <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                    <div class="card-header bg-dark text-white text-center py-3">
+                        <h4 class="mb-0 fw-light"><i class="bi bi-truck me-2"></i>Active Delivery Task</h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="p-4">
+                            <div class="progress rounded-pill" style="height: 2rem;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated
+                                    <%= assignment.deliveryStatus === 'assigned' ? 'bg-warning text-dark' : '' %>
+                                    <%= assignment.deliveryStatus === 'in_transit' ? 'bg-info text-dark' : '' %>
+                                    <%= assignment.deliveryStatus === 'delivered' ? 'bg-success' : '' %>"
+                                    role="progressbar"
+                                    style="width: <%= assignment.deliveryStatus === 'assigned' ? '33%' : (assignment.deliveryStatus === 'in_transit' ? '66%' : '100%') %>;"
+                                    aria-valuenow="<%= assignment.deliveryStatus === 'assigned' ? '33' : (assignment.deliveryStatus === 'in_transit' ? '66' : '100') %>"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <strong class="h6 mb-0"><%= assignment.deliveryStatus.replace('_', ' ').toUpperCase() %></strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div id='map' style='width: 100%; height: 400px;'></div>
+                        <div class="p-4 bg-light d-flex justify-content-between align-items-center">
+                            <button id="start-tracking-btn" class="btn btn-primary rounded-pill fw-bold">
+                                <i class="bi bi-broadcast-pin me-2"></i>Start Live Tracking
+                            </button>
+                            <div class="text-end">
+                                <p class="mb-1"><strong>ETA to Donor:</strong> <span id="eta-donor-display" class="badge bg-secondary">Calculating...</span></p>
+                                <p class="mb-0"><strong>ETA to Requester:</strong> <span id="eta-requester-display" class="badge bg-secondary">Waiting...</span></p>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="row g-4">
+                                <div class="col-md-6 border-end">
+                                    <h5 class="fw-bold text-success mb-3"><i class="bi bi-box-arrow-in-right me-2"></i>Pickup Point</h5>
+                                    <p class="mb-2"><strong>Donor:</strong> <%= donation.donor_name %></p>
+                                    <p class="mb-2"><strong>Food:</strong> <%= donation.food_type %> (<%= donation.quantity.amount %> <%= donation.quantity.unit %>)</p>
+                                    <p class="mb-2"><strong>Address:</strong> <%= donation.location_text %></p>
+                                    <a href="tel:<%= donation.donor_phone %>" class="btn btn-outline-secondary w-100">
+                                        <i class="bi bi-telephone me-2"></i>Call Donor
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="fw-bold text-info mb-3"><i class="bi bi-flag-fill me-2"></i>Drop-off Point</h5>
+                                    <p class="mb-2"><strong>Requester:</strong> <%= request.requester_name %></p>
+                                    <p class="mb-2"><strong>Address:</strong> <%= request.location_text %></p>
+                                    <a href="tel:<%= request.requester_phone %>" class="btn btn-outline-secondary w-100">
+                                        <i class="bi bi-telephone me-2"></i>Call Requester
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-0">
+                        <div class="card-footer p-4">
+                            <% if (assignment.deliveryStatus === 'assigned') { %>
+                                <div class="text-center mb-3 alert alert-warning border-0">
+                                    Enter the OTP from the donor to confirm pickup.
+                                </div>
+                                <form action="/delivery/<%= assignment._id %>/pickup" method="POST">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                        <input type="text" name="otp" class="form-control" placeholder="Enter Donor OTP" required />
+                                        <button type="submit" class="btn btn-success fw-bold">Confirm Pickup</button>
+                                    </div>
+                                </form>
+                            <% } else if (assignment.deliveryStatus === 'in_transit') { %>
+                                <div class="text-center mb-3 alert alert-info border-0">
+                                    Enter the OTP from the requester to confirm delivery.
+                                </div>
+                                <form action="/delivery/<%= assignment._id %>/deliver" method="POST">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                                        <input type="text" name="otp" class="form-control" placeholder="Enter Requester OTP" required />
+                                        <button type="submit" class="btn btn-info fw-bold">Confirm Delivery</button>
+                                    </div>
+                                </form>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <% } else if (user.volunteer && lastDeliveredAssignment) { %>
+            <div class="card">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-check-circle-fill display-4 text-success mb-3"></i>
+                    <h4 class="text-success">Last Delivery Complete!</h4>
+                    <p class="mb-3">Thanks for delivering food to <strong><%= lastDeliveredAssignment.food_request.requester_name %></strong>.</p>
+                    <form action="/delivery/<%= lastDeliveredAssignment._id %>/feedback" method="POST">
+                        <div class="mb-3">
+                            <textarea name="volunteerFeedback" class="form-control" rows="3" placeholder="Share your experience..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+        <% } else if (user.volunteer) { %>
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-sm border-0 rounded-4 text-center py-5 bg-light">
+                    <div class="card-body">
+                        <i class="bi bi-hourglass-split display-4 text-muted mb-3"></i>
+                        <h4 class="text-muted">No Active Assignment</h4>
+                        <p class="mb-0 px-4">You're all set for now! We'll notify you when a new delivery task is available nearby.</p>
+                    </div>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="card">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-person-plus-fill text-primary display-2"></i>
+                    <h3 class="fw-bold mt-4 mb-2">Make a Difference</h3>
+                    <p class="text-muted mx-auto" style="max-width: 500px;">Join our volunteer team and be a vital part of our community's support system.</p>
+                    <a href="/volunteer-registration" class="btn btn-primary btn-lg mt-3 rounded-pill px-5 py-3 fw-bold shadow-sm">Become a Volunteer</a>
+                </div>
+            </div>
+        <% } %>
+    </div>
 </div>
 
-<script>
-    // Only run this script if the active delivery card exists
-    if (document.getElementById('active-delivery-card')) {
-        // Pass data from EJS to JS
-        const mapboxToken = "<%= mapboxAccessToken %>";
-        const donorCoords = <%- JSON.stringify(user.volunteer.currentAssignments.food_donation.location_geo.coordinates) %>;
-        const requesterCoords = <%- JSON.stringify(user.volunteer.currentAssignments.food_request.location_geo.coordinates) %>;
+<div class="container-fluid py-4">
+    <% if (user.food_donations && user.food_donations.length > 0) { %>
+    <div class="card mb-4">
+        <div class="card-header">
+        <h5><i class="bi bi-box-seam-fill me-2"></i>My Food Donations</h5>
+        </div>
+        <div class="card-body">
+        <% user.food_donations.forEach(donation => { %>
+            <div class="border rounded p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2">
+            <div class="flex-grow-1">
+                <h6 class="mb-1">
+                <%= donation.food_type %> 
+                (<%= donation.quantity?.amount %> <%= donation.quantity?.unit %>)
+                </h6>
+                <small class="text-muted">
+                <i class="bi bi-geo-alt-fill me-1"></i><%= donation.location_text %>
+                </small><br>
+                <small class="text-muted">
+                Expires: <%= donation.expiration_date ? new Date(donation.expiration_date).toLocaleDateString() : 'N/A' %>
+                </small><br>
+                <small class="text-muted">Submitted: <%= new Date(donation.createdAt).toLocaleString() %></small>
+                <br>
 
-        mapboxgl.accessToken = mapboxToken;
-        const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: donorCoords, // Start map centered on donor
-            zoom: 11
+                <% if (donation.description) { %>
+                <small class="text-muted">Note: <%= donation.description %></small>
+                <% } %>
+
+                <% if (donation.connected_requests?.length > 0) { %>
+                <br>
+                <small class="text-muted">Connected Requests: 
+                    <%= donation.connected_requests.length %>
+                </small>
+                <% } %>
+            </div>
+
+            <!-- Status + OTP + Volunteer -->
+            <div class="text-end">
+                <span class="badge <%= getStatusBadge(donation.status) %>">
+                <%= donation.status.charAt(0).toUpperCase() + donation.status.slice(1) %>
+                </span>
+
+                <% if (donation.is_verified) { %>
+                <span class="badge bg-success-subtle text-success-emphasis ms-2">Verified</span>
+                <% } else { %>
+                <span class="badge bg-warning-subtle text-warning-emphasis ms-2">Pending Verification</span>
+                <% } %>
+
+                <% if (donation.status === 'matched' && donation.match) { %>
+                <div class="mt-2 text-start text-md-end">
+                    <small class="d-block text-muted">Volunteer OTP: 
+                    <strong><%= donation.match.donorOtp || '—' %></strong>
+                    </small>
+
+                    <% if (donation.match.assignedVolunteer?.username) { %>
+                    <small class="d-block text-muted">Volunteer: 
+                        <strong><%= donation.match.assignedVolunteer.username %></strong>
+                    </small>
+                    <% } %>
+
+                    <small class="d-block text-muted">Delivery Status: 
+                    <span class="text-primary"><%= donation.match.deliveryStatus %></span>
+                    </small>
+
+                    <% if (donation.match.deliveryactualDeliveryTime) { %>
+                    <small class="d-block text-muted">Delivered On: 
+                        <%= new Date(donation.match.deliveryactualDeliveryTime).toLocaleString() %>
+                    </small>
+                    <% } %>
+
+                    <% if (donation.match.deliveryfailureReason) { %>
+                    <span class="badge bg-danger-subtle text-danger-emphasis mt-1">
+                        Failed: <%= donation.match.deliveryfailureReason %>
+                    </span>
+                    <% } %>
+                </div>
+                <% } else if (donation.status === 'approved') { %>
+                <div class="mt-2">
+                    <small class="text-muted">Waiting for matching with requests...</small>
+                </div>
+                <% } else if (donation.status === 'rejected') { %>
+                <div class="mt-2">
+                    <small class="text-danger">Rejected by admin.</small>
+                </div>
+                <% } %>
+            </div>
+            </div>
+        <% }) %>
+        </div>
+    </div>
+    <% } else { %>
+    <div class="card mb-4">
+        <div class="card-body text-center py-4">
+        <i class="bi bi-box-seam display-4 text-muted mb-3"></i>
+        <p class="text-muted">You haven't made any food donations yet. <a href="/donations/new">Donate now!</a></p>
+        </div>
+    </div>
+    <% } %>
+
+    <% if (user.food_requests && user.food_requests.length > 0) { %>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-card-checklist me-2"></i>My Food Requests</h5>
+            </div>
+            <div class="card-body">
+                <% user.food_requests.forEach(request => { %>
+                    <div class="border rounded p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                        <div>
+                            <h6 class="mb-1"><%= request.food_type %> (<%= request.quantity.amount %> <%= request.quantity.unit %>)</h6>
+                            <small class="text-muted"><i class="bi bi-people-fill me-1"></i>For <%= request.number_of_people %> people</small><br>
+                            <small class="text-muted"><i class="bi bi-geo-alt-fill me-1"></i><%= request.location_text %></small>
+                        </div>
+                        <div class="mt-2 mt-md-0 text-md-end">
+                            <span class="badge <%= getStatusBadge(request.status) %>"><%= request.status.charAt(0).toUpperCase() + request.status.slice(1) %></span>
+                            <span class="badge bg-info-subtle text-info-emphasis ms-2">Urgency: <%= request.urgency_level.charAt(0).toUpperCase() + request.urgency_level.slice(1) %></span>
+                            <% if (request.is_verified) { %>
+                                <span class="badge bg-success-subtle text-success-emphasis ms-2">Verified</span>
+                            <% } else { %>
+                                <span class="badge bg-warning-subtle text-warning-emphasis ms-2">Pending Verification</span>
+                            <% } %>
+                            <a href="/requests/<%= request._id %>" class="btn btn-sm btn-outline-primary ms-2 mt-2 mt-md-0">Details</a>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="card mb-4">
+            <div class="card-body text-center py-4">
+                <i class="bi bi-clipboard-check display-4 text-muted mb-3"></i>
+                <p class="text-muted">You haven't made any food requests yet. <a href="/requests/new">Request food now!</a></p>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<% if (user.volunteer && user.volunteer.currentAssignments) { %>
+<script>
+    const mapboxToken = "<%= mapboxAccessToken %>";
+    const donorCoords = <%- JSON.stringify(user.volunteer.currentAssignments.food_donation.location_geo.coordinates) %>;
+    const requesterCoords = <%- JSON.stringify(user.volunteer.currentAssignments.food_request.location_geo.coordinates) %>;
+    const volunteerCoords = <%- JSON.stringify(user.volunteer.geometry.coordinates) %>;
+
+    mapboxgl.accessToken = mapboxToken;
+
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: donorCoords,
+        zoom: 11
+    });
+
+    new mapboxgl.Marker({ color: '#ffc107' })
+        .setLngLat(volunteerCoords)
+        .setPopup(new mapboxgl.Popup().setHTML("<h5>You (Volunteer)</h5>"))
+        .addTo(map);
+
+    new mapboxgl.Marker({ color: '#28a745' })
+        .setLngLat(donorCoords)
+        .setPopup(new mapboxgl.Popup().setHTML("<h5>Pickup Location</h5>"))
+        .addTo(map);
+
+    new mapboxgl.Marker({ color: '#17a2b8' })
+        .setLngLat(requesterCoords)
+        .setPopup(new mapboxgl.Popup().setHTML("<h5>Delivery Location</h5>"))
+        .addTo(map);
+
+    async function drawRoute() {
+        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${volunteerCoords[0]},${volunteerCoords[1]};${donorCoords[0]},${donorCoords[1]};${requesterCoords[0]},${requesterCoords[1]}?geometries=geojson&access_token=${mapboxToken}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const route = data.routes[0].geometry.coordinates;
+        const duration = Math.round(data.routes[0].duration / 60);
+
+        const etaDisplay = document.getElementById('eta-display');
+        if (etaDisplay) etaDisplay.textContent = `${duration} minutes`;
+
+        map.addSource('fullRoute', {
+            type: 'geojson',
+            data: {
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: route
+                }
+            }
         });
 
-        // Add Marker for Donor (Pickup)
-        new mapboxgl.Marker({ color: '#28a745' }) // Green
-            .setLngLat(donorCoords)
-            .setPopup(new mapboxgl.Popup().setHTML("<h5>Pickup Location</h5>"))
-            .addTo(map);
+        map.addLayer({
+            id: 'fullRoute',
+            type: 'line',
+            source: 'fullRoute',
+            layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            paint: {
+                'line-color': '#007bff',
+                'line-width': 5
+            }
+        });
 
-        // Add Marker for Requester (Dropoff)
-        new mapboxgl.Marker({ color: '#17a2b8' }) // Blue/Info
-            .setLngLat(requesterCoords)
-            .setPopup(new mapboxgl.Popup().setHTML("<h5>Delivery Location</h5>"))
-            .addTo(map);
-
-        // Fetch and display the route
-        async function getRoute() {
-            const response = await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${donorCoords[0]},${donorCoords[1]};${requesterCoords[0]},${requesterCoords[1]}?steps=true&geometries=geojson&access_token=${mapboxToken}`);
-            const data = await response.json();
-            const route = data.routes[0].geometry.coordinates;
-
-            map.addLayer({
-                id: 'route',
-                type: 'line',
-                source: {
-                    type: 'geojson',
-                    data: {
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'LineString',
-                            coordinates: route
-                        }
-                    }
-                },
-                layout: {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                paint: {
-                    'line-color': '#007bff',
-                    'line-width': 5
-                }
-            });
-            // Fit map to the route bounds
-             const bounds = new mapboxgl.LngLatBounds(donorCoords, requesterCoords);
-             map.fitBounds(bounds, { padding: 50 });
-        }
-
-        getRoute();
+        const bounds = new mapboxgl.LngLatBounds();
+        [volunteerCoords, donorCoords, requesterCoords].forEach(coord => bounds.extend(coord));
+        map.fitBounds(bounds, { padding: 50 });
     }
+
+    drawRoute();
 </script>
+<% } %>

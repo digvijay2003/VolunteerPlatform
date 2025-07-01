@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, required: true, unique: true, match: [/^\+?\d{10,15}$/, 'Please enter a valid phone number'] },
   password: { type: String, required: true },
   address: addressSchema,
+  roles: { type: [String], enum: ['donor', 'requester', 'volunteer'], default: [] },
   food_donations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodDonation' }],
   food_requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodRequest' }],
   volunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'Volunteer' },

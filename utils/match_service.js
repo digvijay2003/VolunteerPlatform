@@ -98,12 +98,17 @@ async function matchEntity(primary, oppositeModel, isRequest) {
     const donation = isRequest ? opposite : primary;
 
     const score = getMatchScore(request, donation);
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
     if (score >= 60) {
       const match = await FoodMatch.create({
         food_request: request._id,
         food_donation: donation._id,
         autoMatched: true,
         matchScore: score,
+        donorOtp: Math.floor(100000 + Math.random() * 900000).toString(),
+        requesterOtp: Math.floor(100000 + Math.random() * 900000).toString(),
         note: 'Auto-matched based on proximity, type, and quantity',
         status: 'matched',
       });
@@ -112,6 +117,8 @@ async function matchEntity(primary, oppositeModel, isRequest) {
       request.status = 'matched';
       donation.connected_requests?.push(request._id);
       donation.status = 'matched';
+      donation.match = match._id;
+      request.match = match._id;
 
       await Promise.all([request.save(), donation.save()]);
 
