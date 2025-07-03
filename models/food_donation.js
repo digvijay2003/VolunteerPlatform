@@ -7,7 +7,7 @@ const foodDonationSchema = new mongoose.Schema({
   donor_phone: { type: String, required: true, match: [/^\+?\d{10,15}$/, 'Please enter a valid phone number'] },
   food_type: { type: String, required: true, trim: true },
   quantity: quantitySchema,
-  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  status: { type: String, enum: ['pending', 'approved', 'rejected', 'matched'], default: 'pending' },
   location_text: { type: String, required: true },
   location_geo: geoSchema,
   description: { type: String, required: true, trim: true },
@@ -16,7 +16,10 @@ const foodDonationSchema = new mongoose.Schema({
   is_verified: { type: Boolean, default: false },
   verified_by: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
   connected_requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodRequest' }],
-  fulfilled_at: { type: Date }
+  fulfilled_at: { type: Date },
+  match: { type: mongoose.Schema.Types.ObjectId, ref: 'FoodMatch' },
+  delivered_by_volunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'Volunteer' },
+  delivery_willing: { type: Boolean, default: false },
 }, { timestamps: true });
 
 // Indexes

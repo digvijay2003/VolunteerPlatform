@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const logger = require('../config/logger');
 
-const protect_user = async (req, res, next) => {
+const requireUserAuth = async (req, res, next) => {
   const token = req.session?.token;
 
   if (!token) {
@@ -31,4 +31,4 @@ const protect_user = async (req, res, next) => {
   }
 };
 
-module.exports = protect_user;
+module.exports = requireUserAuth;

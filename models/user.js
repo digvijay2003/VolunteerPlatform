@@ -8,8 +8,9 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, required: true, unique: true, match: [/^\+?\d{10,15}$/, 'Please enter a valid phone number'] },
   password: { type: String, required: true },
   address: addressSchema,
-  food_donations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodDonation' }],
-  food_requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodRequest' }],
+  roles: { type: [String], enum: ['donor', 'requester', 'volunteer'], default: [] },
+  food_donations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodDonation', default: [] }],
+  food_requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodRequest', default: [] }],
   volunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'Volunteer' },
 }, { timestamps: true });
 
@@ -38,4 +39,5 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 };
 
 const User = mongoose.model('User', userSchema);
+
 module.exports = User;

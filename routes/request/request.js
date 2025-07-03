@@ -9,8 +9,9 @@ const {storage} = require('../../utils/cloudinary');
 const multer = require('multer');
 const upload = multer({storage});
 const mongoose = require('mongoose');
-const protect_user = require('../../middleware/user_auth');
+const requireUserAuth = require('../../middleware/user_auth');
 const logger = require('../../config/logger');
+const {matchFoodRequest} = require('../../utils/match_service');
 
 // Handle GET request to render the food request form
 router.get('/feedhope-request-food', (req, res) => {
@@ -25,7 +26,7 @@ router.get('/feedhope-request-food', (req, res) => {
 // Handle POST request to submit a food request 
 router.post(
   '/feedhope-request-food',
-  protect_user,
+  requireUserAuth,
   upload.fields([
     { name: 'proof_images', maxCount: 3 },
     { name: 'government_id_images', maxCount: 3 }
@@ -37,12 +38,19 @@ router.post(
         requester_phone,
         foodtype,
         location,
-        need_description,
+        description,
         urgency,
         number_of_people,
         expiration_date,
         government_id_number
       } = req.body;
+
+      const can_pickup = req.body.can_pickup === 'on'; 
+
+      // if (!can_pickup) {
+      //   req.flash('error', 'You must confirm that you can pick up the food yourself.');
+      //   return res.redirect('/feedhope-request-food');
+      // }
 
       const quantity = {
         amount: Number(req.body.quantity?.amount),
@@ -132,19 +140,22 @@ router.post(
           type: 'Point',
           coordinates: [longitude, latitude]
         },
-        need_description,
+        description,
         urgency_level: urgency,
         number_of_people: Number(number_of_people),
         expiration_date: expiration_date || null,
         proof_images,
         government_id_number,
-        government_id_images
+        government_id_images,
+        can_pickup,
       });
 
       req.user.food_requests.push(foodRequest._id);
       await req.user.save();
 
       logger.info(`✅ Request submitted by ${req.user.email} (Request ID: ${foodRequest._id})`);
+
+      matchFoodRequest(foodRequest).catch(err => console.error('Match error:', err));
 
       req.flash('success', 'Food request submitted. We will contact you soon.');
 

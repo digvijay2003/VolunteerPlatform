@@ -65,8 +65,8 @@
                   </div>
               
                   <div class="form-outline mb-4">
-                      <textarea id="need_description" name="need_description" class="form-control" required></textarea>
-                      <label class="form-label" for="need_description">Why do you need food? <span class="text-danger">*</span></label>
+                      <textarea id="description" name="description" class="form-control" required></textarea>
+                      <label class="form-label" for="description">Why do you need food? <span class="text-danger">*</span></label>
                   </div>
               
                   <div class="row">
@@ -101,6 +101,11 @@
                 <div class="form-outline mb-4">
                     <input type="file" name="government_id_images" multiple required />
                     <label class="form-label" for="government_id_images">Upload Government ID Images <span class="text-danger">*</span></label>
+                </div>
+
+                <div class="form-outline mb-4">
+                    <input class="form-check-input" type="checkbox" id="can_pickup" name="can_pickup">
+                    <label class="form-check-label" for="can_pickup">I can pick up the food myself <span class="text-danger">*</span></label>
                 </div>
               
                   <button type="submit" class="btn btn-success col-12 btn-rounded btn-block">Submit Request</button>

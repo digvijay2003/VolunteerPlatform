@@ -1,0 +1,682 @@
+<style>
+    :root {
+        --bs-primary: #005A6A; /* Darker, more professional teal */
+        --bs-primary-rgb: 0, 90, 106;
+        --bs-secondary: #6c757d;
+        --bs-success: #198754;
+        --bs-info: #0dcaf0;
+        --bs-warning: #ffc107;
+        --bs-danger: #dc3545;
+        --bs-light: #f8f9fa;
+        --bs-dark: #212529;
+        --body-bg: #f4f7f9; 
+        --card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        --card-shadow-hover: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+        --border-color: #dee2e6;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family: 'Inter', sans-serif; /* A clean, modern font */
+    }
+
+    .dashboard-header {
+        font-weight: 600;
+        color: var(--bs-dark);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, var(--bs-primary), #007788);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-avatar {
+        width: 90px;
+        height: 90px;
+        background-color: white;
+        color: var(--bs-primary);
+        border: 4px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .stat-card {
+        background-color: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow-hover);
+    }
+
+    .stat-card .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--bs-dark);
+    }
+
+    .stat-card .stat-label {
+        font-size: 1rem;
+        color: var(--bs-secondary);
+    }
+
+    .card {
+        border: none;
+        box-shadow: var(--card-shadow);
+        border-radius: 0.75rem;
+        transition: box-shadow 0.2s ease;
+    }
+    
+    .card:hover {
+        box-shadow: var(--card-shadow-hover);
+    }
+
+    .card .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid var(--border-color);
+        font-weight: 600;
+    }
+
+    .list-group-item {
+        border-color: var(--border-color);
+        padding: 1rem 0;
+    }
+    
+    .list-group-item:first-child {
+        padding-top: 0;
+    }
+    
+    .list-group-item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .card-header-primary {
+        background-color: var(--bs-primary);
+        color: white;
+    }
+    
+    .btn-primary {
+        background-color: var(--bs-primary);
+        border-color: var(--bs-primary);
+    }
+
+    .btn-primary:hover {
+        background-color: #00434f;
+        border-color: #00434f;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <h2 class="dashboard-header">
+        <i class="bi bi-person-circle me-2"></i>My Dashboard
+    </h2>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="profile-header mb-4">
+                <div class="d-flex flex-column flex-md-row align-items-center">
+                    <div class="flex-shrink-0 mb-3 mb-md-0 me-md-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center profile-avatar">
+                            <span class="fs-1 fw-bold"><%= user.name.split(' ').map(n => n[0]).join('').toUpperCase() %></span>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 text-center text-md-start">
+                        <h1 class="display-6 fw-bold mb-1"><%= user.name %></h1>
+                        <p class="lead mb-2 opacity-75"><%= user.email %></p>
+                        <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-normal">
+                           <i class="bi bi-calendar-check me-1"></i> Member since <%= new Date(user.createdAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'long' }) %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <% if (user.volunteer) { %>
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                           <div class="stat-icon text-warning"><i class="bi bi-star-fill"></i></div>
+                           <div class="stat-value"><%= user.volunteer.rating.toFixed(1) %></div>
+                           <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                           <div class="stat-icon text-success"><i class="bi bi-check-all"></i></div>
+                           <div class="stat-value"><%= user.volunteer.completedAssignments ? user.volunteer.completedAssignments.length : 0 %></div>
+                           <div class="stat-label">Completed Deliveries</div>
+                    </div>
+                </div>
+                   <div class="col-md-4">
+                    <div class="stat-card">
+                           <div class="stat-icon text-primary"><i class="bi bi-truck"></i></div>
+                           <div class="stat-value"><%= user.volunteer.currentAssignments ? 1 : 0 %></div>
+                           <div class="stat-label">Active Delivery</div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+
+            <% if (user.volunteer) { %>
+                <div class="card">
+                       <div class="card-header">
+                         <h5><i class="bi bi-person-badge-fill me-2"></i>Volunteer Profile</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <% if (user.volunteer.isBanned) { %>
+                            <div class="alert alert-danger"><i class="bi bi-x-circle-fill me-2"></i><strong>Account Banned:</strong> <%= user.volunteer.bannedReason || 'No reason provided.' %></div>
+                        <% } %>
+                        <div class="row g-4">
+                            <div class="col-sm-6"><p class="mb-0 text-muted">Username</p><p class="fw-bold mb-0"><%= user.volunteer.username %></p></div>
+                            <div class="col-sm-6"><p class="mb-0 text-muted">Contact</p><p class="fw-bold mb-0"><%= user.volunteer.phone %></p></div>
+                            <div class="col-sm-12"><p class="mb-0 text-muted">Location</p><p class="fw-bold mb-0"><%= user.volunteer.location %></p></div>
+                            <div class="col-sm-12">
+                                <p class="text-muted mb-2">Skills</p>
+                                <div>
+                                <% if (user.volunteer.skills && user.volunteer.skills.length > 0) { %>
+                                    <% user.volunteer.skills.forEach(skill => { %>
+                                        <span class="badge rounded-pill bg-secondary fw-normal me-1 fs-6 px-3 py-2"><%= skill %></span>
+                                    <% }) %>
+                                <% } else { %><p class="text-muted">No skills listed.</p><% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-lightning-charge-fill me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-grid gap-3">
+                        <a href="/feedhope-donation-food" class="btn btn-success btn-lg py-3 fw-bold"><i class="bi bi-box-seam me-2"></i>Donate Food</a>
+                        <a href="/feedhope-request-food" class="btn btn-info btn-lg py-3 fw-bold text-dark"><i class="bi bi-card-checklist me-2"></i>Request Food</a>
+                    </div>
+                </div>
+            </div>
+
+            <% if (user.volunteer) { %>
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-person-check-fill me-2"></i>Volunteer Status</h5>
+                </div>
+                <div class="card-body p-4">
+                     <% if (!user.volunteer.governmentIdVerified) { %>
+                         <div class="alert alert-warning d-flex align-items-center">
+                             <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+                             <div>
+                                 <strong class="d-block">ID Not Verified</strong>
+                                 <a href="#" class="btn btn-warning btn-sm fw-bold mt-1">Verify Now</a>
+                            </div>
+                        </div>
+                    <% } %>
+                    <ul class="list-group list-group-flush">
+                           <li class="list-group-item d-flex justify-content-between align-items-center">
+                             <span>ID Verification</span>
+                               <% if (user.volunteer.governmentIdVerified) { %><span class="badge bg-success-subtle text-success-emphasis rounded-pill">Verified</span><% } else { %><span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">Not Verified</span><% } %>
+                         </li>
+                         <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Profile Status</span>
+                            <% if (user.volunteer.status === 'active') { %><span class="badge bg-success-subtle text-success-emphasis rounded-pill">Active</span><% } %>
+                            <% if (user.volunteer.status === 'inactive') { %><span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">Inactive</span><% } %>
+                             <% if (user.volunteer.status === 'suspended') { %><span class="badge bg-danger-subtle text-danger-emphasis rounded-pill">Suspended</span><% } %>
+                         </li>
+                         <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Availability</span>
+                            <div class="f">
+                                <% if(user.volunteer.availability === true){ %>
+                                    <span class="badge bg-success-subtle text-success-emphasis rounded-pill">Available</span>
+                                <% } else { %>
+                                    <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">Not Available</span>
+                                <% } %>
+                            </div>
+                         </li>
+                    </ul>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <% if (user.volunteer && user.volunteer.currentAssignments) { %>
+            <% const assignment = user.volunteer.currentAssignments; %>
+            <% const donation = assignment.food_donation; %>
+            <% const request = assignment.food_request; %>
+            <div class="col-lg-10 col-xl-8">
+                <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                    <div class="card-header bg-dark text-white text-center py-3">
+                        <h4 class="mb-0 fw-light"><i class="bi bi-truck me-2"></i>Active Delivery Task</h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="p-4">
+                            <div class="progress rounded-pill" style="height: 2rem;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated
+                                    <%= assignment.deliveryStatus === 'assigned' ? 'bg-warning text-dark' : '' %>
+                                    <%= assignment.deliveryStatus === 'in_transit' ? 'bg-info text-dark' : '' %>
+                                    <%= assignment.deliveryStatus === 'delivered' ? 'bg-success' : '' %>"
+                                    role="progressbar"
+                                    style="width: <%= assignment.deliveryStatus === 'assigned' ? '33%' : (assignment.deliveryStatus === 'in_transit' ? '66%' : '100%') %>;"
+                                    aria-valuenow="<%= assignment.deliveryStatus === 'assigned' ? '33' : (assignment.deliveryStatus === 'in_transit' ? '66' : '100') %>"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <strong class="h6 mb-0"><%= assignment.deliveryStatus.replace('_', ' ').toUpperCase() %></strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div id='map' style='width: 100%; height: 400px;'></div>
+                        <div class="p-4 bg-light d-flex justify-content-between align-items-center">
+                            <!-- <button id="start-tracking-btn" class="btn btn-primary rounded-pill fw-bold">
+                                <i class="bi bi-broadcast-pin me-2"></i>Start Live Tracking
+                            </button> -->
+                            <div class="text-end">
+                                <p class="mb-1"><strong>ETA to Donor:</strong> <span id="eta-donor-display" class="badge bg-secondary">Calculating...</span></p>
+                                <p class="mb-0"><strong>ETA to Requester:</strong> <span id="eta-requester-display" class="badge bg-secondary">Waiting...</span></p>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="row g-4">
+                                <div class="col-md-6 border-end">
+                                    <h5 class="fw-bold text-success mb-3"><i class="bi bi-box-arrow-in-right me-2"></i>Pickup Point</h5>
+                                    <p class="mb-2"><strong>Donor:</strong> <%= donation.donor_name %></p>
+                                    <p class="mb-2"><strong>Food:</strong> <%= donation.food_type %> (<%= donation.quantity.amount %> <%= donation.quantity.unit %>)</p>
+                                    <p class="mb-2"><strong>Address:</strong> <%= donation.location_text %></p>
+                                    <a href="tel:<%= donation.donor_phone %>" class="btn btn-outline-secondary w-100">
+                                        <i class="bi bi-telephone me-2"></i>Call Donor
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="fw-bold text-info mb-3"><i class="bi bi-flag-fill me-2"></i>Drop-off Point</h5>
+                                    <p class="mb-2"><strong>Requester:</strong> <%= request.requester_name %></p>
+                                    <p class="mb-2"><strong>Address:</strong> <%= request.location_text %></p>
+                                    <a href="tel:<%= request.requester_phone %>" class="btn btn-outline-secondary w-100">
+                                        <i class="bi bi-telephone me-2"></i>Call Requester
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-0">
+                        <div class="card-footer p-4">
+                            <% if (assignment.deliveryStatus === 'assigned') { %>
+                                <div class="text-center mb-3 alert alert-warning border-0">
+                                    Enter the OTP from the donor to confirm pickup.
+                                </div>
+                                <form action="/delivery/<%= assignment._id %>/pickup" method="POST">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                        <input type="text" name="otp" class="form-control" placeholder="Enter Donor OTP" required />
+                                        <button type="submit" class="btn btn-success fw-bold">Confirm Pickup</button>
+                                    </div>
+                                </form>
+                            <% } else if (assignment.deliveryStatus === 'in_transit') { %>
+                                <div class="text-center mb-3 alert alert-info border-0">
+                                    Enter the OTP from the requester to confirm delivery.
+                                </div>
+                                <form action="/delivery/<%= assignment._id %>/deliver" method="POST">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                                        <input type="text" name="otp" class="form-control" placeholder="Enter Requester OTP" required />
+                                        <button type="submit" class="btn btn-info fw-bold">Confirm Delivery</button>
+                                    </div>
+                                </form>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <% } else if (user.volunteer && lastDeliveredAssignment) { %>
+            <div class="card">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-check-circle-fill display-4 text-success mb-3"></i>
+                    <h4 class="text-success">Last Delivery Complete!</h4>
+                    <p class="mb-3">Thanks for delivering food to <strong><%= lastDeliveredAssignment.food_request.requester_name %></strong>.</p>
+                    <form action="/delivery/<%= lastDeliveredAssignment._id %>/feedback" method="POST">
+                        <div class="mb-3">
+                            <textarea name="volunteerFeedback" class="form-control" rows="3" placeholder="Share your experience..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+        <% } else if (user.volunteer) { %>
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-sm border-0 rounded-4 text-center py-5 bg-light">
+                    <div class="card-body">
+                        <i class="bi bi-hourglass-split display-4 text-muted mb-3"></i>
+                        <h4 class="text-muted">No Active Assignment</h4>
+                        <p class="mb-0 px-4">You're all set for now! We'll notify you when a new delivery task is available nearby.</p>
+                    </div>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="card">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-person-plus-fill text-primary display-2"></i>
+                    <h3 class="fw-bold mt-4 mb-2">Make a Difference</h3>
+                    <p class="text-muted mx-auto" style="max-width: 500px;">Join our volunteer team and be a vital part of our community's support system.</p>
+                    <a href="/volunteer-registration" class="btn btn-primary btn-lg mt-3 rounded-pill px-5 py-3 fw-bold shadow-sm">Become a Volunteer</a>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<div class="container-fluid py-4">
+    <% if (activeFoodDonation) { %>
+    <div class="card shadow-lg border-0 mb-4 rounded-4">
+        <div class="card-header bg-success-subtle text-success-emphasis">
+            <h5 class="mb-0"><i class="bi bi-box2-heart me-2"></i>Current Food Donation Status</h5>
+        </div>
+        <div class="card-body p-4">
+            <p><strong>Food:</strong> <%= activeFoodDonation.food_type %> 
+                (<%= activeFoodDonation.quantity.amount %> <%= activeFoodDonation.quantity.unit %>)
+            </p>
+            <p><strong>Donated On:</strong> <%= new Date(activeFoodDonation.createdAt).toLocaleString() %></p>
+            <p><strong>Status:</strong> 
+                <span class="badge <%= getStatusBadge(activeFoodDonation.status) %>">
+                    <%= activeFoodDonation.status.charAt(0).toUpperCase() + activeFoodDonation.status.slice(1) %>
+                </span>
+            </p>
+
+            <% if (activeFoodDonation.match) { %>
+                <p><strong>Assigned Volunteer:</strong> 
+                    <%= activeFoodDonation.match.assignedVolunteer?.username || 'Pending' %>
+                </p>
+                <p><strong>Volunteer OTP:</strong> 
+                    <%= activeFoodDonation.match.donorOtp || '—' %>
+                </p>
+                <p><strong>Delivery Status:</strong> 
+                    <%= activeFoodDonation.match.deliveryStatus %>
+                </p>
+                <% if (activeFoodDonation.match.deliveryactualDeliveryTime) { %>
+                    <p><strong>Delivered On:</strong> 
+                        <%= new Date(activeFoodDonation.match.deliveryactualDeliveryTime).toLocaleString() %>
+                    </p>
+                <% } %>
+            <% } %>
+        </div>
+    </div>
+    <% } %>
+
+    <% if (previousFoodDonations.length > 0) { %>
+    <div class="text-center my-3">
+        <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="collapse" data-bs-target="#previousDonations">
+            View Previous Donations
+        </button>
+    </div>
+
+    <div class="collapse" id="previousDonations">
+        <% previousFoodDonations.forEach(donation => { %>
+        <div class="border rounded p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2">
+            <div class="flex-grow-1">
+                <h6 class="mb-1">
+                    <%= donation.food_type %> 
+                    (<%= donation.quantity?.amount %> <%= donation.quantity?.unit %>)
+                </h6>
+                <small class="text-muted">
+                    <i class="bi bi-geo-alt-fill me-1"></i><%= donation.location_text %>
+                </small><br>
+                <small class="text-muted">
+                    Expires: <%= donation.expiration_date ? new Date(donation.expiration_date).toLocaleDateString() : 'N/A' %>
+                </small><br>
+                <small class="text-muted">Submitted: <%= new Date(donation.createdAt).toLocaleString() %></small>
+                <% if (donation.description) { %>
+                    <br><small class="text-muted">Note: <%= donation.description %></small>
+                <% } %>
+                <% if (donation.connected_requests?.length > 0) { %>
+                    <br><small class="text-muted">Connected Requests: <%= donation.connected_requests.length %></small>
+                <% } %>
+            </div>
+
+            <div class="text-end">
+                <span class="badge <%= getStatusBadge(donation.status) %>">
+                    <%= donation.status.charAt(0).toUpperCase() + donation.status.slice(1) %>
+                </span>
+                <% if (donation.is_verified) { %>
+                    <span class="badge bg-success-subtle text-success-emphasis ms-2">Verified</span>
+                <% } else { %>
+                    <span class="badge bg-warning-subtle text-warning-emphasis ms-2">Pending Verification</span>
+                <% } %>
+
+                <% if (donation.status === 'matched' && donation.match) { %>
+                <div class="mt-2 text-start text-md-end">
+                    <small class="d-block text-muted">Volunteer Verification OTP: 
+                        <strong><%= donation.match.donorOtp || '—' %></strong>
+                    </small>
+                    <% if (donation.match.assignedVolunteer?.username) { %>
+                        <small class="d-block text-muted">Volunteer: 
+                            <strong><%= donation.match.assignedVolunteer.username %></strong>
+                        </small>
+                    <% } %>
+                    <small class="d-block text-muted">Delivery Status: 
+                        <span class="text-primary"><%= donation.match.deliveryStatus %></span>
+                    </small>
+                    <% if (donation.match.deliveryactualDeliveryTime) { %>
+                        <small class="d-block text-muted">Delivered On: 
+                            <%= new Date(donation.match.deliveryactualDeliveryTime).toLocaleString() %>
+                        </small>
+                    <% } %>
+                    <% if (donation.match.deliveryfailureReason) { %>
+                        <span class="badge bg-danger-subtle text-danger-emphasis mt-1">
+                            Failed: <%= donation.match.deliveryfailureReason %>
+                        </span>
+                    <% } %>
+                </div>
+                <% } else if (donation.status === 'approved') { %>
+                    <div class="mt-2"><small class="text-muted">Waiting for matching with requests...</small></div>
+                <% } else if (donation.status === 'rejected') { %>
+                    <div class="mt-2"><small class="text-danger">Rejected by admin.</small></div>
+                <% } %>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+    <% } %>
+
+    <% if (activeFoodRequest) { %>
+    <div class="card shadow-lg border-0 mb-4 rounded-4">
+        <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-box2-heart me-2"></i>Current Food Request Status</h5>
+        </div>
+        <div class="card-body p-4">
+        <p><strong>Food:</strong> <%= activeFoodRequest.food_type %> 
+            (<%= activeFoodRequest.quantity.amount %> <%= activeFoodRequest.quantity.unit %>)
+        </p>
+        <p><strong>Requested On:</strong> <%= new Date(activeFoodRequest.createdAt).toLocaleString() %></p>
+        <p><strong>Status:</strong> 
+            <span class="badge <%= getStatusBadge(activeFoodRequest.status) %>">
+            <%= activeFoodRequest.status.charAt(0).toUpperCase() + activeFoodRequest.status.slice(1) %>
+            </span>
+        </p>
+
+        <% if (activeFoodRequest.match) { %>
+            <p><strong>Assigned Volunteer:</strong> 
+            <%= activeFoodRequest.match.assignedVolunteer?.username || 'Pending' %>
+            </p>
+            <p><strong>Requester OTP:</strong> 
+            <%= activeFoodRequest.match.requesterOtp || '—' %>
+            </p>
+            <p><strong>Delivery Status:</strong> 
+            <%= activeFoodRequest.match.deliveryStatus %>
+            </p>
+            <% if (activeFoodRequest.match.deliveryactualDeliveryTime) { %>
+            <p><strong>Delivered On:</strong> 
+                <%= new Date(activeFoodRequest.match.deliveryactualDeliveryTime).toLocaleString() %>
+            </p>
+            <% } %>
+        <% } %>
+        </div>
+    </div>
+    <% } %>
+
+    <% if (previousFoodRequests.length > 0) { %>
+    <div class="text-center my-3">
+        <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="collapse" data-bs-target="#previousRequests">
+        View Previous Requests
+        </button>
+    </div>
+
+    <div class="collapse" id="previousRequests">
+        <% previousFoodRequests.forEach(request => { %>
+        <div class="border rounded p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2">
+        <div class="flex-grow-1">
+            <h6 class="mb-1">
+            <%= request.food_type %> 
+            (<%= request.quantity?.amount %> <%= request.quantity?.unit %>)
+            </h6>
+            <small class="text-muted">
+            <i class="bi bi-geo-alt-fill me-1"></i><%= request.location_text %>
+            </small><br>
+            <small class="text-muted">
+            Expires: <%= request.expiration_date ? new Date(request.expiration_date).toLocaleDateString() : 'N/A' %>
+            </small><br>
+            <small class="text-muted">Submitted: <%= new Date(request.createdAt).toLocaleString() %></small>
+            <% if (request.description) { %>
+            <br><small class="text-muted">Note: <%= request.description %></small>
+            <% } %>
+            <% if (request.connected_donations?.length > 0) { %>
+            <br><small class="text-muted">Connected Donations: <%= request.connected_donations.length %></small>
+            <% } %>
+        </div>
+
+        <div class="text-end">
+            <span class="badge <%= getStatusBadge(request.status) %>">
+            <%= request.status.charAt(0).toUpperCase() + request.status.slice(1) %>
+            </span>
+            <% if (request.is_verified) { %>
+            <span class="badge bg-success-subtle text-success-emphasis ms-2">Verified</span>
+            <% } else { %>
+            <span class="badge bg-warning-subtle text-warning-emphasis ms-2">Pending Verification</span>
+            <% } %>
+
+            <% if (request.status === 'matched' && request.match) { %>
+            <div class="mt-2 text-start text-md-end">
+            <small class="d-block text-muted">Volunteer Verification OTP: 
+                <strong><%= request.match.requesterOtp || '—' %></strong>
+            </small>
+            <% if (request.match.assignedVolunteer?.username) { %>
+                <small class="d-block text-muted">Volunteer: 
+                <strong><%= request.match.assignedVolunteer.username %></strong>
+                </small>
+            <% } %>
+            <small class="d-block text-muted">Delivery Status: 
+                <span class="text-primary"><%= request.match.deliveryStatus %></span>
+            </small>
+            <% if (request.match.deliveryactualDeliveryTime) { %>
+                <small class="d-block text-muted">Delivered On: 
+                <%= new Date(request.match.deliveryactualDeliveryTime).toLocaleString() %>
+                </small>
+            <% } %>
+            <% if (request.match.deliveryfailureReason) { %>
+                <span class="badge bg-danger-subtle text-danger-emphasis mt-1">
+                Failed: <%= request.match.deliveryfailureReason %>
+                </span>
+            <% } %>
+            </div>
+            <% } else if (request.status === 'approved') { %>
+            <div class="mt-2"><small class="text-muted">Waiting for matching with donors...</small></div>
+            <% } else if (request.status === 'rejected') { %>
+            <div class="mt-2"><small class="text-danger">Rejected by admin.</small></div>
+            <% } %>
+        </div>
+        </div>
+        <% }) %>
+    </div>
+    <% } %>
+</div>
+
+<% if (user.volunteer && user.volunteer.currentAssignments) { %>
+<script>
+    const mapboxToken = "<%= mapboxAccessToken %>";
+    const donorCoords = <%- JSON.stringify(user.volunteer.currentAssignments.food_donation.location_geo.coordinates) %>;
+    const requesterCoords = <%- JSON.stringify(user.volunteer.currentAssignments.food_request.location_geo.coordinates) %>;
+    const volunteerCoords = <%- JSON.stringify(user.volunteer.geometry.coordinates) %>;
+
+    mapboxgl.accessToken = mapboxToken;
+
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: donorCoords,
+        zoom: 11
+    });
+
+    new mapboxgl.Marker({ color: '#ffc107' })
+        .setLngLat(volunteerCoords)
+        .setPopup(new mapboxgl.Popup().setHTML("<h5>You (Volunteer)</h5>"))
+        .addTo(map);
+
+    new mapboxgl.Marker({ color: '#28a745' })
+        .setLngLat(donorCoords)
+        .setPopup(new mapboxgl.Popup().setHTML("<h5>Pickup Location</h5>"))
+        .addTo(map);
+
+    new mapboxgl.Marker({ color: '#17a2b8' })
+        .setLngLat(requesterCoords)
+        .setPopup(new mapboxgl.Popup().setHTML("<h5>Delivery Location</h5>"))
+        .addTo(map);
+
+    async function drawRoute() {
+        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${volunteerCoords[0]},${volunteerCoords[1]};${donorCoords[0]},${donorCoords[1]};${requesterCoords[0]},${requesterCoords[1]}?geometries=geojson&access_token=${mapboxToken}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const route = data.routes[0].geometry.coordinates;
+        const duration = Math.round(data.routes[0].duration / 60);
+
+        const etaDisplay = document.getElementById('eta-display');
+        if (etaDisplay) etaDisplay.textContent = `${duration} minutes`;
+
+        map.addSource('fullRoute', {
+            type: 'geojson',
+            data: {
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: route
+                }
+            }
+        });
+
+        map.addLayer({
+            id: 'fullRoute',
+            type: 'line',
+            source: 'fullRoute',
+            layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            paint: {
+                'line-color': '#007bff',
+                'line-width': 5
+            }
+        });
+
+        const bounds = new mapboxgl.LngLatBounds();
+        [volunteerCoords, donorCoords, requesterCoords].forEach(coord => bounds.extend(coord));
+        map.fitBounds(bounds, { padding: 50 });
+    }
+
+    drawRoute();
+</script>
+<% } %>

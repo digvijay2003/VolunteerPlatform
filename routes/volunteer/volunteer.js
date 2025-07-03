@@ -1,19 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-
 const Volunteer = require('../../models/volunteer');
-
 const sendEmail = require('../../utils/sendEmail');
 const { getCoordinates } = require('../../utils/geocoding');
 const { upload } = require('../../utils/cloudinary');
+const protect_user = require('../../middleware/user_auth');
 
-
-const {
-    validateVolunteerRegistration,
-    validateVolunteerLogin,
-    validateVolunteerEdit,
-} = require('../../validation/volunteerValidation');
 
 const asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
@@ -35,12 +27,9 @@ router.get('/volunteer-registration',
                 { id: 'password', label: 'Password', type: 'password', name: 'password', required: true },
                 { id: 'phone', label: 'Phone Number', type: 'tel', name: 'phone', pattern: "^\+?\d{10,15}$", required: true },
                 { id: 'location', label: 'Location', type: 'text', name: 'location', required: true },
-                { id: 'availability', label: 'Availability', type: 'text', name: 'availability', required: true },
                 { id: 'skills', label: 'Skills', type: 'select',  name: 'skills[]', multiple: true, options: [ { value: 'delivery', label: 'Delivery' }, { value: 'cooking', label: 'Cooking' }, { value: 'communication', label: 'Communication' },{ value: 'logistics', label: 'Logistics' } ]},
-                { id: 'role', label: 'Role', type: 'select', name: 'role', options: [ { value: 'driver', label: 'Driver' }, { value: 'coordinator', label: 'Coordinator' }, { value: 'general', label: 'General' }], required: true},
-                { id: 'emergencyContactName', label: 'Emergency Contact Name', type: 'text', name: 'emergencyContact[name]', required: true },
-                { id: 'emergencyContactPhone', label: 'Emergency Contact Phone', type: 'tel', name: 'emergencyContact[phone]',  pattern: "^\+?\d{10,15}$", required: true },
-                { id: 'governmentIdProofs', label: 'Government ID Proofs', type: 'file', name: 'governmentIdProofs', multiple: true, required: true}
+                { id: 'governmentIdProofs', label: 'Government ID Proofs', type: 'file', name: 'governmentIdProofs', multiple: true, required: true},
+                { id: 'availability', label: 'Availability', type: 'select', name: 'availability', required: true, options: [{ value: 'true', label: 'Yes' }, { value: 'false', label: 'No' } ]}
             ]
         });
 });
@@ -53,48 +42,19 @@ const buildFieldData = (reqBody) => {
         { id: 'password', label: 'Password', type: 'password', name: 'password', required: true, value: reqBody.password },
         { id: 'phone', label: 'Phone Number', type: 'tel', name: 'phone', pattern: "^\+?\d{10,15}$", required: true, value: reqBody.phone },
         { id: 'location', label: 'Location', type: 'text', name: 'location', required: true, value: reqBody.location },
-        { id: 'availability', label: 'Availability', type: 'text', name: 'availability', required: true, value: reqBody.availability },
-        {
-            id: 'skills', label: 'Skills', type: 'select', name: 'skills[]', multiple: true,
-            value: reqBody.skills || [],
-            options: [
-                { value: 'delivery', label: 'Delivery' },
-                { value: 'cooking', label: 'Cooking' },
-                { value: 'communication', label: 'Communication' },
-                { value: 'logistics', label: 'Logistics' }
-            ]
-        },
-        {
-            id: 'role', label: 'Role', type: 'select', name: 'role', required: true,
-            value: reqBody.role,
-            options: [
-                { value: 'driver', label: 'Driver' },
-                { value: 'coordinator', label: 'Coordinator' },
-                { value: 'general', label: 'General' }
-            ]
-        },
-        {
-            id: 'emergencyContactName', label: 'Emergency Contact Name', type: 'text',
-            name: 'emergencyContact[name]', required: true,
-            value: reqBody.emergencyContact?.name
-        },
-        {
-            id: 'emergencyContactPhone', label: 'Emergency Contact Phone', type: 'tel',
-            name: 'emergencyContact[phone]', pattern: "^\+?\d{10,15}$", required: true,
-            value: reqBody.emergencyContact?.phone
-        },
-        {
-            id: 'governmentIdProofs', label: 'Government ID Proofs', type: 'file',
-            name: 'governmentIdProofs', multiple: true, required: true
-        }
+        { id: 'skills', label: 'Skills', type: 'select', name: 'skills[]', multiple: true, value: reqBody.skills || [], options: [ { value: 'delivery', label: 'Delivery' }, { value: 'cooking', label: 'Cooking' }, { value: 'communication', label: 'Communication' },{ value: 'logistics', label: 'Logistics' }]},
+        { id: 'governmentIdProofs', label: 'Government ID Proofs', type: 'file', name: 'governmentIdProofs', multiple: true, required: true },
+        { id: 'availability', label: 'Availability', type: 'select', name: 'availability', required: true, options: [ { value: 'true', label: 'Yes' }, { value: 'false', label: 'No' }]}
     ];
 };
 
 router.post(
     '/volunteer-registration',
+    protect_user,
     upload.array('governmentIdProofs', 3),
     asyncHandler(async (req, res) => {
-        const { username, email, password, phone, location, role, availability, skills, emergencyContact } = req.body;
+        const { username, email, password, phone, location, skills, emergencyContact } = req.body;
+
         const fields = buildFieldData(req.body);
 
         try {
@@ -103,14 +63,13 @@ router.post(
             if (existingVolunteer) {
                 req.flash('error', 'A volunteer with this email already exists.');
                 return res.status(400).render('volunteer/register', {
-                    title: 'VOLUNTEER REGISTRATION',
+                    title: 'Volunteer Registration',
                     action: '/volunteer-registration',
                     submitLabel: 'Register',
-                    stylesheet: '/stylesheet/volunteer/register.css',
+                    stylesheet: '',
                     showNavbar: false,
                     showFooter: false,
                     fields,
-                    error: 'Email already registered.'
                 });
             }
 
@@ -122,14 +81,16 @@ router.post(
                 description: `ID Proof for ${username}`,
             }));
 
+            const availability = req.body.availability === 'true';
+
             const newVolunteer = new Volunteer({
+                user_id: req.user._id,
                 username,
                 email,
                 password,
                 phone,
                 location,
                 geometry: { type: 'Point', coordinates: [longitude, latitude] },
-                role,
                 availability,
                 skills,
                 emergencyContact,
@@ -137,7 +98,11 @@ router.post(
             });
 
             const resp = await newVolunteer.save();
-            req.session.volunteerId = newVolunteer._id;
+
+            if (req.user) {
+                req.user.volunteer = newVolunteer._id;
+                await req.user.save();
+            }
 
             if (resp) {
                 const profileLink = `${process.env.PROD_URL}/volunteer-profile`;
@@ -200,7 +165,6 @@ router.get(
 
 router.post(
     '/volunteer-login',
-    validateVolunteerLogin,
     asyncHandler(async (req, res) => {
         const { email, password } = req.body;
 
