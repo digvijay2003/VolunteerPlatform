@@ -17,7 +17,7 @@ router.get('/feedhope-user-login', (req, res) => {
     submitLabel: 'Login',
     fields: [
         { id: 'emailOrPhone', name: 'emailOrPhone', type: 'text', label: 'Email or Phone', icon: 'person', required: true },
-        { id: 'password', name: 'password', type: 'password', label: 'Password', icon: 'lock', required: true }
+        { id: 'password', name: 'password', type: 'password', label: 'Password', icon: 'lock', required: false }
     ],
     showRegisterButton: true,
     showNavbar: false,
@@ -61,10 +61,15 @@ router.post('/feedhope-user-login', async (req, res) => {
       $or: [{ email: emailOrPhone }, { phone: emailOrPhone }]
     });
 
-    if (!user || !(await user.comparePassword(password))) {
-      req.flash('error', 'Invalid email/phone or password');
+    if(!user) {
+      req.flash('error', 'Invalid email/phone');
       return res.redirect('/feedhope-user-login');
     }
+
+    // if (!user || !(await user.comparePassword(password))) {
+    //   req.flash('error', 'Invalid email/phone or password');
+    //   return res.redirect('/feedhope-user-login');
+    // }
 
     const token = generateToken(user._id);
     req.session.token = token;

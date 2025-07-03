@@ -10,58 +10,92 @@ const requireUserAuth = require('../../middleware/user_auth');
 
 router.get('/feedhope-user-dashboard', requireUserAuth, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id)
-            .populate('food_donations')
-            .populate('food_requests');
-
+        const user = await User.findById(req.user.id);
         if (!user) {
             req.flash('error', 'User not found');
             return res.redirect('/feedhope-user-login');
         }
 
         const volunteer = await Volunteer.findOne({ user_id: req.user.id })
-        .populate({
-            path: 'completedAssignments',
-            options: { sort: { deliveryactualDeliveryTime: -1 }, limit: 1 },
-            populate: ['food_donation', 'food_request']
-        });
-        const lastDeliveredAssignment = volunteer.completedAssignments[0];
+            .populate({
+                path: 'completedAssignments',
+                options: { sort: { deliveryactualDeliveryTime: -1 }, limit: 1 },
+                populate: ['food_donation', 'food_request']
+            });
+
+        const lastDeliveredAssignment = volunteer?.completedAssignments?.[0];
 
         if (volunteer && volunteer.currentAssignments) {
             const activeAssignment = await FoodMatch.findById(volunteer.currentAssignments)
                 .populate({
-                    path: 'food_donations',
+                path: 'food_donation',
+                populate: {
+                    path: 'match',
                     populate: {
-                        path: 'match',
-                        populate: {
-                        path: 'assignedVolunteer',
-                        model: 'Volunteer'
-                        }
+                    path: 'assignedVolunteer',
+                    model: 'Volunteer'
                     }
+                }
                 })
                 .populate({
-                    path: 'food_requests',
+                path: 'food_request',
+                populate: {
+                    path: 'match',
                     populate: {
-                        path: 'match',
-                        populate: {
-                        path: 'assignedVolunteer',
-                        model: 'Volunteer'
-                        }
+                    path: 'assignedVolunteer',
+                    model: 'Volunteer'
                     }
+                }
                 })
             volunteer.currentAssignments = activeAssignment;
         }
+
         user.volunteer = volunteer;
+
+        const foodDonations = await FoodDonation.find({ user_id: req.user.id })
+            .populate({
+                path: 'match',
+                populate: {
+                    path: 'assignedVolunteer',
+                    model: 'Volunteer'
+                }
+            })
+            .sort({ createdAt: -1 });
+
+        const foodRequests = await FoodRequest.find({ user_id: req.user.id })
+            .populate({
+                path: 'match',
+                populate: {
+                    path: 'assignedVolunteer',
+                    model: 'Volunteer'
+                }
+            })
+            .sort({ createdAt: -1 });
+
+        const activeFoodRequest = foodRequests.find(fr => fr.status === 'matched' && !fr.fulfilled_at);
+        const previousFoodRequests = foodRequests.filter(fr => 
+            !activeFoodRequest || fr._id.toString() !== activeFoodRequest._id.toString()
+        );
+
+
+        const activeFoodDonation = foodDonations.find(fd => fd.status === 'matched' && !fd.fulfilled_at);
+        const previousFoodDonations = foodDonations.filter(fd => 
+            !activeFoodDonation || fd._id.toString() !== activeFoodDonation._id.toString()
+        );
 
         res.render('user/profile', {
             user,
             lastDeliveredAssignment,
+            activeFoodDonation,
+            previousFoodDonations,
+            activeFoodRequest,
+            previousFoodRequests,
             mapboxAccessToken: process.env.MAPBOX_TOKEN,
             title: 'User Dashboard',
             showNavbar: false,
             showFooter: false,
             stylesheet: '',
-            getStatusBadge: function(status) {
+            getStatusBadge: function (status) {
                 switch (status) {
                     case 'approved': return 'bg-success';
                     case 'pending': return 'bg-warning text-dark';
@@ -74,7 +108,7 @@ router.get('/feedhope-user-dashboard', requireUserAuth, async (req, res) => {
     } catch (error) {
         console.error('Dashboard Error:', error);
         req.flash('error', 'Could not load dashboard data.');
-        res.redirect('/');
+        res.redirect('/feedhope-user-profile');
     }
 });
 
@@ -116,7 +150,10 @@ router.post('/delivery/:id/deliver', requireUserAuth, async (req, res) => {
     const assignmentId = req.params.id;
 
     try {
-        const match = await FoodMatch.findById(assignmentId).populate('assignedVolunteer');
+        const match = await FoodMatch.findById(assignmentId)
+            .populate('assignedVolunteer')
+            .populate('food_donation')
+            .populate('food_request');
 
         if (!match || match.deliveryStatus !== 'in_transit') {
             req.flash('error', 'Invalid operation or already delivered.');
@@ -128,8 +165,10 @@ router.post('/delivery/:id/deliver', requireUserAuth, async (req, res) => {
             return res.redirect('/feedhope-user-dashboard');
         }
 
+        const deliveryTime = new Date();
+
         match.deliveryStatus = 'delivered';
-        match.deliveryactualDeliveryTime = new Date();
+        match.deliveryactualDeliveryTime = deliveryTime;
         match.verifyOtpWithRequester = true;
         match.deliverynotifications = {
             donorNotified: true,
@@ -138,6 +177,18 @@ router.post('/delivery/:id/deliver', requireUserAuth, async (req, res) => {
         };
         await match.save();
 
+        const donation = match.food_donation;
+        if (donation && !donation.fulfilled_at) {
+            donation.fulfilled_at = deliveryTime;
+            await donation.save();
+        }
+        
+        const request = match.food_request;
+        if (request && !request.fulfilled_at) {
+            request.fulfilled_at = deliveryTime;
+            await request.save();
+        }
+        
         const volunteer = match.assignedVolunteer;
         if (volunteer) {
             volunteer.availability = true;

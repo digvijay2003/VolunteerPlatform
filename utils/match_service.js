@@ -80,6 +80,9 @@ function getMatchScore(request, donation) {
 
 async function matchEntity(primary, oppositeModel, isRequest) {
   const location = primary.location_geo.coordinates;
+  const role = isRequest ? 'Request' : 'Donation';
+  console.log(`🛰  Starting match for ${role} ${primary._id}`);
+  console.log(`📍 Coordinates: [${location[0]}, ${location[1]}]`);
 
   const opposites = await oppositeModel.find({
     status: 'pending',
@@ -97,11 +100,24 @@ async function matchEntity(primary, oppositeModel, isRequest) {
     const request = isRequest ? primary : opposite;
     const donation = isRequest ? opposite : primary;
 
+    console.log(`🔄 Evaluating match between Request ${request._id} and Donation ${donation._id}`);
+
     const score = getMatchScore(request, donation);
+    console.log(`📊 Match Score: ${score}`);
+    console.log({
+      foodTypeScore: getFoodTypeSimilarityScore(request.food_type, donation.food_type),
+      quantityMatchScore: getQuantityMatchScore(request, donation),
+      urgencyScore: (request.urgency_level === 'high') ? SCORE_THRESHOLDS.urgencyHigh :
+                    (request.urgency_level === 'medium') ? SCORE_THRESHOLDS.urgencyMid : 0,
+      verifiedScore: donation.is_verified ? SCORE_THRESHOLDS.verified : 0
+    });
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log('Score Breakdown:');
+    console.log(`- Food Type Similarity: ${getFoodTypeSimilarityScore(request.food_type, donation.food_type)}`);
+    console.log(`- Quantity Match: ${getQuantityMatchScore(request, donation)}`); 
+    console.log(`Score : ${score}`);
 
-    if (score >= 60) {
+    if (score >= 40) {
       const match = await FoodMatch.create({
         food_request: request._id,
         food_donation: donation._id,
@@ -113,23 +129,36 @@ async function matchEntity(primary, oppositeModel, isRequest) {
         status: 'matched',
       });
 
-      request.connected_donations?.push(donation._id);
-      request.status = 'matched';
-      donation.connected_requests?.push(request._id);
-      donation.status = 'matched';
-      donation.match = match._id;
-      request.match = match._id;
+      console.log(`✅ Match created between Request ${request._id} and Donation ${donation._id} → MatchID: ${match._id}`);
 
-      await Promise.all([request.save(), donation.save()]);
+      try {
+        request.connected_donations = request.connected_donations || [];
+        donation.connected_requests = donation.connected_requests || [];
 
-      await agenda.now('assign-delivery-agent', { matchId: match._id });
-      console.log(`✅ Match created (score: ${score}) → delivery scheduled for match: ${match._id}`);
+        request.connected_donations.push(donation._id);
+        donation.connected_requests.push(request._id);
+
+        request.status = 'matched';
+        donation.status = 'matched';
+        request.match = match._id;
+        donation.match = match._id;
+
+        await Promise.all([request.save(), donation.save()]);
+        console.log(`💾 Match linked and saved successfully.`);
+
+        await agenda.now('assign-delivery-agent', { matchId: match._id });
+        console.log(`📦 Delivery assignment scheduled via Agenda for match: ${match._id}`);
+      } catch (err) {
+        console.error(`❗ Error while saving match relationships: ${err.message}`, err);
+      }
 
       return match;
+    } else {
+      console.log(`❌ Match score too low (${score}) for pairing Request ${request._id} and Donation ${donation._id}`);
     }
   }
 
-  console.log(`❌ No suitable match found for ${primary._id}`);
+  console.log(`🚫 No suitable match found for ${primary._id}`);
   return null;
 }
 

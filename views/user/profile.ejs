@@ -209,8 +209,8 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="d-grid gap-3">
-                        <a href="/donations/new" class="btn btn-success btn-lg py-3 fw-bold"><i class="bi bi-box-seam me-2"></i>Donate Food</a>
-                        <a href="/requests/new" class="btn btn-info btn-lg py-3 fw-bold text-dark"><i class="bi bi-card-checklist me-2"></i>Request Food</a>
+                        <a href="/feedhope-donation-food" class="btn btn-success btn-lg py-3 fw-bold"><i class="bi bi-box-seam me-2"></i>Donate Food</a>
+                        <a href="/feedhope-request-food" class="btn btn-info btn-lg py-3 fw-bold text-dark"><i class="bi bi-card-checklist me-2"></i>Request Food</a>
                     </div>
                 </div>
             </div>
@@ -285,9 +285,9 @@
                         </div>
                         <div id='map' style='width: 100%; height: 400px;'></div>
                         <div class="p-4 bg-light d-flex justify-content-between align-items-center">
-                            <button id="start-tracking-btn" class="btn btn-primary rounded-pill fw-bold">
+                            <!-- <button id="start-tracking-btn" class="btn btn-primary rounded-pill fw-bold">
                                 <i class="bi bi-broadcast-pin me-2"></i>Start Live Tracking
-                            </button>
+                            </button> -->
                             <div class="text-end">
                                 <p class="mb-1"><strong>ETA to Donor:</strong> <span id="eta-donor-display" class="badge bg-secondary">Calculating...</span></p>
                                 <p class="mb-0"><strong>ETA to Requester:</strong> <span id="eta-requester-display" class="badge bg-secondary">Waiting...</span></p>
@@ -382,137 +382,226 @@
 </div>
 
 <div class="container-fluid py-4">
-    <% if (user.food_donations && user.food_donations.length > 0) { %>
-    <div class="card mb-4">
-        <div class="card-header">
-        <h5><i class="bi bi-box-seam-fill me-2"></i>My Food Donations</h5>
+    <% if (activeFoodDonation) { %>
+    <div class="card shadow-lg border-0 mb-4 rounded-4">
+        <div class="card-header bg-success-subtle text-success-emphasis">
+            <h5 class="mb-0"><i class="bi bi-box2-heart me-2"></i>Current Food Donation Status</h5>
         </div>
-        <div class="card-body">
-        <% user.food_donations.forEach(donation => { %>
-            <div class="border rounded p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2">
-            <div class="flex-grow-1">
-                <h6 class="mb-1">
-                <%= donation.food_type %> 
-                (<%= donation.quantity?.amount %> <%= donation.quantity?.unit %>)
-                </h6>
-                <small class="text-muted">
-                <i class="bi bi-geo-alt-fill me-1"></i><%= donation.location_text %>
-                </small><br>
-                <small class="text-muted">
-                Expires: <%= donation.expiration_date ? new Date(donation.expiration_date).toLocaleDateString() : 'N/A' %>
-                </small><br>
-                <small class="text-muted">Submitted: <%= new Date(donation.createdAt).toLocaleString() %></small>
-                <br>
-
-                <% if (donation.description) { %>
-                <small class="text-muted">Note: <%= donation.description %></small>
-                <% } %>
-
-                <% if (donation.connected_requests?.length > 0) { %>
-                <br>
-                <small class="text-muted">Connected Requests: 
-                    <%= donation.connected_requests.length %>
-                </small>
-                <% } %>
-            </div>
-
-            <!-- Status + OTP + Volunteer -->
-            <div class="text-end">
-                <span class="badge <%= getStatusBadge(donation.status) %>">
-                <%= donation.status.charAt(0).toUpperCase() + donation.status.slice(1) %>
+        <div class="card-body p-4">
+            <p><strong>Food:</strong> <%= activeFoodDonation.food_type %> 
+                (<%= activeFoodDonation.quantity.amount %> <%= activeFoodDonation.quantity.unit %>)
+            </p>
+            <p><strong>Donated On:</strong> <%= new Date(activeFoodDonation.createdAt).toLocaleString() %></p>
+            <p><strong>Status:</strong> 
+                <span class="badge <%= getStatusBadge(activeFoodDonation.status) %>">
+                    <%= activeFoodDonation.status.charAt(0).toUpperCase() + activeFoodDonation.status.slice(1) %>
                 </span>
+            </p>
 
-                <% if (donation.is_verified) { %>
-                <span class="badge bg-success-subtle text-success-emphasis ms-2">Verified</span>
-                <% } else { %>
-                <span class="badge bg-warning-subtle text-warning-emphasis ms-2">Pending Verification</span>
+            <% if (activeFoodDonation.match) { %>
+                <p><strong>Assigned Volunteer:</strong> 
+                    <%= activeFoodDonation.match.assignedVolunteer?.username || 'Pending' %>
+                </p>
+                <p><strong>Volunteer OTP:</strong> 
+                    <%= activeFoodDonation.match.donorOtp || '—' %>
+                </p>
+                <p><strong>Delivery Status:</strong> 
+                    <%= activeFoodDonation.match.deliveryStatus %>
+                </p>
+                <% if (activeFoodDonation.match.deliveryactualDeliveryTime) { %>
+                    <p><strong>Delivered On:</strong> 
+                        <%= new Date(activeFoodDonation.match.deliveryactualDeliveryTime).toLocaleString() %>
+                    </p>
                 <% } %>
-
-                <% if (donation.status === 'matched' && donation.match) { %>
-                <div class="mt-2 text-start text-md-end">
-                    <small class="d-block text-muted">Volunteer OTP: 
-                    <strong><%= donation.match.donorOtp || '—' %></strong>
-                    </small>
-
-                    <% if (donation.match.assignedVolunteer?.username) { %>
-                    <small class="d-block text-muted">Volunteer: 
-                        <strong><%= donation.match.assignedVolunteer.username %></strong>
-                    </small>
-                    <% } %>
-
-                    <small class="d-block text-muted">Delivery Status: 
-                    <span class="text-primary"><%= donation.match.deliveryStatus %></span>
-                    </small>
-
-                    <% if (donation.match.deliveryactualDeliveryTime) { %>
-                    <small class="d-block text-muted">Delivered On: 
-                        <%= new Date(donation.match.deliveryactualDeliveryTime).toLocaleString() %>
-                    </small>
-                    <% } %>
-
-                    <% if (donation.match.deliveryfailureReason) { %>
-                    <span class="badge bg-danger-subtle text-danger-emphasis mt-1">
-                        Failed: <%= donation.match.deliveryfailureReason %>
-                    </span>
-                    <% } %>
-                </div>
-                <% } else if (donation.status === 'approved') { %>
-                <div class="mt-2">
-                    <small class="text-muted">Waiting for matching with requests...</small>
-                </div>
-                <% } else if (donation.status === 'rejected') { %>
-                <div class="mt-2">
-                    <small class="text-danger">Rejected by admin.</small>
-                </div>
-                <% } %>
-            </div>
-            </div>
-        <% }) %>
-        </div>
-    </div>
-    <% } else { %>
-    <div class="card mb-4">
-        <div class="card-body text-center py-4">
-        <i class="bi bi-box-seam display-4 text-muted mb-3"></i>
-        <p class="text-muted">You haven't made any food donations yet. <a href="/donations/new">Donate now!</a></p>
+            <% } %>
         </div>
     </div>
     <% } %>
 
-    <% if (user.food_requests && user.food_requests.length > 0) { %>
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5><i class="bi bi-card-checklist me-2"></i>My Food Requests</h5>
+    <% if (previousFoodDonations.length > 0) { %>
+    <div class="text-center my-3">
+        <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="collapse" data-bs-target="#previousDonations">
+            View Previous Donations
+        </button>
+    </div>
+
+    <div class="collapse" id="previousDonations">
+        <% previousFoodDonations.forEach(donation => { %>
+        <div class="border rounded p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2">
+            <div class="flex-grow-1">
+                <h6 class="mb-1">
+                    <%= donation.food_type %> 
+                    (<%= donation.quantity?.amount %> <%= donation.quantity?.unit %>)
+                </h6>
+                <small class="text-muted">
+                    <i class="bi bi-geo-alt-fill me-1"></i><%= donation.location_text %>
+                </small><br>
+                <small class="text-muted">
+                    Expires: <%= donation.expiration_date ? new Date(donation.expiration_date).toLocaleDateString() : 'N/A' %>
+                </small><br>
+                <small class="text-muted">Submitted: <%= new Date(donation.createdAt).toLocaleString() %></small>
+                <% if (donation.description) { %>
+                    <br><small class="text-muted">Note: <%= donation.description %></small>
+                <% } %>
+                <% if (donation.connected_requests?.length > 0) { %>
+                    <br><small class="text-muted">Connected Requests: <%= donation.connected_requests.length %></small>
+                <% } %>
             </div>
-            <div class="card-body">
-                <% user.food_requests.forEach(request => { %>
-                    <div class="border rounded p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                        <div>
-                            <h6 class="mb-1"><%= request.food_type %> (<%= request.quantity.amount %> <%= request.quantity.unit %>)</h6>
-                            <small class="text-muted"><i class="bi bi-people-fill me-1"></i>For <%= request.number_of_people %> people</small><br>
-                            <small class="text-muted"><i class="bi bi-geo-alt-fill me-1"></i><%= request.location_text %></small>
-                        </div>
-                        <div class="mt-2 mt-md-0 text-md-end">
-                            <span class="badge <%= getStatusBadge(request.status) %>"><%= request.status.charAt(0).toUpperCase() + request.status.slice(1) %></span>
-                            <span class="badge bg-info-subtle text-info-emphasis ms-2">Urgency: <%= request.urgency_level.charAt(0).toUpperCase() + request.urgency_level.slice(1) %></span>
-                            <% if (request.is_verified) { %>
-                                <span class="badge bg-success-subtle text-success-emphasis ms-2">Verified</span>
-                            <% } else { %>
-                                <span class="badge bg-warning-subtle text-warning-emphasis ms-2">Pending Verification</span>
-                            <% } %>
-                            <a href="/requests/<%= request._id %>" class="btn btn-sm btn-outline-primary ms-2 mt-2 mt-md-0">Details</a>
-                        </div>
-                    </div>
-                <% }) %>
+
+            <div class="text-end">
+                <span class="badge <%= getStatusBadge(donation.status) %>">
+                    <%= donation.status.charAt(0).toUpperCase() + donation.status.slice(1) %>
+                </span>
+                <% if (donation.is_verified) { %>
+                    <span class="badge bg-success-subtle text-success-emphasis ms-2">Verified</span>
+                <% } else { %>
+                    <span class="badge bg-warning-subtle text-warning-emphasis ms-2">Pending Verification</span>
+                <% } %>
+
+                <% if (donation.status === 'matched' && donation.match) { %>
+                <div class="mt-2 text-start text-md-end">
+                    <small class="d-block text-muted">Volunteer Verification OTP: 
+                        <strong><%= donation.match.donorOtp || '—' %></strong>
+                    </small>
+                    <% if (donation.match.assignedVolunteer?.username) { %>
+                        <small class="d-block text-muted">Volunteer: 
+                            <strong><%= donation.match.assignedVolunteer.username %></strong>
+                        </small>
+                    <% } %>
+                    <small class="d-block text-muted">Delivery Status: 
+                        <span class="text-primary"><%= donation.match.deliveryStatus %></span>
+                    </small>
+                    <% if (donation.match.deliveryactualDeliveryTime) { %>
+                        <small class="d-block text-muted">Delivered On: 
+                            <%= new Date(donation.match.deliveryactualDeliveryTime).toLocaleString() %>
+                        </small>
+                    <% } %>
+                    <% if (donation.match.deliveryfailureReason) { %>
+                        <span class="badge bg-danger-subtle text-danger-emphasis mt-1">
+                            Failed: <%= donation.match.deliveryfailureReason %>
+                        </span>
+                    <% } %>
+                </div>
+                <% } else if (donation.status === 'approved') { %>
+                    <div class="mt-2"><small class="text-muted">Waiting for matching with requests...</small></div>
+                <% } else if (donation.status === 'rejected') { %>
+                    <div class="mt-2"><small class="text-danger">Rejected by admin.</small></div>
+                <% } %>
             </div>
         </div>
-    <% } else { %>
-        <div class="card mb-4">
-            <div class="card-body text-center py-4">
-                <i class="bi bi-clipboard-check display-4 text-muted mb-3"></i>
-                <p class="text-muted">You haven't made any food requests yet. <a href="/requests/new">Request food now!</a></p>
-            </div>
+        <% }) %>
+    </div>
+    <% } %>
+
+    <% if (activeFoodRequest) { %>
+    <div class="card shadow-lg border-0 mb-4 rounded-4">
+        <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-box2-heart me-2"></i>Current Food Request Status</h5>
         </div>
+        <div class="card-body p-4">
+        <p><strong>Food:</strong> <%= activeFoodRequest.food_type %> 
+            (<%= activeFoodRequest.quantity.amount %> <%= activeFoodRequest.quantity.unit %>)
+        </p>
+        <p><strong>Requested On:</strong> <%= new Date(activeFoodRequest.createdAt).toLocaleString() %></p>
+        <p><strong>Status:</strong> 
+            <span class="badge <%= getStatusBadge(activeFoodRequest.status) %>">
+            <%= activeFoodRequest.status.charAt(0).toUpperCase() + activeFoodRequest.status.slice(1) %>
+            </span>
+        </p>
+
+        <% if (activeFoodRequest.match) { %>
+            <p><strong>Assigned Volunteer:</strong> 
+            <%= activeFoodRequest.match.assignedVolunteer?.username || 'Pending' %>
+            </p>
+            <p><strong>Requester OTP:</strong> 
+            <%= activeFoodRequest.match.requesterOtp || '—' %>
+            </p>
+            <p><strong>Delivery Status:</strong> 
+            <%= activeFoodRequest.match.deliveryStatus %>
+            </p>
+            <% if (activeFoodRequest.match.deliveryactualDeliveryTime) { %>
+            <p><strong>Delivered On:</strong> 
+                <%= new Date(activeFoodRequest.match.deliveryactualDeliveryTime).toLocaleString() %>
+            </p>
+            <% } %>
+        <% } %>
+        </div>
+    </div>
+    <% } %>
+
+    <% if (previousFoodRequests.length > 0) { %>
+    <div class="text-center my-3">
+        <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="collapse" data-bs-target="#previousRequests">
+        View Previous Requests
+        </button>
+    </div>
+
+    <div class="collapse" id="previousRequests">
+        <% previousFoodRequests.forEach(request => { %>
+        <div class="border rounded p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2">
+        <div class="flex-grow-1">
+            <h6 class="mb-1">
+            <%= request.food_type %> 
+            (<%= request.quantity?.amount %> <%= request.quantity?.unit %>)
+            </h6>
+            <small class="text-muted">
+            <i class="bi bi-geo-alt-fill me-1"></i><%= request.location_text %>
+            </small><br>
+            <small class="text-muted">
+            Expires: <%= request.expiration_date ? new Date(request.expiration_date).toLocaleDateString() : 'N/A' %>
+            </small><br>
+            <small class="text-muted">Submitted: <%= new Date(request.createdAt).toLocaleString() %></small>
+            <% if (request.description) { %>
+            <br><small class="text-muted">Note: <%= request.description %></small>
+            <% } %>
+            <% if (request.connected_donations?.length > 0) { %>
+            <br><small class="text-muted">Connected Donations: <%= request.connected_donations.length %></small>
+            <% } %>
+        </div>
+
+        <div class="text-end">
+            <span class="badge <%= getStatusBadge(request.status) %>">
+            <%= request.status.charAt(0).toUpperCase() + request.status.slice(1) %>
+            </span>
+            <% if (request.is_verified) { %>
+            <span class="badge bg-success-subtle text-success-emphasis ms-2">Verified</span>
+            <% } else { %>
+            <span class="badge bg-warning-subtle text-warning-emphasis ms-2">Pending Verification</span>
+            <% } %>
+
+            <% if (request.status === 'matched' && request.match) { %>
+            <div class="mt-2 text-start text-md-end">
+            <small class="d-block text-muted">Volunteer Verification OTP: 
+                <strong><%= request.match.requesterOtp || '—' %></strong>
+            </small>
+            <% if (request.match.assignedVolunteer?.username) { %>
+                <small class="d-block text-muted">Volunteer: 
+                <strong><%= request.match.assignedVolunteer.username %></strong>
+                </small>
+            <% } %>
+            <small class="d-block text-muted">Delivery Status: 
+                <span class="text-primary"><%= request.match.deliveryStatus %></span>
+            </small>
+            <% if (request.match.deliveryactualDeliveryTime) { %>
+                <small class="d-block text-muted">Delivered On: 
+                <%= new Date(request.match.deliveryactualDeliveryTime).toLocaleString() %>
+                </small>
+            <% } %>
+            <% if (request.match.deliveryfailureReason) { %>
+                <span class="badge bg-danger-subtle text-danger-emphasis mt-1">
+                Failed: <%= request.match.deliveryfailureReason %>
+                </span>
+            <% } %>
+            </div>
+            <% } else if (request.status === 'approved') { %>
+            <div class="mt-2"><small class="text-muted">Waiting for matching with donors...</small></div>
+            <% } else if (request.status === 'rejected') { %>
+            <div class="mt-2"><small class="text-danger">Rejected by admin.</small></div>
+            <% } %>
+        </div>
+        </div>
+        <% }) %>
+    </div>
     <% } %>
 </div>
 

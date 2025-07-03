@@ -3,9 +3,9 @@ const Volunteer = require('../models/volunteer');
 const agenda = require('../jobs/agendaInstance'); // Required for scheduling retry
 
 function getDistanceByUrgency(urgency) {
-  if (urgency === 'high') return 10000;
-  if (urgency === 'medium') return 5000;
-  return 7000;
+  if (urgency === 'high') return 30000;
+  if (urgency === 'medium') return 35000;
+  return 40000;
 }
 
 async function assignDeliveryAgent(matchId) {
@@ -50,6 +50,8 @@ async function assignDeliveryAgent(matchId) {
     }
   }).limit(1);
 
+  console.log(`🔍 Found ${volunteers.length} volunteers near ${food_donation._id} for match ${matchId}`);
+
   if (volunteers?.length) {
     const volunteer = volunteers[0];
 
@@ -58,7 +60,10 @@ async function assignDeliveryAgent(matchId) {
     match.deliveryStatus = 'assigned';
     await match.save();
 
-    volunteer.currentAssignments.push(match._id);
+    volunteer.currentAssignments = Array.isArray(volunteer.currentAssignments)
+    ? [...volunteer.currentAssignments, match._id]
+    : [match._id];
+
     volunteer.availability = false;
     await volunteer.save();
 
@@ -71,7 +76,7 @@ async function assignDeliveryAgent(matchId) {
     return;
   }
 
-  const MAX_RETRY = 5;
+  const MAX_RETRY = 10;
 
   match.deliveryStatus = 'pending';
   match.deliveryRetryCount = (match.deliveryRetryCount || 0) + 1;
@@ -85,7 +90,7 @@ async function assignDeliveryAgent(matchId) {
   await match.save();
 
   console.log(`🔁 No volunteer found. Retrying match ${matchId} in 10 minutes... (Attempt ${match.deliveryRetryCount})`);
-  await agenda.schedule('in 10 minutes', 'assign-delivery-agent', { matchId });
+  await agenda.schedule('in 2 minutes', 'assign-delivery-agent', { matchId });
 }
 
 module.exports = assignDeliveryAgent;

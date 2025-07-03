@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   address: addressSchema,
   roles: { type: [String], enum: ['donor', 'requester', 'volunteer'], default: [] },
-  food_donations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodDonation' }],
-  food_requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodRequest' }],
+  food_donations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodDonation', default: [] }],
+  food_requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FoodRequest', default: [] }],
   volunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'Volunteer' },
 }, { timestamps: true });
 
@@ -39,4 +39,5 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 };
 
 const User = mongoose.model('User', userSchema);
+
 module.exports = User;
