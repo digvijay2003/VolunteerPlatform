@@ -90,7 +90,7 @@ async function assignDeliveryAgent(matchId) {
   await match.save();
 
   console.log(`🔁 No volunteer found. Retrying match ${matchId} in 10 minutes... (Attempt ${match.deliveryRetryCount})`);
-  await agenda.schedule('in 2 minutes', 'assign-delivery-agent', { matchId });
+  await agenda.schedule('in 10 minutes', 'assign-delivery-agent', { matchId });
 }
 
 module.exports = assignDeliveryAgent;

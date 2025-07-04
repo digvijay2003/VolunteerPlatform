@@ -76,8 +76,8 @@ async function startAgenda() {
   await agenda.start();
 
   // Unique job definition to avoid duplicates
-  await agenda.every('1 minutes', 'retry-unmatched-requests', {}, { unique: true });
-  await agenda.every('2 minutes', 'retry-pending-delivery-matches', {}, { unique: true });
+  await agenda.every('10 minutes', 'retry-unmatched-requests', {}, { unique: true });
+  await agenda.every('15 minutes', 'retry-pending-delivery-matches', {}, { unique: true });
 
   console.log('🕒 Agenda initialized and scheduled');
 }
