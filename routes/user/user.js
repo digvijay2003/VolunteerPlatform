@@ -75,7 +75,7 @@ router.post('/feedhope-user-login', async (req, res) => {
     req.session.token = token;
 
     // Redirect to original path if it exists
-    const redirectTo = req.session.redirectTo || '/feedhope-user-profile';
+    const redirectTo = req.session.redirectTo || '/feedhope-user-dashboard';
     delete req.session.redirectTo;
 
     req.flash('success', 'Login successful');
