@@ -339,11 +339,61 @@
                                     </div>
                                 </form>
                             <% } %>
+
+                            <% if (assignment.deliveryStatus === 'assigned' || assignment.deliveryStatus === 'in_transit') { %>
+                            <div class="alert alert-danger mt-4">
+                                <h5><i class="bi bi-x-octagon-fill me-2"></i>Report Delivery Failure</h5>
+                                
+                                <p class="text-danger fw-semibold">
+                                    ⚠️ Warning: Reporting a failed delivery may affect your volunteer rating if found unjustified.
+                                </p>
+                                <p class="text-muted mb-3">
+                                    Please be honest and clear. This helps us improve coordination and logistics.
+                                </p>
+
+                                <form action="/delivery/<%= assignment._id %>/fail" method="POST" onsubmit="return confirmDeliveryFailure();">
+                                    <div class="mb-3">
+                                        <label for="failureType" class="form-label">Select Failure Reason Type</label>
+                                        <select id="failureType" class="form-select" name="reasonType" required>
+                                            <option value="">-- Choose a reason --</option>
+                                            <option value="Unable to Contact Donor">Unable to Contact Donor</option>
+                                            <option value="Requester Not Available">Requester Not Available</option>
+                                            <option value="Incorrect Address">Incorrect Address</option>
+                                            <option value="Traffic/Accident Issue">Traffic/Accident Issue</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="reason" class="form-label">Explain in detail</label>
+                                        <textarea name="reason" id="reason" class="form-control" rows="3" placeholder="Explain what went wrong..." required></textarea>
+                                    </div>
+
+                                    <button class="btn btn-danger fw-bold w-100" type="submit">
+                                        <i class="bi bi-exclamation-circle-fill me-2"></i>Mark as Failed
+                                    </button>
+                                </form>
+                            </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
             </div>
-
+        <% } else if (user.volunteer && lastFailedAssignment) { %>
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-sm border-0 rounded-4 text-center py-5 bg-light">
+                <div class="card-body">
+                    <i class="bi bi-exclamation-circle-fill display-4 text-danger mb-3"></i>
+                    <h4 class="text-danger">Last Delivery Failed</h4>
+                    <p class="text-muted mb-3">
+                    We’re sorry the delivery couldn’t be completed. Thank you for trying.<br />
+                    The task will be reassigned to another volunteer shortly.
+                    </p>
+                    <p><strong>Reason:</strong> <%= lastFailedAssignment.deliveryfailureReason %></p>
+                    <a href="/feedhope-user-dashboard" class="btn btn-outline-secondary mt-2">Back to Dashboard</a>
+                </div>
+                </div>
+            </div>
         <% } else if (user.volunteer && lastDeliveredAssignment) { %>
             <div class="card">
                 <div class="card-body text-center p-5">
@@ -356,16 +406,6 @@
                         </div>
                         <button type="submit" class="btn btn-primary w-100 rounded-pill">Submit Feedback</button>
                     </form>
-                </div>
-            </div>
-        <% } else if (user.volunteer) { %>
-            <div class="col-12 col-md-8 col-lg-6">
-                <div class="card shadow-sm border-0 rounded-4 text-center py-5 bg-light">
-                    <div class="card-body">
-                        <i class="bi bi-hourglass-split display-4 text-muted mb-3"></i>
-                        <h4 class="text-muted">No Active Assignment</h4>
-                        <p class="mb-0 px-4">You're all set for now! We'll notify you when a new delivery task is available nearby.</p>
-                    </div>
                 </div>
             </div>
         <% } else { %>
@@ -678,5 +718,11 @@
     }
 
     drawRoute();
+</script>
+
+<script>
+    function confirmDeliveryFailure() {
+        return confirm("Are you sure you want to report this delivery as failed? This action may affect your reliability score.");
+    }
 </script>
 <% } %>

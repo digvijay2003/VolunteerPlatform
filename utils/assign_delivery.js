@@ -58,15 +58,24 @@ async function assignDeliveryAgent(matchId) {
     match.assignedVolunteer = volunteer._id;
     match.deliveryMode = 'volunteer';
     match.deliveryStatus = 'assigned';
+
+    // ✅ Reset fields from previous failure
+    match.previousAssignedVolunteer = undefined;
+    match.deliveryfailureReason = undefined;
+    match.deliveryRoute = { type: 'LineString', coordinates: [] };
+    match.verifyOtpWithDonor = false;
+    match.verifyOtpWithRequester = false;
+
     await match.save();
 
+    // Assign to volunteer
     volunteer.currentAssignments = Array.isArray(volunteer.currentAssignments)
-    ? [...volunteer.currentAssignments, match._id]
-    : [match._id];
-
+      ? [...volunteer.currentAssignments, match._id]
+      : [match._id];
     volunteer.availability = false;
     await volunteer.save();
 
+    // Update related docs
     food_donation.delivered_by_volunteer = volunteer._id;
     await food_donation.save();
 

@@ -6,6 +6,7 @@ const FoodDonation = require('../../models/food_donation');
 const FoodRequest = require('../../models/food_request');
 const FoodMatch = require('../../models/food_match');
 const requireUserAuth = require('../../middleware/user_auth');
+const agenda = require('../../jobs/agendaInstance');
 
 
 router.get('/feedhope-user-dashboard', requireUserAuth, async (req, res) => {
@@ -83,6 +84,25 @@ router.get('/feedhope-user-dashboard', requireUserAuth, async (req, res) => {
             !activeFoodDonation || fd._id.toString() !== activeFoodDonation._id.toString()
         );
 
+        let lastFailedAssignment = null;
+
+        if (volunteer && !volunteer.currentAssignments) {
+            lastFailedAssignment = await FoodMatch.findOne({
+                deliveryStatus: 'failed',
+                assignedVolunteer: null,
+                previousAssignedVolunteer: volunteer._id,
+                deliveryfailureReason: { $exists: true },
+                food_request: { $exists: true },
+                food_donation: { $exists: true },
+            })
+            .populate('food_request')
+            .populate('food_donation')
+            .sort({ updatedAt: -1 });
+        }
+
+        console.log('lastFailedAssignment:', lastFailedAssignment);
+
+
         res.render('user/profile', {
             user,
             lastDeliveredAssignment,
@@ -90,6 +110,7 @@ router.get('/feedhope-user-dashboard', requireUserAuth, async (req, res) => {
             previousFoodDonations,
             activeFoodRequest,
             previousFoodRequests,
+            lastFailedAssignment,
             mapboxAccessToken: process.env.MAPBOX_TOKEN,
             title: 'User Dashboard',
             showNavbar: false,
@@ -204,6 +225,64 @@ router.post('/delivery/:id/deliver', requireUserAuth, async (req, res) => {
     } catch (err) {
         console.error('Delivery Error:', err);
         req.flash('error', 'Something went wrong during delivery confirmation.');
+        res.redirect('/feedhope-user-dashboard');
+    }
+});
+
+router.post('/delivery/:id/fail', requireUserAuth, async (req, res) => {
+    const matchId = req.params.id;
+    const { reason, reasonType } = req.body;
+
+    try {
+        const match = await FoodMatch.findById(matchId)
+            .populate('assignedVolunteer')
+            .populate('food_donation')
+            .populate('food_request');
+
+        if (!match || (match.deliveryStatus !== 'assigned' && match.deliveryStatus !== 'in_transit')) {
+            req.flash('error', 'Invalid delivery status for failure report.');
+            return res.redirect('/feedhope-user-dashboard');
+        }
+
+        match.deliveryStatus = 'failed';
+        match.deliveryfailureReason = `[${reasonType}] ${reason}`;
+        match.previousAssignedVolunteer = match.assignedVolunteer;
+        match.assignedVolunteer = null;
+        match.deliveryMode = null;
+        match.deliveryRetryCount = (match.deliveryRetryCount || 0) + 1;
+
+        // Remove volunteer assignment (for single ObjectId field)
+        const volunteer = match.previousAssignedVolunteer;
+        if (volunteer) {
+            volunteer.availability = true;
+            volunteer.currentAssignments = null; 
+            await volunteer.save();
+        }
+
+        // Clean from food_donation and food_request
+        const donation = match.food_donation;
+        if (donation && donation.delivered_by_volunteer?.toString() === volunteer?._id?.toString()) {
+            donation.delivered_by_volunteer = null;
+            await donation.save();
+        }
+
+        const request = match.food_request;
+        if (request && request.delivered_by_volunteer?.toString() === volunteer?._id?.toString()) {
+            request.delivered_by_volunteer = null;
+            await request.save();
+        }
+
+        await match.save();
+
+        // Optional: Retry delivery after 10 minutes
+        await agenda.schedule('in 10 minutes', 'assign-delivery-agent', { matchId });
+
+        req.flash('success', 'Delivery marked as failed. We’ll reassign it shortly.');
+        res.redirect('/feedhope-user-dashboard');
+
+    } catch (err) {
+        console.error('Delivery Failure Error:', err);
+        req.flash('error', 'An error occurred while marking delivery as failed.');
         res.redirect('/feedhope-user-dashboard');
     }
 });

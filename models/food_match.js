@@ -10,6 +10,7 @@ const matchFoodRequestDonationSchema = new mongoose.Schema({
   autoMatched: { type: Boolean, default: false },
   matchScore: { type: Number, default: 0 },
   assignedVolunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'Volunteer' },
+  previousAssignedVolunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'Volunteer' },
   deliveryfailureReason:  { type : String},
   deliveryStatus: { type: String, enum: ['pending', 'assigned', 'delivered','in_transit','failed'], default: 'pending' },
   deliveryRoute: { type: { type: String, enum: ['LineString'], default: 'LineString' }, coordinates: { type: [[Number]], default: [] },},
