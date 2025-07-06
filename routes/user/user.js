@@ -66,10 +66,10 @@ router.post('/feedhope-user-login', async (req, res) => {
       return res.redirect('/feedhope-user-login');
     }
 
-    // if (!user || !(await user.comparePassword(password))) {
-    //   req.flash('error', 'Invalid email/phone or password');
-    //   return res.redirect('/feedhope-user-login');
-    // }
+    if (!user || !(await user.comparePassword(password))) {
+      req.flash('error', 'Invalid email/phone or password');
+      return res.redirect('/feedhope-user-login');
+    }
 
     const token = generateToken(user._id);
     req.session.token = token;

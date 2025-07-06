@@ -183,7 +183,7 @@ router.post(
 
         req.session.volunteerId = volunteer._id;
         req.flash('success', 'Successfully Logged In!');
-        res.redirect('/volunteer-profile'); 
+        res.redirect('/feedhope-user-dashboard'); // Redirect to the user dashboard or any other page
     })
 );
 
