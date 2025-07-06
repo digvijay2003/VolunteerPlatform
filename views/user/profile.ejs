@@ -226,7 +226,6 @@
                              <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
                              <div>
                                  <strong class="d-block">ID Not Verified</strong>
-                                 <a href="#" class="btn btn-warning btn-sm fw-bold mt-1">Verify Now</a>
                             </div>
                         </div>
                     <% } %>
@@ -408,7 +407,7 @@
                     </form>
                 </div>
             </div>
-        <% } else { %>
+        <% } else if(!user.volunteer) { %>
             <div class="card">
                 <div class="card-body text-center p-5">
                     <i class="bi bi-person-plus-fill text-primary display-2"></i>

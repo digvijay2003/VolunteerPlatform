@@ -11,6 +11,15 @@ const asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
 };
 
+const checkIfAlreadyVolunteer = asyncHandler(async (req, res, next) => {
+    const existingVolunteer = await Volunteer.findOne({ user_id: req.user._id });
+    if (existingVolunteer) {
+        req.flash('error', 'You are already registered as a volunteer.');
+        return res.status(400).redirect('/feedhope-user-dashboard');
+    }
+    next();
+});
+
 router.get('/volunteer-registration',
     (req, res) => 
         {
@@ -51,6 +60,7 @@ const buildFieldData = (reqBody) => {
 router.post(
     '/volunteer-registration',
     protect_user,
+    checkIfAlreadyVolunteer,
     upload.array('governmentIdProofs', 3),
     asyncHandler(async (req, res) => {
         const { username, email, password, phone, location, skills, emergencyContact } = req.body;
@@ -58,19 +68,11 @@ router.post(
         const fields = buildFieldData(req.body);
 
         try {
-            const existingVolunteer = await Volunteer.findOne({ email });
+            const existingVolunteer = await Volunteer.findOne({ user_id: req.user._id });
 
             if (existingVolunteer) {
-                req.flash('error', 'A volunteer with this email already exists.');
-                return res.status(400).render('volunteer/register', {
-                    title: 'Volunteer Registration',
-                    action: '/volunteer-registration',
-                    submitLabel: 'Register',
-                    stylesheet: '',
-                    showNavbar: false,
-                    showFooter: false,
-                    fields,
-                });
+                req.flash('error', 'You are already registered as a volunteer.');
+                return res.status(400).redirect('/feedhope-user-dashboard'); 
             }
 
             const [longitude, latitude] = await getCoordinates(location);
