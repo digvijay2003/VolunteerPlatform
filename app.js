@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const connectDB = require('./config/db');
 const startAgenda = require('./jobs/agenda');
+const agenda = require('./jobs/agendaInstance');
 
 const app = express();
 

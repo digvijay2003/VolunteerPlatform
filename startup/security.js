@@ -5,6 +5,7 @@ const hpp = require('hpp');
 const cors = require('cors');
 
 module.exports = (app) => {
+    app.set('trust proxy', 1);
     // Helmet for Security Headers
     app.use(
         helmet({
@@ -62,13 +63,29 @@ module.exports = (app) => {
         })
     );    
     
-    const limiter = rateLimit({
+    // Specific rate limit for /feedhope to prevent abuse
+    const feedhopeLimiter = rateLimit({
+        windowMs: 15 * 60 * 1000,
+        max: 30,
+        message: 'Too many requests to /feedhope from this IP, please try again later.',
+    });
+    app.use('/feedhope', feedhopeLimiter);
+
+    // Global rate limit for all other routes
+    const globalLimiter = rateLimit({
         windowMs: 15 * 60 * 1000,
         max: 100,
         message: 'Too many requests from this IP, please try again later.',
+        handler: (req, res) => {
+            console.warn(`⚠️ Global rate limit exceeded: ${req.ip} on ${req.originalUrl}`);
+            res.status(429).json({
+                success: false,
+                message: 'Too many requests from this IP, please try again later.'
+            });
+        }
     });
 
-    app.use('/api', limiter);
+    app.use(globalLimiter);
 
     app.use(mongoSanitize());
     app.use(hpp());
