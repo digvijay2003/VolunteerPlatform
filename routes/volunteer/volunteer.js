@@ -17,6 +17,12 @@ const checkIfAlreadyVolunteer = asyncHandler(async (req, res, next) => {
         req.flash('error', 'You are already registered as a volunteer.');
         return res.status(400).redirect('/feedhope-user-dashboard');
     }
+    const existingVolunteerEmail = await Volunteer.findOne({ email: req.body.email });
+
+    if (existingVolunteerEmail) {
+        req.flash('error', 'Email already Exists.');
+        return res.status(400).redirect('/feedhope-user-dashboard'); 
+    }
     next();
 });
 
@@ -68,13 +74,6 @@ router.post(
         const fields = buildFieldData(req.body);
 
         try {
-            const existingVolunteer = await Volunteer.findOne({ user_id: req.user._id });
-
-            if (existingVolunteer) {
-                req.flash('error', 'You are already registered as a volunteer.');
-                return res.status(400).redirect('/feedhope-user-dashboard'); 
-            }
-
             const [longitude, latitude] = await getCoordinates(location);
 
             const files = req.files.map((file) => ({
