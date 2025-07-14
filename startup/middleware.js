@@ -38,6 +38,9 @@ module.exports = (app) => {
         logger.info({
             timestamp: new Date().toISOString(),
             message: `Route visited: ${req.method} ${req.originalUrl}`,
+            user: req.user?.id || 'Guest',
+            request_id: req.headers['x-request-id'] || 'N/A',
+            ip: req.ip,
         });
         next();
     });
