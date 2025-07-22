@@ -127,6 +127,13 @@
         <i class="bi bi-person-circle me-2"></i>My Dashboard
     </h2>
 
+    <% if (!hasPremiumAccess) { %>
+    <div class="alert alert-warning text-center">
+        You are on a free plan. Upgrade to Premium to access exclusive features.
+        <a href="/feedhope-user-subscribe" class="btn btn-primary btn-sm">Upgrade</a>
+    </div>
+    <% } %>
+
     <div class="row g-4 mb-4">
         <div class="col-lg-8">
             <div class="profile-header mb-4">
@@ -137,7 +144,14 @@
                         </div>
                     </div>
                     <div class="flex-grow-1 text-center text-md-start">
-                        <h1 class="display-6 fw-bold mb-1"><%= user.name %></h1>
+                        <h1 class="display-6 fw-bold mb-1 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <%= user.name %>
+                        <% if (hasPremiumAccess) { %>
+                            <span style="background: linear-gradient(to right, #f6d365, #fda085); color: #111; font-weight: 600; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; margin-left: 10px; display: inline-block;">
+                            <i class="bi bi-gem me-1"></i> Premium Member
+                            </span>
+                        <% } %>
+                        </h1>
                         <p class="lead mb-2 opacity-75"><%= user.email %></p>
                         <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-normal">
                            <i class="bi bi-calendar-check me-1"></i> Member since <%= new Date(user.createdAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'long' }) %>

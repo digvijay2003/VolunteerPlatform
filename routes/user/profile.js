@@ -7,9 +7,11 @@ const FoodRequest = require('../../models/food_request');
 const FoodMatch = require('../../models/food_match');
 const requireUserAuth = require('../../middleware/user_auth');
 const agenda = require('../../jobs/agendaInstance');
+const checkPremiumAccess = require('../../middleware/check_subscription');
+const Subscription = require('../../models/subscription');
 
 
-router.get('/feedhope-user-dashboard', requireUserAuth, async (req, res) => {
+router.get('/feedhope-user-dashboard', requireUserAuth, checkPremiumAccess, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         if (!user) {
@@ -102,6 +104,12 @@ router.get('/feedhope-user-dashboard', requireUserAuth, async (req, res) => {
 
         console.log('lastFailedAssignment:', lastFailedAssignment);
 
+        const subscription = await Subscription.findOne({ user: req.user.id });
+
+        let hasPremiumAccess = false;
+        if (subscription?.plan === 'Premium' && subscription?.status === 'Active' && new Date() <= subscription?.endDate) {
+        hasPremiumAccess = true;
+        }
 
         res.render('user/profile', {
             user,
@@ -116,6 +124,7 @@ router.get('/feedhope-user-dashboard', requireUserAuth, async (req, res) => {
             showNavbar: false,
             showFooter: false,
             stylesheet: '',
+            hasPremiumAccess,
             getStatusBadge: function (status) {
                 switch (status) {
                     case 'approved': return 'bg-success';

@@ -5,6 +5,7 @@ const requestRoutes = require('../routes/request/request');
 const adminRoutes = require('../routes/admin/main');
 const userRoutes = require('../routes/user/user');
 const userProfileRoutes = require('../routes/user/profile');
+const subscriptionRoutes = require('../routes/user/subscription');
 
 module.exports = (app) => {
     app.use('/', homeRoutes);
@@ -14,4 +15,5 @@ module.exports = (app) => {
     app.use('/admin', adminRoutes);
     app.use('/', userRoutes);
     app.use('/', userProfileRoutes);
+    app.use('/', subscriptionRoutes);
 };

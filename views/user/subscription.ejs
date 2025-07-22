@@ -1,0 +1,15 @@
+<div style="max-width: 600px; margin: 40px auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px;">
+    <h2 class="text-center">Upgrade to Premium</h2>
+    
+    <% if (subscription?.plan === 'Premium' && new Date(subscription.endDate) > new Date()) { %>
+        <p class="alert alert-success">You are already a Premium user. Your subscription is valid until <%= new Date(subscription.endDate).toDateString() %>.</p>
+        <a href="/feedhope-user-dashboard" class="btn btn-primary">Go to Dashboard</a>
+    <% } else { %>
+        <form method="POST" action="/feedhope-user-subscribe">
+            <p>Premium includes enhanced dashboard, priority support, and more.</p>
+            <p>₹199/month (mock setup)</p>
+            <button type="submit" class="btn btn-success">Upgrade to Premium</button>
+            <a href="/feedhope" class="btn btn-secondary">Cancel</a>
+        </form>
+    <% } %>
+</div>

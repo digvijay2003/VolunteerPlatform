@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   volunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'Volunteer' },
   campaigns: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Campaign' }],
   money_donations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'MoneyDonation' }],
-  subscription: { plan: { type: String, enum: ['free', 'pro', 'enterprise'], default: 'free' }, active: { type: Boolean, default: false }, expires_at: Date, },
+  subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription',},
   donor_subscription: { active: { type: Boolean, default: false }, amount: {type: Number}, frequency: { type: String, enum: ['monthly', 'yearly'] }, next_charge: Date, payment_gateway_customer_id: String, },
 }, { timestamps: true });
 
