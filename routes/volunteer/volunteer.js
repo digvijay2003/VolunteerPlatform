@@ -34,7 +34,7 @@ router.get('/volunteer-registration',
             action: '/volunteer-registration', 
             submitLabel: 'Register',
             stylesheet: '/stylesheet/volunteer/register.css',
-            showNavbar: false,
+            showNavbar: true,
             showFooter: false,
             fields: [
                 { id: 'username', label: 'Username', type: 'text', name: 'username', required: true },

@@ -1,15 +1,15 @@
-<div class="container d-flex justify-content-center align-items-center py-5">
-  <div class="card shadow-lg p-4 w-100" style="max-width: 800px;">
-    <h1 class="text-center mb-3"><%= title || 'Form' %></h1>
-    <p class="text-center text-muted mb-4"><%= subtitle || '' %></p>
+<div class="container d-flex justify-content-center align-items-center my-5" style="min-height: 100vh; background-color: #b8d4f0;">
+  <div class="card shadow-lg p-4 w-100" style="max-width: 800px; border-radius: 15px; border: none; overflow: hidden;">
+    <h1 class="text-center mb-3" style="color: #343a40; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 700;"><%= title || 'Form' %></h1>
+    <p class="text-center text-muted mb-4" style="color: #6c757d; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1.1rem;"><%= subtitle || '' %></p>
 
     <form action="<%= action %>" method="POST">
       <div class="row">
         <% fields.forEach((field, index) => { %>
           <div class="<%= isRegisterForm ? 'col-md-6' : 'col-12' %> mb-3">
-            <label for="<%= field.id %>" class="form-label">
+            <label for="<%= field.id %>" class="form-label" style="font-weight: 600; color: #495057;">
               <% if (field.icon) { %>
-                <span class="material-symbols-outlined align-middle me-1"><%= field.icon %></span>
+                <span class="material-symbols-outlined align-middle me-1" style="vertical-align: middle; font-size: 1.2em; color: #007bff;"><%= field.icon %></span>
               <% } %>
               <%= field.label %>
             </label>
@@ -20,18 +20,25 @@
               name="<%= field.name %>" 
               placeholder="<%= field.placeholder || '' %>" 
               <%= field.required ? 'required' : '' %>
+              style="border-radius: 8px; border: 1px solid #ced4da; padding: 0.75rem 1rem; transition: all 0.3s ease-in-out;"
+              onfocus="this.style.borderColor='#007bff'; this.style.boxShadow='0 0 0 0.25rem rgba(0, 123, 255, 0.25)';"
+              onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';"
             >
           </div>
         <% }) %>
       </div>
 
       <div class="d-grid mt-3">
-        <button type="submit" class="btn btn-primary"><%= submitLabel || 'Submit' %></button>
+        <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff; border-radius: 8px; padding: 0.75rem 1.5rem; font-size: 1.1rem; font-weight: 600; transition: background-color 0.3s ease, border-color 0.3s ease;"
+        onmouseover="this.style.backgroundColor='#0056b3'; this.style.borderColor='#0056b3';"
+        onmouseout="this.style.backgroundColor='#007bff'; this.style.borderColor='#007bff';">
+          <%= submitLabel || 'Submit' %>
+        </button>
       </div>
 
       <% if (showRegisterButton) { %>
         <div class="mt-3 text-center">
-          <small>Don't have an account? <a href="<%= registerLink %>" class="text-danger">Register</a></small>
+          <small style="color: #6c757d;">Don't have an account? <a href="<%= registerLink %>" class="text-danger" style="color: #dc3545 !important; text-decoration: none; font-weight: 600;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Register</a></small>
         </div>
       <% } %>
     </form>

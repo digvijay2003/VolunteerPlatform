@@ -34,7 +34,7 @@ router.get('/feedhope-how-it-works', (req, res) => {
         'home/how-it-works',
         {
             title: 'how-it-works',
-            stylesheet: '/stylesheet/home/how-it-works.css'
+            stylesheet: ''
         }
     );
 });
@@ -67,9 +67,6 @@ router.get('/feedhope-events', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 router.post('/feedhope-contact_Us', async (req, res) => {
     const { username, email, contact, message } = req.body;

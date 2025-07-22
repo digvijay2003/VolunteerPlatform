@@ -74,7 +74,7 @@ module.exports = (app) => {
     // Global rate limit for all other routes
     const globalLimiter = rateLimit({
         windowMs: 15 * 60 * 1000,
-        max: 100,
+        max: 1000,
         message: 'Too many requests from this IP, please try again later.',
         handler: (req, res) => {
             console.warn(`⚠️ Global rate limit exceeded: ${req.ip} on ${req.originalUrl}`);
