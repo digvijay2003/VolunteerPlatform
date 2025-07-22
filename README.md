@@ -1,8 +1,8 @@
-# FEEDhope
+# Feedhope
 
 ## 🌟 Project Overview
 
-**FEEDhope** is a humanitarian platform that connects individuals in need of food or essential supplies with generous donors who want to make a difference. It enables real-time visibility into requests from underprivileged communities and allows users to contribute directly by fulfilling those needs.
+**Feedhope** is a humanitarian platform that connects individuals in need of food or essential supplies with generous donors who want to make a difference. It enables real-time visibility into requests from underprivileged communities and allows users to contribute directly by fulfilling those needs.
 
 The mission of FEEDhope is to bridge the gap between abundance and scarcity through technology, transparency, and community participation.
 
@@ -51,12 +51,12 @@ The mission of FEEDhope is to bridge the gap between abundance and scarcity thro
 
 ## 📦 Tech Stack (optional – if you want to include)
 
-- **Frontend**: React.js + Tailwind CSS
-- **Backend**: Node.js / Express / Flask
-- **Database**: PostgreSQL / MongoDB
+- **Frontend**: Ejs Template + Bootstrap + CSS
+- **Backend**: Node.js / Express
+- **Database**: MongoDB
 - **Authentication**: JWT, OTP
-- **Geolocation**: Leaflet.js / Mapbox
-- **Deployment**: Docker + AWS / Render
+- **Geolocation**: Mapbox
+- **Deployment**: Render
 
 ---
 
