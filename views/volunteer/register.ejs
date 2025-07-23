@@ -1,36 +1,17 @@
 <div class="d-flex align-items-center justify-content-center"
      style="min-height: 100vh; background: white;">
-
   <div class="container-fluid mx-3" style="width: 100%; background: rgba(255, 255, 255, 0.92); border-radius: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,0.1); padding: .3rem; backdrop-filter: blur(8px);">
-    
-    <!-- Title -->
+
     <h2 class="text-center fw-bold mb-3"
         style="color: #031d38; font-size: 2.25rem; letter-spacing: -0.5px;"> <%= title %> </h2>
 
-    <!-- Alert / Info -->
-    <div class="mb-5" 
-         style="background-color: #e8f8ff; padding: 1.5rem 2rem; border-left: 5px solid #17a2b8; border-radius: 0.75rem; color: #005f73;">
-      <h5 class="fw-semibold mb-2" style="font-size: 1rem;">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i> Please read the guidelines carefully:
-      </h5>
-      <ul style="margin-bottom: 0; padding-left: 1.25rem; line-height: 1.75;">
-        <li>Username must be at least 3 characters long.</li>
-        <li>Phone number format: <code>+91 98050xxxxx</code>.</li>
-        <li>Govt ID (JPG/PNG/PDF) must be ≤ 100KB.</li>
-        <li>Password must be ≥ 8 characters.</li>
-        <li>A valid email is required.</li>
-        <li>Location & availability are mandatory.</li>
-        <li>Emergency contact name is required.</li>
-      </ul>
-    </div>
+    <%- include('../partials/volunteerGuidelines') %>
 
-    <!-- Form Starts -->
     <form action="<%= action %>" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
       <div class="row g-4">
         <% fields.forEach(field => { %>
           <div class="col-md-6 col-lg-4">
             <label for="<%= field.id %>" class="form-label fw-semibold" style="color: #333;"><%= field.label %></label>
-
             <% if (field.type === 'select') { %>
               <select id="<%= field.id %>" name="<%= field.name %>" class="form-select form-control-lg"
                       <%= field.multiple ? 'multiple' : '' %>
@@ -82,15 +63,8 @@
         <% }) %>
       </div>
 
-      <!-- Submit Button -->
       <div class="text-center my-3 d-grid gap-2 col-6 mx-auto">
-        <button type="submit" 
-                class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm"
-                style="font-weight: 600; background-color: #007bff; border: none; transition: all 0.2s ease;"
-                onmouseover="this.style.backgroundColor='#0056b3'; this.style.transform='translateY(-2px)';"
-                onmouseout="this.style.backgroundColor='#007bff'; this.style.transform='translateY(0)';">
-          <%= submitLabel || 'Register Now' %> <i class="bi bi-arrow-right-short"></i>
-        </button>
+        <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">Register Now</button>
       </div>
     </form>
   </div>
@@ -101,13 +75,10 @@
     (function () {
       'use strict'
 
-      // Fetch all the forms we want to apply custom Bootstrap validation styles to
       const forms = document.querySelectorAll('.needs-validation')
 
-      // Loop over them and prevent submission
       Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
-          // Clear all custom invalid feedback messages before validation
           form.querySelectorAll('.invalid-feedback').forEach(feedback => {
               feedback.textContent = '';
           });
@@ -115,9 +86,8 @@
           if (!form.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();
-            // If Bootstrap's default validation fails, ensure specific messages are shown if available
             form.querySelectorAll(':invalid').forEach(field => {
-                const feedbackDiv = field.nextElementSibling; // This assumes invalid-feedback is directly after the input/select
+                const feedbackDiv = field.nextElementSibling; 
                 if (feedbackDiv && feedbackDiv.classList.contains('invalid-feedback')) {
                     if (field.id === 'username') {
                         feedbackDiv.textContent = 'Username must be at least 3 characters.';
@@ -127,7 +97,7 @@
                         feedbackDiv.textContent = 'Password must be at least 8 characters.';
                     } else if (field.id === 'phone') {
                         feedbackDiv.textContent = 'Please enter a valid phone number (e.g., +91 98050xxxx).';
-                    } else if (!feedbackDiv.textContent) { // Only set generic if no specific message is defined
+                    } else if (!feedbackDiv.textContent) { 
                         feedbackDiv.textContent = 'This field is required.';
                     }
                 }
@@ -139,8 +109,8 @@
 
           if (fileInput) {
             const files = fileInput.files;
-            fileErrorDiv.textContent = ''; // Clear previous errors
-            fileInput.classList.remove('is-invalid'); // Clear invalid state before re-evaluating
+            fileErrorDiv.textContent = '';
+            fileInput.classList.remove('is-invalid'); 
 
             let fileInvalid = false;
             if (files.length === 0 && fileInput.required) {
