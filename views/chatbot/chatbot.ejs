@@ -1,0 +1,34 @@
+<div class="container py-5">
+    <h2>Ask FeedHope Assistant 🤖</h2>
+
+    <div class="card p-3 mt-3">
+        <div class="mb-3">
+            <input type="text" id="userMsg" class="form-control" placeholder="Type your question..." />
+        </div>
+        <button class="btn btn-primary" id="sendBtn">Send</button>
+
+        <div id="chatReply" class="mt-4 alert alert-info" style="display: none;"></div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sendBtn = document.getElementById('sendBtn');
+        const input = document.getElementById('userMsg');
+        const replyDiv = document.getElementById('chatReply');
+
+        sendBtn.addEventListener('click', async () => {
+            const msg = input.value;
+            replyDiv.style.display = 'none';
+
+            const response = await fetch('/bot/ai-chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg }),
+            });
+
+            const data = await response.json();
+            replyDiv.textContent = data.reply || 'Error in response.';
+            replyDiv.style.display = 'block';
+        });
+    });
+</script>

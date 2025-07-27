@@ -1,83 +1,33 @@
-<nav class="navbar navbar-expand-lg fixed-top" style="background-color: #e3f2fd;">
+<nav class="navbar navbar-expand-lg fixed-top py-3" style="background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,.08);">
   <div class="container-fluid">
-    <!-- <a href="/feedhope" class="navbar-brand d-flex align-items-center"> -->
-      <img src="/images/feedhope-logo.webp" class="rounded-3" alt="FeedHope Logo" style="height: 25px; margin-right: 10px; margin-right: 50px;">
-      <!-- <span style="font-weight: 600; font-family: 'Roboto Slab', sans-serif;">FeedHope</span> -->
-    <!-- </a> -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+    <a href="/feedhope" class="navbar-brand d-flex align-items-center">
+      <img src="/images/feedhope-logo.webp" class="rounded-3" alt="FeedHope Logo" style="height: 30px; margin-right: 10px;">
+      <span style="font-weight: 700; font-family: 'Roboto Slab', serif; color: #333;">FeedHope</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="offcanvas offcanvas-end" id="offcanvasNavbar" tabindex="-1" aria-labelledby="offcanvasNavbarLabel">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
       <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">FeedHope</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="/feedhope-about-us">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/feedhope-how-it-works">Our Process</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/feedhope-events">Events</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/volunteer-login">Get Involved</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/feedhope-contact-us">Contact Us</a>
-          </li>
+        <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+          <li class="nav-item"><a class="nav-link fw-medium" href="/feedhope-about-us">About Us</a></li>
+          <li class="nav-item"><a class="nav-link fw-medium" href="/feedhope-how-it-works">Our Process</a></li>
+          <li class="nav-item"><a class="nav-link fw-medium" href="/feedhope-events">Events</a></li>
+          <li class="nav-item"><a class="nav-link fw-medium" href="#donationSection">Donate ₹</a></li>
+          <li class="nav-item"><a class="nav-link fw-medium" href="#heroSection">Donate/Request</a></li>
+          <li class="nav-item"><a class="nav-link fw-medium" href="/volunteer-registration">Get Involved</a></li>
+          <li class="nav-item"><a class="nav-link fw-medium" href="/feedhope-contact-us">Contact Us</a></li>
         </ul>
-        <div class="d-flex mx-2">
-          <a class="btn btn-danger px-4" href="/volunteer-registration"><span class="text-white">Become a Volunteer</span></a>
+        <div class="d-flex ms-auto">
+          <a class="btn btn-primary px-4 py-2 rounded-pill shadow-sm animate__animated animate__pulse animate__infinite" href="/volunteer-registration">
+            <span class="text-white fw-bold">Become a Volunteer</span>
+          </a>
         </div>
       </div>
     </div>
   </div>
 </nav>
-
-<style>
-  .navbar a { 
-    font-size: 1rem;
-    color: #090000 !important;
-    text-decoration: none;
-    font-family: "Roboto Slab", sans-serif;
-    position: relative;
-  }
-
-  .navbar a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 0;
-    height: 2px;
-    background-color: #090000;
-    transition: width 0.3s ease-in-out;
-  }
-
-  .navbar a:hover::after {
-    width: 100%;
-  }
-
-  .navbar .btn {
-    font-weight: 500;
-  }
-
-  .navbar-toggler {
-    border: none;
-    padding: 0;
-  }
-
-  @media (max-width: 768px) {
-    .navbar-brand span {
-      font-size: 0.9rem;
-    }
-    .offcanvas-body .btn {
-      width: 100%;
-      margin-top: 10px;
-    }
-  }
-</style>

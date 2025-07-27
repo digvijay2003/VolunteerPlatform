@@ -41,23 +41,13 @@
 </head>
 <body>
 
-
-        <% if (typeof showSpinner !== 'undefined' && showSpinner) { %>
-            <div id="spinner-container">
-                <div class="spinner"></div>
-                <% if (typeof spinnerMessage !== 'undefined' && spinnerMessage) { %>
-                    <p id="spinner-message"><%= spinnerMessage %></p>
-                <% } %>
-            </div>
-        <% } %>
-
         <% if (typeof showNavbar === 'undefined' || showNavbar) { %>
             <header>
                 <%- include('../partials/navbar') %>
             </header>
         <% } %>
         
-        <main>
+        <main class="mt-5 pt-5">
             <%- include('../partials/flash') %>
             <%- body %>
         </main>
@@ -71,15 +61,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-   
-    <script>
-        window.addEventListener('load', function() {
-            var spinnerContainer = document.getElementById('spinner-container');
-            if (spinnerContainer) {
-                spinnerContainer.style.display = 'none';
-            }
-        });
-    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -89,6 +70,18 @@
                     console.log('Sound play error:', error);
                 });
             }
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
     </script>
 

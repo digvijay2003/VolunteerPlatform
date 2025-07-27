@@ -1,19 +1,18 @@
-<!-- section 1 -->
-<div class="container-fluid hero-section">
+<div class="container-fluid hero-section" id="heroSection">
   <h1 class="hero-title">FeedHope</h1>
   <p class="lead">Empowering Communities, One Meal at a Time</p>
+  <p class="hero-info">Join us in the fight against hunger. Whether you're looking to donate food and make a difference or in need of assistance, FeedHope connects communities to ensure no one goes to bed hungry.</p>
   <div class="hero-buttons">
-      <a href="/feedhope-donation-food" class="hero-button">
-          Contribute Food <span class="material-symbols-outlined">double_arrow</span>
-      </a>
-      <a href="/feedhope-request-food" class="hero-button">
-          Request Assistance <span class="material-symbols-outlined">double_arrow</span>
-      </a>      
+    <a href="/feedhope-donation-food" class="hero-button">
+      Contribute Food <span class="material-symbols-outlined">double_arrow</span>
+    </a>
+    <a href="/feedhope-request-food" class="hero-button">
+      Request Assistance <span class="material-symbols-outlined">double_arrow</span>
+    </a>
   </div>
 </div>
 
-<!-- section 4 -->
-<div class="container-fluid donation-section">
+<div class="container-fluid donation-section" id="donationSection">
   <div class="container py-5">
     <div class="row align-items-center">
       <div class="col-12 col-md-5 donation-section-image"></div>
@@ -25,7 +24,7 @@
           </p>
           <div class="donation-button-wrapper justify-content-center justify-content-md-end">
             <button class="btn btn-donate bg-danger text-white" type="button" data-bs-toggle="modal" data-bs-target="#donationModal">
-              Donate Now <span class="material-symbols-outlined">send_money</span>
+              <span>Donate Now ₹</span>
             </button>
           </div>
         </div>
@@ -33,45 +32,55 @@
     </div>
   </div>
 </div>
+
 <div class="modal fade" id="donationModal" tabindex="-1" aria-labelledby="donationModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-black" id="donationModalLabel">Donate Now</h5>
+        <h5 class="modal-title text-black" id="donationModalLabel">Donate via UPI QR</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="donationForm" action="/api/donate" method="POST">
-          <div class="form-group">
+        <p class="text-center text-muted">
+          We currently accept donations via Google Pay UPI. 95% of your contribution goes directly to platform development and volunteer resources. 5% helps us cover operational costs and expand our outreach.
+        </p>
+        <div class="text-center mb-4">
+          <img src="/images/GooglePay_QR.png" alt="Donate via Google Pay QR" style="max-width: 220px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1);" />
+          <p class="mt-2 text-muted small">Scan this QR with any UPI app (Google Pay, PhonePe, Paytm) to donate.</p>
+          <p class="fw-bold">UPI ID: <span style="color: #d9534f;">yourname@okaxis</span></p>
+        </div>
+        <hr>
+        <form id="donationForm" action="#" method="POST" onsubmit="return false;" style="pointer-events: none; opacity: 0.6;">
+          <div class="form-group mb-2">
             <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required />
+            <input type="text" id="name" class="form-control" disabled />
           </div>
-          <div class="form-group">
+          <div class="form-group mb-2">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email address" required />
+            <input type="email" id="email" class="form-control" disabled />
           </div>
-          <div class="form-group">
+          <div class="form-group mb-2">
             <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" required />
+            <input type="tel" id="phone" class="form-control" disabled />
           </div>
-          <div class="form-group">
+          <div class="form-group mb-2">
             <label for="amount">Donation Amount (in ₹)</label>
-            <select id="amount" name="amount" class="form-control" required>
+            <select id="amount" class="form-control" disabled>
               <option value="" disabled selected>Select amount</option>
               <option value="500">₹500</option>
               <option value="1000">₹1000</option>
               <option value="2000">₹2000</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label for="message">Message (Optional)</label>
-            <textarea id="message" name="message" class="form-control" rows="4" placeholder="Add a message to support our cause (optional)"></textarea>
+            <textarea id="message" class="form-control" rows="3" disabled></textarea>
           </div>
-          <p class="text-center text-muted">
-            Your contribution helps support our platform and the welfare of those in need. Thank you for making a difference!
-          </p>
-          <button type="submit" class="btn btn-primary btn-block">Donate Now</button>
-        </form>        
+          <button type="submit" class="btn btn-secondary btn-block w-100" disabled>Form Coming Soon</button>
+        </form>
+        <p class="text-center mt-3 text-muted small">
+          Form-based donations are coming soon! For now, please donate via UPI QR above. 🙏
+        </p>
       </div>
     </div>
   </div>

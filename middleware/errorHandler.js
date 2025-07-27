@@ -45,7 +45,7 @@ const internalServerError = (err, req, res, next) => {
 
     if (err instanceof multer.MulterError) {
         req.flash('error', 'File upload error: ' + err.message);
-        res.redirect(req.OriginalUrl);
+        res.redirect(req.originalUrl);
     } else if (err.message.includes('Invalid file type') || err.message.includes('File too large')) {
         req.flash('error', 'The uploaded file must be a PNG, JPG, or PDF and not exceed 100KB.');
     } else {

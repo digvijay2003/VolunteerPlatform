@@ -41,8 +41,7 @@ module.exports = morgan((tokens, req, res) => {
 }, {
     stream: {
         write: (message) => {
-            console.log(message.trim());  
-            console.log();
+            logger.info(message.trim());
         }
     },
 });

@@ -1,42 +1,38 @@
 const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, printf, colorize } = format;
-const { Loggly } = require('winston-loggly-bulk'); 
+const Sentry = require('@sentry/node');
+const TransportStream = require('winston-transport');
 
-const token_Loggly = process.env.LOGGLY_TOKEN;
-const subdomain_Loggly = process.env.LOGGLY_SUBDOMAIN;
+class SentryTransport extends TransportStream {
+  log(info, callback) {
+    setImmediate(() => {
+      this.emit('logged', info);
+    });
 
-const logFormat = printf(({ level, message, timestamp }) => {
-    return `${timestamp} [${level}]: ${message}`;
-});
+    if (info.level === 'error' || info.level === 'warn') {
+      Sentry.captureMessage(`[${info.level.toUpperCase()}] ${info.message}`, {
+        level: info.level,
+        extra: info.meta || {},
+      });
+    }
 
-const isProduction = 'production' === '';
+    callback();
+  }
+}
 
 const logger = createLogger({
-    level: 'info',
-    format: combine(
-        timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        colorize(),
-        logFormat
-    ),
-    transports: [
-        new transports.Console(), 
-        new transports.File({ filename: 'logs/error.log', level: 'error' }), 
-        new transports.File({ filename: 'logs/combined.log' }), 
-    ]
+  level: 'info',
+  format: format.combine(
+    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    format.errors({ stack: true }),
+    format.colorize(),
+    format.printf(({ timestamp, level, message }) => `${timestamp} [${level}]: ${message}`)
+  ),
+  transports: [
+    new transports.Console(),
+    new transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new transports.File({ filename: 'logs/combined.log' }),
+    new SentryTransport(), 
+  ],
 });
-
-if (isProduction) {
-    logger.add(new Loggly({
-        token: token_Loggly,   
-        subdomain: subdomain_Loggly, 
-        tags: ['Winston-NodeJS'], 
-        json: true, 
-        debug: true, 
-        onError: (error) => {
-            console.error('Loggly transport error:', error);
-            logger.error(`Loggly transport error: ${error.message}`);
-        }
-    }));
-}
 
 module.exports = logger;

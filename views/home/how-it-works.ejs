@@ -1,7 +1,398 @@
-  <div class="container text-center mt-5">
-    <h1 class="mb-3">Contribute to Our Project</h1>
-    <p class="mb-4">We welcome contributions to make our project even better. Check out the repository to get started!</p>
-    <a href="https://github.com/digvijay2003/VolunteerPlatform" class="btn btn-primary btn-lg" target="_blank">
-      <i class="bi bi-github"></i> Visit Our GitHub Repository
-    </a>
-  </div>
+<style>
+    :root {
+      --primary-blue: #007bff;
+      --accent-orange: #ff6f00;
+      --secondary-green: #28a745;
+      --text-dark: #343a40;
+      --text-light: #f8f9fa;
+      --card-bg: #ffffff;
+      --section-bg-light: #f5f7fa;
+    }
+
+    .how-it-works-section .card {
+      border: none;
+      border-radius: 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      background-color: var(--card-bg);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .how-it-works-section .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .how-it-works-section .card-body {
+      padding: 2rem;
+    }
+
+    .how-it-works-section .card-title {
+      color: var(--primary-blue);
+      font-size: 1.7rem;
+      margin-bottom: 1rem;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .how-it-works-section .card-title::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background-color: var(--accent-orange);
+      border-radius: 5px;
+    }
+
+    .how-it-works-section .card-text {
+      color: var(--text-dark);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .unique-features-section {
+      background-color: var(--section-bg-light);
+    }
+
+    .feature-box {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      background-color: var(--card-bg);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      padding: 2rem !important;
+    }
+
+    .feature-box:hover {
+      border-color: var(--secondary-green);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
+    }
+
+    .feature-box h5 {
+      color: var(--primary-blue);
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+      position: relative;
+      padding-bottom: 5px;
+    }
+
+    .feature-box h5::before {
+      content: '\2713';
+      font-family: 'Material Symbols Outlined';
+      font-size: 1.8rem;
+      color: var(--secondary-green);
+      margin-right: 10px;
+      vertical-align: middle;
+      display: inline-block;
+      transform: translateY(-2px);
+    }
+
+    .feature-box p {
+      color: var(--text-dark);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .role-tabs-section {
+      background-color: var(--section-bg-light);
+    }
+
+    .nav-tabs {
+      border-bottom: 2px solid #dee2e6;
+      margin-bottom: 2rem !important;
+    }
+
+    .nav-tabs .nav-link {
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 1rem 1.5rem;
+      transition: all 0.3s ease;
+      margin-bottom: -2px;
+    }
+
+    .nav-tabs .nav-link:hover {
+      color: var(--primary-blue);
+      border-color: rgba(0, 123, 255, 0.2);
+    }
+
+    .nav-tabs .nav-link.active {
+      color: var(--primary-blue);
+      background-color: transparent;
+      border-color: var(--primary-blue);
+      font-weight: 700;
+    }
+
+    .tab-content {
+      border: 1px solid rgba(0, 0, 0, 0.1) !important;
+      padding: 2.5rem !important;
+      background-color: var(--card-bg);
+      border-radius: 15px !important;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .tab-content h5 {
+      color: var(--primary-blue);
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .tab-content p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--text-dark);
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary-blue), #2c6f89);
+      color: white;
+      padding: 5rem 20px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-section h2 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-section p {
+      font-size: 1.3rem;
+      margin-bottom: 2.5rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .cta-section .btn {
+      font-size: 1.2rem;
+      padding: 0.8rem 2.2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin: 0.5rem;
+    }
+
+    .cta-section .btn-light {
+      color: var(--primary-blue);
+      background-color: white;
+      border-color: white;
+    }
+
+    .cta-section .btn-light:hover {
+      background-color: var(--text-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .cta-section .btn-outline-light {
+      color: white;
+      border-color: white;
+    }
+
+    .cta-section .btn-outline-light:hover {
+      background-color: white;
+      color: var(--primary-blue);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 767.98px) {
+      .how-it-works-section .card-title {
+        font-size: 1.5rem;
+      }
+      .how-it-works-section .card-text {
+        font-size: 1rem;
+      }
+      .feature-box h5 {
+        font-size: 1.3rem;
+      }
+      .feature-box p {
+        font-size: 0.95rem;
+      }
+      .nav-tabs .nav-link {
+        font-size: 1rem;
+        padding: 0.8rem 1rem;
+      }
+      .tab-content h5 {
+        font-size: 1.5rem;
+      }
+      .tab-content p {
+        font-size: 1rem;
+      }
+      .cta-section h2 {
+        font-size: 2.2rem;
+      }
+      .cta-section p {
+        font-size: 1.1rem;
+      }
+      .cta-section .btn {
+        font-size: 1rem;
+        padding: 0.7rem 1.8rem;
+        display: block;
+        width: 100%;
+        max-width: 250px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 10px;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .cta-section .btn {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.5rem;
+      }
+    }
+</style>
+
+<section class="py-1 bg-light how-it-works-section">
+        <div class="container">
+            <h2 class="text-center mb-5 fw-bold">How FeedHope Works</h2>
+            <div class="row g-4">
+                <!-- Step Cards -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">1. Register Your Role</h5>
+                            <p class="card-text">Sign up as a Donor, Requester, or Volunteer with basic details.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">2. Submit Food Info</h5>
+                            <p class="card-text">Fill out a form to donate or request food — with images and location.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">3. Intelligent Matching</h5>
+                            <p class="card-text">Our engine matches donation & request based on location, quantity, and expiry.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">4. Volunteer Assignment</h5>
+                            <p class="card-text">A nearby verified volunteer is assigned to handle the pickup and delivery.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">5. Delivery Tracking</h5>
+                            <p class="card-text">Real-time tracking for deliveries. OTP-based confirmation ensures security.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">6. Feedback & Ratings</h5>
+                            <p class="card-text">Both parties share feedback, helping us improve trust and transparency.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Makes Us Different -->
+    <section class="py-5 unique-features-section">
+        <div class="container">
+            <h2 class="text-center mb-5 fw-bold">What Makes FeedHope Unique?</h2>
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="feature-box h-100">
+                        <h5 class="fw-semibold">Smart Matching System</h5>
+                        <p>Automatically connects donors and requesters based on need and proximity.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box h-100">
+                        <h5 class="fw-semibold">Secure & Verified Users</h5>
+                        <p>All users and volunteers are verified for safety and reliability.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box h-100">
+                        <h5 class="fw-semibold">Real-Time Notifications</h5>
+                        <p>Stay updated on every step — from matching to delivery completion.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box h-100">
+                        <h5 class="fw-semibold">OTP Verified Deliveries</h5>
+                        <p>Ensures both donor and recipient authenticate the transaction via OTP.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box h-100">
+                        <h5 class="fw-semibold">Impact Tracking</h5>
+                        <p>Track your contributions — meals delivered, families helped, etc.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box h-100">
+                        <h5 class="fw-semibold">Volunteer Friendly</h5>
+                        <p>Volunteers get route maps, status updates, and easy task management.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Role Based Tabs -->
+    <section class="py-5 bg-light role-tabs-section">
+        <div class="container">
+            <h2 class="text-center mb-5 fw-bold">Role-Based Experience</h2>
+            <ul class="nav nav-tabs justify-content-center mb-3" id="roleTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="donor-tab" data-bs-toggle="tab" data-bs-target="#donor" type="button" role="tab" aria-controls="donor" aria-selected="true">Donor</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="requester-tab" data-bs-toggle="tab" data-bs-target="#requester" type="button" role="tab" aria-controls="requester" aria-selected="false">Requester</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="volunteer-tab" data-bs-toggle="tab" data-bs-target="#volunteer" type="button" role="tab" aria-controls="volunteer" aria-selected="false">Volunteer</button>
+                </li>
+            </ul>
+            <div class="tab-content border p-4 bg-white rounded shadow-sm" id="roleTabsContent">
+                <div class="tab-pane fade show active" id="donor" role="tabpanel" aria-labelledby="donor-tab">
+                    <h5 class="fw-bold">Donor</h5>
+                    <p>List surplus food by submitting details and proof images. Optionally choose to deliver the food yourself or let a volunteer handle it.</p>
+                </div>
+                <div class="tab-pane fade" id="requester" role="tabpanel" aria-labelledby="requester-tab">
+                    <h5 class="fw-bold">Requester</h5>
+                    <p>Request food by filling a simple form. Once matched, you get notifications and delivery details. Confirm the delivery via OTP.</p>
+                </div>
+                <div class="tab-pane fade" id="volunteer" role="tabpanel" aria-labelledby="volunteer-tab">
+                    <h5 class="fw-bold">Volunteer</h5>
+                    <p>View available delivery tasks. Pick up food, deliver it safely, and confirm using OTP. Earn trust ratings and help your community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="m-5 text-center cta-section">
+        <div class="container">
+            <h2 class="fw-bold mb-3">Ready to Make a Difference?</h2>
+            <p class="mb-4">Join as a Volunteer, Donor, or Requester today and be the reason someone sleeps full tonight.</p>
+            <a href="/volunteer-registration" class="btn btn-light btn-lg rounded-pill fw-semibold me-2">Become a Volunteer</a>
+            <a href="/feedhope-donation-food" class="btn btn-outline-light btn-lg rounded-pill fw-semibold me-2">Donate Food</a>
+            <a href="/feedhope-request-food" class="btn btn-outline-light btn-lg rounded-pill">Request Food</a>
+        </div>
+    </section>
