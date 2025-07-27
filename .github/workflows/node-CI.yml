@@ -4,9 +4,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ] # Trigger this workflow when code is pushed to the 'main' branch
+    branches: [ "master" ] # Trigger this workflow when code is pushed to the 'master' branch
   pull_request:
-    branches: [ "main" ] # Trigger this workflow when a pull request is opened/updated against 'main'
+    branches: [ "master" ] # Trigger this workflow when a pull request is opened/updated against 'master'
 
 jobs:
   build-and-test:
