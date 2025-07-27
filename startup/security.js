@@ -65,11 +65,18 @@ module.exports = (app) => {
     
     // Specific rate limit for /feedhope to prevent abuse
     const feedhopeLimiter = rateLimit({
-        windowMs: 15 * 60 * 1000,
+        windowMs: 15 * 60 * 100,
         max: 30,
         message: 'Too many requests to /feedhope from this IP, please try again later.',
     });
     app.use('/feedhope', feedhopeLimiter);
+
+    const chatbotLimiter = rateLimit({
+        windowMs: 15 * 60 * 1000,
+        max: 10,
+        message: 'Too many requests to /chatbot from this IP, please try again later.',
+    });
+    app.use('/bot', chatbotLimiter);
 
     // Global rate limit for all other routes
     const globalLimiter = rateLimit({
