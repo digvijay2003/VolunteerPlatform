@@ -2,6 +2,16 @@
      style="min-height: 100vh; background: white;">
   <div class="container-fluid mx-3" style="width: 100%; background: rgba(255, 255, 255, 0.92); border-radius: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,0.1); padding: .3rem; backdrop-filter: blur(8px);">
 
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <a href="/feedhope" class="btn btn-outline-dark me-2">
+        <span class="material-symbols-outlined align-middle">arrow_back</span> Back to Home
+      </a>
+      <a href="/volunteer-login" class="btn btn-primary">
+        Volunteer Login
+      </a>
+    </div>
+
     <h2 class="text-center fw-bold mb-3"
         style="color: #031d38; font-size: 2.25rem; letter-spacing: -0.5px;"> <%= title %> </h2>
 
@@ -10,10 +20,10 @@
     <form action="<%= action %>" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
       <div class="row g-4">
         <% fields.forEach(field => { %>
-          <div class="col-md-6 col-lg-4">
-            <label for="<%= field.id %>" class="form-label fw-semibold" style="color: #333;"><%= field.label %></label>
+          <div class="col-md-6 col-lg-12">
+            <label for="<%= field.id %>" class="form-label fw-semibold" style="font-weight: 700; color: #343a40; font-size: 1.3rem;"><%= field.label %></label>
             <% if (field.type === 'select') { %>
-              <select id="<%= field.id %>" name="<%= field.name %>" class="form-select form-control-lg"
+              <select id="<%= field.id %>" name="<%= field.name %>" class="form-select form-control-lg border border-dark p-2 mb-2 rounded-0 border-2"
                       <%= field.multiple ? 'multiple' : '' %>
                       <%= field.required ? 'required' : '' %>
                       style="border-radius: 0.5rem; padding: 0.65rem 1.25rem;">
@@ -23,27 +33,27 @@
                 <% }) %>
               </select>
               <% if (field.description) { %>
-                <div class="form-text" style="color: #6c757d;"><%= field.description %></div>
+                <div class="form-text" style="font-weight: 700; color: #343a40; font-size: 1.3rem;"><%= field.description %></div>
               <% } %>
               <div class="invalid-feedback">Please select a valid <%= field.label.toLowerCase() %>.</div>
 
             <% } else if (field.type === 'file') { %>
-              <input type="file" class="form-control form-control-lg" id="<%= field.id %>" name="<%= field.name %>"
+              <input type="file" class="form-control form-control-lg border border-dark p-2 mb-2 rounded-0 border-2" id="<%= field.id %>" name="<%= field.name %>"
                      <%= field.multiple ? 'multiple' : '' %> <%= field.required ? 'required' : '' %>
                      style="border-radius: 0.5rem; padding: 0.65rem 1.25rem;">
-              <div class="form-text" style="color: #6c757d;">
+              <div class="form-text" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">
                 <%= field.description || 'Accepted formats: JPG, PNG, PDF. Max size: 100KB.' %>
               </div>
               <div class="invalid-feedback">Please upload a valid file.</div>
 
             <% } else { %>
-              <input type="<%= field.type %>" class="form-control form-control-lg"
+              <input type="<%= field.type %>" class="form-control form-control-lg border border-dark p-2 mb-2 rounded-0 border-2"
                      id="<%= field.id %>" name="<%= field.name %>"
                      value="<%= field.value || '' %>" <%= field.attributes || '' %>
                      <%= field.required ? 'required' : '' %>
                      style="border-radius: 0.5rem; padding: 0.65rem 1.25rem;">
               <% if (field.description) { %>
-                <div class="form-text" style="color: #6c757d;"><%= field.description %></div>
+                <div class="form-text" style="font-weight: 700; color: #343a40; font-size: 1.3rem;"><%= field.description %></div>
               <% } %>
               <div class="invalid-feedback">
                 <% if (field.id === 'username') { %>
@@ -63,7 +73,7 @@
         <% }) %>
       </div>
 
-      <div class="text-center my-3 d-grid gap-2 col-6 mx-auto">
+      <div class="text-center my-3 d-grid gap-2 col-12 mx-auto">
         <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">Register Now</button>
       </div>
     </form>

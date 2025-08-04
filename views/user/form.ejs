@@ -1,6 +1,15 @@
-<div class="container d-flex justify-content-center align-items-center my-5" style="min-height: 100vh; background-color: #b8d4f0;">
-  <div class="card shadow-lg p-4 w-100" style="max-width: 800px; border-radius: 15px; border: none; overflow: hidden;">
-    <h1 class="text-center mb-3" style="color: #343a40; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 700;"><%= title || 'Form' %></h1>
+<div class="container-fluid">
+  <div class="container mt-5" style=" border-radius: 15px; border: none; overflow: hidden;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <a href="/feedhope" class="btn btn-outline-dark me-2">
+        <span class="material-symbols-outlined align-middle">arrow_back</span> Back to Home
+      </a>
+      <a href="/feedhope-user-login" class="btn btn-primary">
+        Login
+      </a>
+    </div>
+
+    <h1 class="text-center mb-3" style="color: #0963bd; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 700;"><%= title || 'Form' %></h1>
     <p class="text-center text-muted mb-4" style="color: #6c757d; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1.1rem;"><%= subtitle || '' %></p>
 
     <form action="<%= action %>" method="POST">

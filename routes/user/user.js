@@ -13,7 +13,7 @@ router.get('/feedhope-user-profile', requireUserAuth, (req, res) => {
 // Login Page
 router.get('/feedhope-user-login', (req, res) => {
   renderForm(res, {
-    title: 'User Login',
+    title: 'USER LOGIN',
     subtitle: 'Please log in to continue',
     action: '/feedhope-user-login',
     submitLabel: 'Login',
@@ -27,7 +27,7 @@ router.get('/feedhope-user-login', (req, res) => {
 // Register Page
 router.get('/feedhope-user-register', (req, res) => {
   renderForm(res, {
-    title: 'User Registration',
+    title: 'USER REGISTRATION',
     subtitle: 'Create your account',
     action: '/feedhope-user-register',
     submitLabel: 'Register',
@@ -113,5 +113,17 @@ function renderForm(res, {
     showFooter
   });
 }
+
+router.post('/feedhope-user-logout', (req, res) => {
+  
+    req.flash('success', 'You have been successfully logged out!');
+
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session:', err);
+        }
+        res.redirect('/feedhope');
+    });
+});
 
 module.exports = router;

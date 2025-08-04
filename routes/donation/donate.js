@@ -17,7 +17,7 @@ router.get(
             title: 'Food Donation',
             stylesheet: '',
             showNavbar: false,
-            showFooter: true,
+            showFooter: false,
     })
   }
 );

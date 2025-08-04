@@ -1,111 +1,118 @@
-<section class="py-5" style="background-color: #f8f9fa;">
-  <div class="container">
+<section class="mt-2 bg-white" style="background-color: #f8f9fa;">
+  <div class="container-fluid">
     <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <div class="card shadow rounded-4">
-          <div class="card-body p-5">
-            <h2 class="text-center mb-4">Donate Food</h2>
+      <div class="col-lg-12">
+        <div class="card shadow-lg rounded-4 border-0" style="border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;">
+          <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <a href="/feedhope" class="btn btn-outline-dark me-2">
+                <span class="material-symbols-outlined align-middle">arrow_back</span> Back to Home
+              </a>
+              <a href="/feedhope-user-login" class="btn btn-primary">
+                Login
+              </a>
+            </div>
+
+            <h2 class="text-center mb-4 text-primary fw-bold" style="color: #411b5d !important; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 2.25rem;">FOOD CONTRIBUTION PORTAL</h2>
+            
+            <div class="text-center mb-4">
+              <img src="images/donate_food_form.png" class="img-fluid rounded-4" alt="Donating food to those in need" style="max-height: 450px; object-fit: cover;">
+            </div>
+
+            <p class="text-center text-muted mb-5" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1rem; color: #fa7667 !important;">Your contribution can make a difference. Please fill out the form below to donate.</p>
+            
             <form action="/feedhope-donation-food" method="POST" enctype="multipart/form-data">
-              <div class="row g-3">
-                <!-- Donor Name -->
-                <div class="col-md-6">
-                  <label for="donor_name" class="form-label">Your Name</label>
-                  <input type="text" class="form-control" id="donor_name" name="donor_name" required>
-                </div>
+              <div class="row g-4">
 
-                <!-- Phone -->
-                <div class="col-md-6">
-                  <label for="donor_phone" class="form-label">Phone Number</label>
-                  <input type="text" class="form-control" id="donor_phone" name="donor_phone" placeholder="+91xxxxxxxxxx" pattern="^\+?\d{10,15}$" required>
-                </div>
-
-                <!-- Food Type -->
-                <div class="col-md-6">
-                  <label for="food_type" class="form-label">Type of Food</label>
-                  <input type="text" class="form-control" id="food_type" name="food_type" required>
-                </div>
-
-                <!-- Quantity -->
-                <div class="col-md-3">
-                  <label for="quantity_amount" class="form-label">Quantity</label>
-                  <input type="number" class="form-control" id="quantity_amount" name="quantity[amount]" min="1" required>
-                </div>
-
-                <div class="col-md-3">
-                  <label for="quantity_unit" class="form-label">Unit</label>
-                  <select class="form-select" id="quantity_unit" name="quantity[unit]" required>
-                    <option value="kg">kg</option>
-                    <option value="liter">liter</option>
-                    <option value="pieces">pieces</option>
-                  </select>
-                </div>
-
-                <!-- Quantity Description -->
                 <div class="col-12">
-                  <label for="quantity_description" class="form-label">Quantity Description</label>
-                  <textarea class="form-control" id="quantity_description" name="quantity[description]" rows="2" required></textarea>
+                  <label for="donor_name" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Your Name <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" id="donor_name" name="donor_name" placeholder="Enter your full name" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
                 </div>
 
-                <!-- Location -->
                 <div class="col-12">
-                  <label for="location_text" class="form-label">Location</label>
-                  <input type="text" class="form-control" id="location_text" name="location_text" required>
+                  <label for="donor_phone" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Phone Number <span class="text-danger">*</span></label>
+                  <input type="tel" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" id="donor_phone" name="donor_phone" placeholder="+91xxxxxxxxxx" pattern="^\+?\d{10,15}$" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
                 </div>
 
-                <!-- Hidden Geo Coordinates -->
+                <div class="col-12">
+                  <label for="food_type" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Type of Food <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" id="food_type" name="food_type" placeholder="e.g., Cooked meals, Canned goods" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+
+                <div class="col-12">
+                  <label for="quantity_amount" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Quantity <span class="text-danger">*</span></label>
+                  <div class="row g-2">
+                    <div class="col-7">
+                      <input type="number" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" id="quantity_amount" name="quantity[amount]" min="1" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                    </div>
+                    <div class="col-5">
+                      <select class="form-select border border-dark p-2 mb-2 rounded-0 border-2" id="quantity_unit" name="quantity[unit]" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                        <option value="kg">kg</option>
+                        <option value="liter">liter</option>
+                        <option value="pieces">pieces</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label for="quantity_description" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Quantity Description <span class="text-danger">*</span></label>
+                  <textarea class="form-control border border-dark p-2 mb-2 rounded-0 border-2" id="quantity_description" name="quantity[description]" rows="2" placeholder="e.g., 50 servings of rice and curry" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';"></textarea>
+                </div>
+
+                <div class="col-12">
+                  <label for="location_text" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Location <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" id="location_text" name="location_text" placeholder="Enter your full address" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+
+                <div class="col-12">
+                  <label for="description" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Additional Description</label>
+                  <textarea class="form-control border border-dark p-2 mb-2 rounded-0 border-2" id="description" name="description" rows="3" placeholder="Any additional information about the food or donation." required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';"></textarea>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="expiration_date" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Best Before Date</label>
+                  <input type="date" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" id="expiration_date" name="expiration_date" style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+
+                <div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="delivery_willing" name="delivery_willing" style="border-color: #ced4da;">
+                    <label class="form-check-label" for="delivery_willing" style="color: #343a40;">
+                      I am willing to deliver this food
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label" for="proof_images" s9yle="font-weight: 500; color: #343a40; font-size: 1.1rem;">
+                    Upload up to 3 Proof Images (JPG/PNG, Max 100KB Each) <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="proof_images"
+                    name="proof_images"
+                    multiple
+                    accept=".jpg,.jpeg,.png"
+                    required
+                    style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;"
+                    onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';"
+                    onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';"
+                  >
+                  <small class="text-muted" style="color: #6c757d !important;">Minimum 1 image required. This helps verify the donation.</small>
+                </div>
+
                 <input type="hidden" id="location_geo_lat" name="location_geo[coordinates][1]">
                 <input type="hidden" id="location_geo_lng" name="location_geo[coordinates][0]">
                 <input type="hidden" name="location_geo[type]" value="Point">
 
-                <!-- Description -->
-                <div class="col-12">
-                  <label for="description" class="form-label">Description</label>
-                  <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                <div class="col-12 mt-4">
+                  <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill" style="background-color: #28a745; border-color: #28a745; font-size: 1.15rem;">Submit Donation</button>
                 </div>
-
-                <!-- Expiration Date -->
-                <div class="col-md-6">
-                  <label for="expiration_date" class="form-label">Expiration Date</label>
-                  <input type="date" class="form-control" id="expiration_date" name="expiration_date">
-                </div>
-
-                <!-- Upload Proof Images -->
-                <div class="col-12">
-                  <div class="mb-3">
-                    <label class="form-label" for="proof_images">
-                      Upload up to 3 Proof Images (JPG/PNG, Max 100KB Each) <span class="text-danger">*</span>
-                    </label>
-                    <input
-                      type="file"
-                      class="form-control mb-2"
-                      id="proof_images"
-                      name="proof_images"
-                      multiple
-                      accept=".jpg,.jpeg,.png"
-                      required
-                    >
-                    <small class="text-muted">Minimum 1 image required.</small>
-                  </div>
-                </div>
-
-                <!-- Delivery Willingness -->
-                <div class="col-12">
-                    <input class="form-check-input" type="checkbox" id="delivery_willing" name="delivery_willing">
-                    <label class="form-check-label" for="delivery_willing">I am willing to deliver this food <span class="text-danger">*</span></label>
-                </div>
-
-                <!-- Submit -->
-                <div class="col-12 mt-4 text-center">
-                  <button type="submit" class="btn btn-success w-100">Submit Donation</button>
-                </div>
-
               </div>
             </form>
-
-            <div class="text-center mt-4">
-              <a href="/feedhope-request-food-list" class="btn btn-warning">Check Existing Food Requests</a>
-            </div>
-            
           </div>
         </div>
       </div>
@@ -114,8 +121,8 @@
 </section>
 
 <script>
-  const input = document.getElementById('proof_images');
-  input.addEventListener('change', function(event) {
+  const proofInput = document.getElementById('proof_images');
+  proofInput.addEventListener('change', function(event) {
     const files = event.target.files;
 
     if (files.length === 0) {
@@ -130,12 +137,14 @@
       return;
     }
 
-    for (let file of files) {
+    for (const file of files) {
       if (file.size > 100 * 1024) {
         alert('Each file must be less than 100KB.');
-        event.target.value = ''; // Reset
+        event.target.value = '';
         break;
       }
     }
   });
+
+  document.getElementById('expiration_date').min = new Date().toISOString().split('T')[0];
 </script>

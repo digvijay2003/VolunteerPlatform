@@ -1,122 +1,123 @@
-  <section class="py-5" style="background-color: #f8f9fa;">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12 col-lg-10">
-            <div class="card" style="border-radius: 1rem;">
-              <div class="card-body p-5">
-                <h1 class="mb-5 text-center">Food Request</h1>
+<section class="mt-2 bg-white" style="background-color: #f8f9fa;">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="card shadow-lg rounded-4 border-0" style="border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;">
+          <div class="card-body p-4">
 
-                <form action="/feedhope-request-food" method="POST" enctype="multipart/form-data">
-                  <div class="row">
-                      <div class="col-12 col-md-6 mb-4">
-                          <div class="form-outline">
-                              <input type="text" id="requester_name" name="requester_name" class="form-control" required />
-                              <label class="form-label" for="requester_name">Requester Name <span class="text-danger">*</span></label>
-                          </div>
-                      </div>
-                      <div class="col-12 col-md-6 mb-4">
-                          <div class="form-outline">
-                              <input type="text" id="requester_phone" name="requester_phone" class="form-control" pattern="\d{10}" title="Please enter a valid 10-digit phone number" required />
-                              <label class="form-label" for="requester_phone">Requester Phone <span class="text-danger">*</span></label>
-                          </div>
-                      </div>
-                      <div class="col-12 col-md-6 mb-4">
-                          <div class="form-outline">
-                              <input type="text" id="foodtype" name="foodtype" class="form-control" required />
-                              <label class="form-label" for="foodtype">Type of Food <span class="text-danger">*</span></label>
-                          </div>
-                      </div>
-
-                      <div class="col-12 col-md-6 mb-4">
-                        <div class="form-outline">
-                            <input type="file" name="proof_images" multiple accept="image/png, image/jpg, image/pdf" />
-                            <label class="form-label" for="proof_images">Upload the Images for Proof<span class="text-danger">*</span></label>
-                        </div>
-                      </div>
-                  </div>
-              
-                  <div class="row">
-                      <div class="col-12 col-md-6 mb-4">
-                          <div class="form-outline">
-                              <input type="number" id="quantity_amount" name="quantity[amount]" class="form-control" required min="1" />
-                              <label class="form-label" for="quantity_amount">Quantity <span class="text-danger">*</span></label>
-                          </div>
-                      </div>
-                      <div class="col-12 col-md-6 mb-4">
-                          <div class="form-outline">
-                              <select id="quantity_unit" name="quantity[unit]" class="form-select" required>
-                                  <option value="kg">kg</option>
-                                  <option value="liter">liter</option>
-                                  <option value="pieces">pieces</option>
-                              </select>
-                              <label class="form-label" for="quantity_unit">Unit <span class="text-danger">*</span></label>
-                          </div>
-                      </div>
-                  </div>
-              
-                  <div class="form-outline mb-4">
-                      <textarea id="quantity_description" name="quantity[description]" class="form-control" required></textarea>
-                      <label class="form-label" for="quantity_description">Quantity Description <span class="text-danger">*</span></label>
-                  </div>
-              
-                  <div class="form-outline mb-4">
-                      <input type="text" id="location" name="location" class="form-control" required />
-                      <label class="form-label" for="location">Location <span class="text-danger">*</span></label>
-                  </div>
-              
-                  <div class="form-outline mb-4">
-                      <textarea id="description" name="description" class="form-control" required></textarea>
-                      <label class="form-label" for="description">Why do you need food? <span class="text-danger">*</span></label>
-                  </div>
-              
-                  <div class="row">
-                      <div class="col-12 col-md-6 mb-4">
-                          <div class="form-outline">
-                              <select id="urgency" name="urgency" class="form-select" required>
-                                  <option value="low">Low</option>
-                                  <option value="medium" selected>Medium</option>
-                                  <option value="high">High</option>
-                              </select>
-                              <label class="form-label" for="urgency">Urgency Level <span class="text-danger">*</span></label>
-                          </div>
-                      </div>
-                      <div class="col-12 col-md-6 mb-4">
-                          <div class="form-outline">
-                              <input type="number" id="number_of_people" name="number_of_people" class="form-control" required min="1" />
-                              <label class="form-label" for="number_of_people">Number of People <span class="text-danger">*</span></label>
-                          </div>
-                      </div>
-                  </div>
-              
-                <div class="form-outline mb-4">
-                    <input type="date" id="expiration_date" name="expiration_date" class="form-control" />
-                    <label class="form-label" for="expiration_date">Request Expiration Date</label>
-              </div>
-
-                <div class="form-outline mb-4">
-                    <input type="text" id="government_id_number" name="government_id_number" class="form-control" required accept="image/png, image/jpg, image/pdf" />
-                    <label class="form-label" for="government_id_number">Government ID Number <span class="text-danger">*</span></label>
-                </div>
-
-                <div class="form-outline mb-4">
-                    <input type="file" name="government_id_images" multiple required />
-                    <label class="form-label" for="government_id_images">Upload Government ID Images <span class="text-danger">*</span></label>
-                </div>
-
-                <div class="form-outline mb-4">
-                    <input class="form-check-input" type="checkbox" id="can_pickup" name="can_pickup">
-                    <label class="form-check-label" for="can_pickup">I can pick up the food myself <span class="text-danger">*</span></label>
-                </div>
-              
-                  <button type="submit" class="btn btn-success col-12 btn-rounded btn-block">Submit Request</button>
-
-              </form>         
-
-              </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <a href="/feedhope" class="btn btn-outline-dark me-2">
+                <span class="material-symbols-outlined align-middle">arrow_back</span> Back to Home
+              </a>
+              <a href="/feedhope-user-login" class="btn btn-primary">
+                Login
+              </a>
             </div>
+
+            <h2 class="text-center mb-4 text-primary fw-bold" style="color: #411b5d !important; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 2.25rem;">REQUEST FOOD ASSISTANCE</h2>
+
+            <div class="text-center mb-4">
+              <img src="images/donate_food_form.png" class="img-fluid rounded-4" alt="Donating food to those in need" style="max-height: 450px; object-fit: cover;">
+            </div>
+            
+            <p class="text-center text-muted mb-5" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1rem; color: #fa7667 !important;">Please fill out this form to request food. Your privacy is important to us.</p>
+            
+            <form action="/feedhope-request-food" method="POST" enctype="multipart/form-data">
+              <div class="row g-4">
+                
+                <div class="col-12">
+                  <label for="requester_name" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Requester Name <span class="text-danger">*</span></label>
+                  <input type="text" id="requester_name" name="requester_name" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" placeholder="Enter your full name" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+
+                <div class="col-12">
+                  <label for="requester_phone" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Phone Number <span class="text-danger">*</span></label>
+                  <input type="tel" id="requester_phone" name="requester_phone" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" placeholder="+91xxxxxxxxxx" pattern="^\+?\d{10,15}$" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+
+                <div class="col-12">
+                  <label for="foodtype" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Type of Food Needed <span class="text-danger">*</span></label>
+                  <input type="text" id="foodtype" name="foodtype" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" placeholder="e.g., Cooked meals, Canned goods" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+
+                <div class="col-12">
+                  <label for="quantity_amount" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Quantity <span class="text-danger">*</span></label>
+                  <div class="row g-2">
+                    <div class="col-7">
+                      <input type="number" id="quantity_amount" name="quantity[amount]" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" min="1" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                    </div>
+                    <div class="col-5">
+                      <select id="quantity_unit" name="quantity[unit]" class="form-select border border-dark p-2 mb-2 rounded-0 border-2" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                        <option value="kg">kg</option>
+                        <option value="liter">liter</option>
+                        <option value="pieces">pieces</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label for="quantity_description" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Quantity Description <span class="text-danger">*</span></label>
+                  <textarea id="quantity_description" name="quantity[description]" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" rows="2" placeholder="e.g., 50 servings of rice and curry" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';"></textarea>
+                </div>
+
+                <div class="col-12">
+                  <label for="location" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Location <span class="text-danger">*</span></label>
+                  <input type="text" id="location" name="location" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" placeholder="Enter your full address" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+
+                <div class="col-12">
+                  <label for="description" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Why do you need food? <span class="text-danger">*</span></label>
+                  <textarea id="description" name="description" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" rows="3" placeholder="Any additional information about your request." required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';"></textarea>
+                </div>
+
+                <div class="col-12">
+                  <label for="urgency" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Urgency Level <span class="text-danger">*</span></label>
+                  <select id="urgency" name="urgency" class="form-select border border-dark p-2 mb-2 rounded-0 border-2" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+
+                <div class="col-12">
+                  <label for="number_of_people" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Number of People <span class="text-danger">*</span></label>
+                  <input type="number" id="number_of_people" name="number_of_people" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" min="1" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+                
+                <div class="col-12">
+                  <label for="expiration_date" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Request Expiration Date</label>
+                  <input type="date" id="expiration_date" name="expiration_date" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+
+                <div class="col-12">
+                  <div class="form-check pt-4">
+                    <input class="form-check-input" type="checkbox" id="can_pickup" name="can_pickup" style="border-color: #ced4da;">
+                    <label class="form-check-label" for="can_pickup" style="color: #343a40;">I can pick up the food myself</label>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label for="government_id_number" class="form-label" style="font-weight: 700; color: #343a40; font-size: 1.3rem;">Government ID Number <span class="text-danger">*</span></label>
+                  <input type="text" id="government_id_number" name="government_id_number" class="form-control border border-dark p-2 mb-2 rounded-0 border-2" required style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                </div>
+                
+                <div class="col-12">
+                  <label class="form-label" for="government_id_images" style="font-weight: 500; color: #343a40; font-size: 1.1rem;">Upload Government ID Images <span class="text-danger">*</span></label>
+                  <input type="file" id="government_id_images" name="government_id_images" class="form-control" multiple required accept=".jpg,.jpeg,.png" style="border-radius: 0.5rem; border: 1px solid #ced4da; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;" onfocus="this.style.borderColor='#86b7fe'; this.style.boxShadow='0 0 0 0.25rem rgba(13, 110, 253, 0.25)';" onblur="this.style.borderColor='#ced4da'; this.style.boxShadow='none';">
+                  <small class="text-muted" style="color: #6c757d !important;">This helps verify your identity.</small>
+                </div>
+
+                <div class="col-12 mt-4">
+                  <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill" style="background-color: #28a745; border-color: #28a745; font-size: 1.15rem;">Submit Request</button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 </section>
 
 <script>

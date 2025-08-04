@@ -18,7 +18,9 @@ router.get('/feedhope-request-food', (req, res) => {
     res.render('request/request', 
         {
             title: 'Food Request',
-            stylesheet: ''
+            stylesheet: '',
+            showNavbar: false,
+            showFooter: false,
         }
     ); 
 });
