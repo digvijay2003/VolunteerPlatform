@@ -32,7 +32,7 @@ router.get('/volunteer-registration',
         title: 'VOLUNTEER REGISTRATION',
         action: '/volunteer-registration',
         stylesheet: '/stylesheet/volunteer/register.css',
-        showNavbar: true,
+        showNavbar: false,
         showFooter: false,
         fields: getVolunteerFormFields(),
     });
@@ -141,6 +141,7 @@ router.get(
       showRegisterButton: true,
       registerLink: '/volunteer-registration',
       showNavbar: false,
+      showFooter: false,
     });
   }
 );

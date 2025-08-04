@@ -7,6 +7,7 @@ const startAgenda = require('./jobs/agenda');
 const agenda = require('./jobs/agendaInstance');
 const Sentry = require("@sentry/node");
 const { nodeProfilingIntegration } = require("@sentry/profiling-node");
+const logger = require('./config/logger');
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,

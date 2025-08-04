@@ -6,6 +6,8 @@ const session = require('../config/session');
 const flash = require('connect-flash');
 const logger = require('../config/logger')
 const morgan = require('../config/morgan');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
 module.exports = (app) => {
 
@@ -25,10 +27,25 @@ module.exports = (app) => {
 
     // Session and Flash
     app.use(session);
+    app.use(async (req, res, next) => {
+        if (req.session.token) {
+            try {
+                const decoded = jwt.verify(req.session.token, process.env.JWT_SECRET);
+                const user = await User.findById(decoded.id).select('-password');
+                req.user = user;
+            } catch (err) {
+                // Handle expired or invalid token gracefully
+                console.error('Failed to authenticate token:', err);
+                req.session.token = null; // Clear the invalid token
+            }
+        }
+        next();
+    });
     app.use(flash());
 
     // Flash Middleware for Views
     app.use((req, res, next) => {
+        res.locals.currentUser = req.user || null;
         res.locals.success = req.flash('success');
         res.locals.error = req.flash('error');
         next();
