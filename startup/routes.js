@@ -15,5 +15,5 @@ module.exports = (app) => {
     app.use('/', userRoutes);
     app.use('/', userProfileRoutes);
     app.use('/', subscriptionRoutes);
-    app.use('/bot',chatbotRoutes);
+    app.use('/chat',chatbotRoutes);
 };
