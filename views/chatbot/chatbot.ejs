@@ -1,34 +1,45 @@
-<div class="container py-5">
-    <h2>Ask FeedHope Assistant 🤖</h2>
-
-    <div class="card p-3 mt-3">
-        <div class="mb-3">
-            <input type="text" id="userMsg" class="form-control" placeholder="Type your question..." />
+<div id="fh-chat" class="fh-chat-widget" aria-live="polite">
+        <div class="fh-chat-header" id="fh-chat-header">
+            <div>
+                <h4>FeedHope Assistant</h4>
+                <div class="fh-chat-status">
+                    <span id="fh-connection-status" class="fh-connection-status online"></span>
+                    <span id="fh-status-text">Online</span>
+                </div>
+            </div>
+            <div class="fh-chat-controls-header">
+                <button id="fh-chat-minimize" class="fh-header-btn" aria-label="Minimize chat" title="Minimize">−</button>
+                <button id="fh-chat-close" class="fh-header-btn" aria-label="Close chat" title="Close">×</button>
+            </div>
         </div>
-        <button class="btn btn-primary" id="sendBtn">Send</button>
 
-        <div id="chatReply" class="mt-4 alert alert-info" style="display: none;"></div>
-    </div>
+        <div class="fh-chat-content">
+            <div id="fh-messages" class="fh-chat-messages" role="log">
+                <div class="fh-welcome-message">
+                    👋 Welcome! I'm here to help with donations, volunteering, and site assistance.
+                </div>
+            </div>
+
+            <div class="fh-chat-controls">
+                <div class="fh-input-container">
+                    <textarea 
+                        id="fh-input" 
+                        rows="1" 
+                        placeholder="Ask about donations, volunteering, or site help..." 
+                        maxlength="2000"
+                        aria-label="Chat message input"></textarea>
+                    <button id="fh-send" class="fh-send-btn" aria-label="Send message">➤</button>
+                </div>
+                <div id="fh-error" style="display:none" role="alert"></div>
+            </div>
+
+            <div class="fh-chat-footer">
+                <div id="fh-typing" style="display:none">Assistant is typing...</div>
+                <div>
+                    <span id="fh-message-count">0</span> messages
+                </div>
+            </div>
+        </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const sendBtn = document.getElementById('sendBtn');
-        const input = document.getElementById('userMsg');
-        const replyDiv = document.getElementById('chatReply');
-
-        sendBtn.addEventListener('click', async () => {
-            const msg = input.value;
-            replyDiv.style.display = 'none';
-
-            const response = await fetch('/bot/ai-chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: msg }),
-            });
-
-            const data = await response.json();
-            replyDiv.textContent = data.reply || 'Error in response.';
-            replyDiv.style.display = 'block';
-        });
-    });
-</script>
+<link rel="stylesheet" href="/stylesheet/home/chatbot.css">
+<script src="/javaScript/chatbot.js"></script>
